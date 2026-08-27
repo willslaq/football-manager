@@ -7,12 +7,15 @@ import {
   generateSeason,
   generateWorld,
   pickAutoLineup,
+  setTacticalIntensity,
   validateCareerState,
 } from '../engine';
-import type { CareerState, Lineup, Tactics } from '../engine/types';
+import type { CareerState, EngineTraceEntry, Lineup, Tactics } from '../engine/types';
+import { runLiveMatch, type ChanceTraceEntry, type LiveMatchController } from './liveMatch';
 import type { ClubSummary, EngineRequest, EngineResponse } from './protocol';
 
 let career: CareerState | null = null;
+const liveSessions = new Map<string, LiveMatchController>();
 
 const DEFAULT_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
 
@@ -73,6 +76,7 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           request.payload.seed,
           { id: 'trainer-1', name: request.payload.trainerName },
           request.payload.clubId,
+          request.payload.tacticalIntensity,
         );
         career = state;
         respond({
@@ -86,9 +90,11 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
       case 'advanceRound': {
         if (!career) throw new Error('Nenhuma carreira iniciada');
         const previousRound = career.season.currentRound;
+        const engineTrace: EngineTraceEntry[] = [];
         const nextState = advanceRound(career, {
           playerLineup: request.payload.playerLineup,
           playerTactics: request.payload.playerTactics,
+          onPlayerChance: (entry) => engineTrace.push(entry),
         });
         career = nextState;
 
@@ -96,25 +102,77 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         const playerFixture = playedRound.find(
           (f) => f.homeTeamId === nextState.playerClubId || f.awayTeamId === nextState.playerClubId,
         );
+        const playerMatch = playerFixture?.result ?? null;
+
+        const sendRoundResult = (): void => {
+          respond({
+            type: 'roundResult',
+            requestId: request.requestId,
+            payload: { state: nextState, playerMatch, suggestedLineup: buildSuggestedLineup(nextState) },
+          });
+        };
+
+        if (!playerMatch) {
+          sendRoundResult();
+          break;
+        }
 
         respond({
-          type: 'roundResult',
+          type: 'liveMatchStarted',
           requestId: request.requestId,
-          payload: {
-            state: nextState,
-            playerMatch: playerFixture?.result ?? null,
-            suggestedLineup: buildSuggestedLineup(nextState),
-          },
+          payload: { homeTeamId: playerMatch.homeTeamId, awayTeamId: playerMatch.awayTeamId },
+        });
+
+        // A entrada 'setup' é a análise pré-jogo (força por setor, posse, nº de chances) — chega
+        // de uma vez, sem espera; as entradas 'chance' são pareadas por minuto com os eventos.
+        const setupEntry = engineTrace.find((entry) => entry.kind === 'setup');
+        if (setupEntry) {
+          respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry: setupEntry } });
+        }
+        const chanceTrace = engineTrace.filter((entry): entry is ChanceTraceEntry => entry.kind === 'chance');
+
+        const controller = runLiveMatch(playerMatch, chanceTrace, {
+          onEvent: (event, homeGoals, awayGoals) =>
+            respond({ type: 'liveMatchEvent', requestId: request.requestId, payload: { event, homeGoals, awayGoals } }),
+          onTrace: (entry) => respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry } }),
+          onTick: (minute, homeGoals, awayGoals) =>
+            respond({ type: 'liveMatchTick', requestId: request.requestId, payload: { minute, homeGoals, awayGoals } }),
+        });
+        liveSessions.set(request.requestId, controller);
+        controller.done.then(() => {
+          liveSessions.delete(request.requestId);
+          sendRoundResult();
         });
         break;
       }
 
+      case 'skipLiveMatch': {
+        liveSessions.get(request.payload.liveRequestId)?.skip();
+        break;
+      }
+
+      case 'setLiveMatchSpeed': {
+        liveSessions.get(request.payload.liveRequestId)?.setSpeed(request.payload.speed);
+        break;
+      }
+
+      case 'setLiveMatchPaused': {
+        liveSessions.get(request.payload.liveRequestId)?.setPaused(request.payload.paused);
+        break;
+      }
+
       case 'setCareer': {
-        const result = validateCareerState(request.payload.state);
+        // Saves de antes do modo tático (settings.tacticalIntensity) não têm o campo — completa com o padrão.
+        const incoming = request.payload.state;
+        const normalized: CareerState = {
+          ...incoming,
+          settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
+        };
+        const result = validateCareerState(normalized);
         if (!result.valid) {
           throw new Error(`Estado de carreira inválido: ${result.errors.slice(0, 5).join('; ')}`);
         }
-        career = request.payload.state;
+        career = normalized;
         respond({
           type: 'careerState',
           requestId: request.requestId,
@@ -124,6 +182,13 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
             suggestedTactics: DEFAULT_TACTICS,
           },
         });
+        break;
+      }
+
+      case 'setTacticalIntensity': {
+        if (!career) throw new Error('Nenhuma carreira iniciada');
+        career = setTacticalIntensity(career, request.payload.tacticalIntensity);
+        respond({ type: 'settingsUpdated', requestId: request.requestId, payload: { state: career } });
         break;
       }
     }

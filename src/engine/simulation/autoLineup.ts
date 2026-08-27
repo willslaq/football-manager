@@ -6,7 +6,7 @@ function sortByStrengthDesc(players: Player[]): Player[] {
   return [...players].sort((a, b) => b.strength - a.strength);
 }
 
-function sectorSlotCounts(formation: Formation): { defense: number; midfield: number; attack: number } {
+export function sectorSlotCounts(formation: Formation): { defense: number; midfield: number; attack: number } {
   const parts = formation.split('-').map(Number);
   return {
     defense: parts[0],

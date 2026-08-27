@@ -2,6 +2,7 @@ import { deriveSeed } from '../rng';
 import type { CareerState } from '../types/career';
 import type { Club, ClubId } from '../types/club';
 import type { Competition, Fixture, StandingEntry } from '../types/competition';
+import type { EngineTraceEntry } from '../types/match';
 import type { Player } from '../types/player';
 import type { Lineup, Tactics } from '../types/tactics';
 import { pickAutoLineup } from './autoLineup';
@@ -13,6 +14,8 @@ const DEFAULT_AUTO_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
 export interface AdvanceRoundInput {
   playerLineup: Lineup;
   playerTactics: Tactics;
+  /** Observa cada número bruto que o motor computa, só pra partida do jogador — "modo geek" da UI. */
+  onPlayerChance?: (entry: EngineTraceEntry) => void;
 }
 
 function resolvePlayers(ids: string[], playersById: Map<string, Player>): Player[] {
@@ -127,7 +130,14 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
     const away = buildTeamInput(fixture.awayTeamId, isPlayerAway, input, clubsById, playersById);
 
     const seed = deriveSeed(state.seed, `round${state.season.currentRound}:${fixture.homeTeamId}:${fixture.awayTeamId}`);
-    const result = simulateMatch(home, away, seed);
+    const isPlayerFixture = isPlayerHome || isPlayerAway;
+    const result = simulateMatch(
+      home,
+      away,
+      seed,
+      state.settings.tacticalIntensity,
+      isPlayerFixture ? input.onPlayerChance : undefined,
+    );
 
     for (const player of [...home.players, ...away.players]) starterIds.add(player.id);
     for (const event of result.events) {

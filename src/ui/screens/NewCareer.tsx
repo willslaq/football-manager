@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import type { TacticalIntensity } from '../../engine/types';
 import { useCareerStore } from '../../store/careerStore';
 import { Backdrop, Badge, Button, Card, CardButton, ProgressBar, TextField } from '../components';
 import { CLUB_CRESTS } from '../clubCrests';
+import { TACTICAL_INTENSITY_COPY } from '../utils';
 import './NewCareer.css';
 
 export function NewCareer({ onBack }: { onBack: () => void }) {
   const [seed] = useState(() => Math.floor(Math.random() * 1_000_000_000));
   const [trainerName, setTrainerName] = useState('');
+  const [tacticalIntensity, setTacticalIntensity] = useState<TacticalIntensity>('subtle');
   const clubs = useCareerStore((s) => s.clubs);
   const loading = useCareerStore((s) => s.loading);
   const error = useCareerStore((s) => s.error);
@@ -40,6 +43,25 @@ export function NewCareer({ onBack }: { onBack: () => void }) {
         />
       </Card>
 
+      <Card className="new-career__form-card">
+        <span className="field__label">Simulação tática</span>
+        <div className="intensity-toggle">
+          {(Object.keys(TACTICAL_INTENSITY_COPY) as TacticalIntensity[]).map((option) => (
+            <Button
+              key={option}
+              type="button"
+              size="sm"
+              variant={tacticalIntensity === option ? 'primary' : 'secondary'}
+              aria-pressed={tacticalIntensity === option}
+              onClick={() => setTacticalIntensity(option)}
+            >
+              {TACTICAL_INTENSITY_COPY[option].label}
+            </Button>
+          ))}
+        </div>
+        <p className="new-career__hint">{TACTICAL_INTENSITY_COPY[tacticalIntensity].hint}</p>
+      </Card>
+
       <section>
         <p className="new-career__section-title">
           <span>20 clubes da Série A</span>
@@ -54,7 +76,7 @@ export function NewCareer({ onBack }: { onBack: () => void }) {
               key={club.id}
               accentColor={club.colors.primary}
               disabled={!canPick || loading}
-              onClick={() => startCareer(seed, trainerName.trim(), club.id)}
+              onClick={() => startCareer(seed, trainerName.trim(), club.id, tacticalIntensity)}
               className="club-card"
             >
               <div className="club-card__top">

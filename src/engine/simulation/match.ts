@@ -1,8 +1,8 @@
 import { chance, mulberry32, roll, weighted } from '../rng';
 import type { ClubId } from '../types/club';
-import type { MatchEvent, MatchResult, Reason } from '../types/match';
+import type { EngineTraceEntry, MatchEvent, MatchResult, Reason } from '../types/match';
 import type { Player } from '../types/player';
-import type { Tactics, TacticStyle } from '../types/tactics';
+import { TACTIC_STYLE_LABELS, type TacticalIntensity, type Tactics } from '../types/tactics';
 import {
   BASE_CHANCES_PER_TEAM,
   BASE_GOAL_PROBABILITY,
@@ -10,10 +10,10 @@ import {
   MIN_GOAL_PROBABILITY,
   ON_TARGET_MISS_PROBABILITY,
   RATIO_COMPRESSION,
-  STYLE_MODIFIERS,
   type StyleModifiers,
 } from './config';
 import { computeSectorStrengths, type SectorStrengths } from './strength';
+import { applyFormationShape, effectiveStyleModifiers, formationStyleCoherence, styleMatchupModifier } from './tactics';
 
 export interface MatchTeamInput {
   clubId: ClubId;
@@ -67,10 +67,12 @@ interface ResolvedChance {
   minute: number;
   isGoal: boolean;
   isOnTarget: boolean;
-  scorer?: Player;
+  shooter?: Player;
+  quality: number;
+  goalProbability: number;
 }
 
-function pickScorer(rng: () => number, attackers: Player[]): Player | undefined {
+function pickShooter(rng: () => number, attackers: Player[]): Player | undefined {
   const pool = attackers.filter((p) => p.position !== 'GOL');
   if (pool.length === 0) return undefined;
   const weights = pool.map((p) => [p, p.attributes.finishing + p.attributes.heading * 0.3 + 1] as const);
@@ -93,8 +95,8 @@ function resolveChance(
   const isGoal = chance(rng, goalProbability);
   const isOnTarget = isGoal || chance(rng, ON_TARGET_MISS_PROBABILITY);
   const minute = roll(rng, 1, 90);
-  const scorer = isGoal ? pickScorer(rng, attackers) : undefined;
-  return { minute, isGoal, isOnTarget, scorer };
+  const shooter = pickShooter(rng, attackers);
+  return { minute, isGoal, isOnTarget, shooter, quality, goalProbability };
 }
 
 function pickManOfTheMatch(
@@ -120,7 +122,8 @@ function normalizeImpact(diff: number, scale: number): number {
   return clamp(diff / scale, -1, 1);
 }
 
-const COUNTER_EXPOSED_STYLES: TacticStyle[] = ['offensive', 'pressing', 'possession'];
+const MATCHUP_NOTE_THRESHOLD = 0.05;
+const COHERENCE_NOTE_THRESHOLD = 0.95;
 
 function buildExplanation(
   homeStrength: SectorStrengths,
@@ -130,6 +133,7 @@ function buildExplanation(
   away: MatchTeamInput,
   homeGoals: number,
   awayGoals: number,
+  tacticalIntensity: TacticalIntensity,
 ): Reason[] {
   const reasons: Reason[] = [];
 
@@ -177,18 +181,43 @@ function buildExplanation(
     }
   }
 
-  if (away.tactics.style === 'counter' && COUNTER_EXPOSED_STYLES.includes(home.tactics.style) && awayGoals > 0) {
+  const homeMatchup = styleMatchupModifier(home.tactics.style, away.tactics.style, tacticalIntensity);
+  const awayMatchup = styleMatchupModifier(away.tactics.style, home.tactics.style, tacticalIntensity);
+  const homeMatchupEdge = Math.max(Math.abs(homeMatchup.quality - 1), Math.abs(homeMatchup.volume - 1));
+  const awayMatchupEdge = Math.max(Math.abs(awayMatchup.quality - 1), Math.abs(awayMatchup.volume - 1));
+
+  if (awayGoals > 0 && awayMatchupEdge >= MATCHUP_NOTE_THRESHOLD && awayMatchupEdge >= homeMatchupEdge) {
+    const favorable = awayMatchup.quality > 1 || awayMatchup.volume > 1;
     reasons.push({
-      factor: 'style_mismatch',
-      impact: -0.2,
-      note: 'O visitante explorou os contra-ataques diante da postura ofensiva do mandante.',
+      factor: 'style_matchup',
+      impact: favorable ? -0.2 : 0.15,
+      note: favorable
+        ? `O estilo ${TACTIC_STYLE_LABELS[away.tactics.style]} do visitante levou vantagem contra o ${TACTIC_STYLE_LABELS[home.tactics.style]} do mandante.`
+        : `O estilo ${TACTIC_STYLE_LABELS[away.tactics.style]} do visitante rendeu menos diante do ${TACTIC_STYLE_LABELS[home.tactics.style]} do mandante.`,
     });
   }
-  if (home.tactics.style === 'counter' && COUNTER_EXPOSED_STYLES.includes(away.tactics.style) && homeGoals > 0) {
+  if (homeGoals > 0 && homeMatchupEdge >= MATCHUP_NOTE_THRESHOLD && homeMatchupEdge >= awayMatchupEdge) {
+    const favorable = homeMatchup.quality > 1 || homeMatchup.volume > 1;
     reasons.push({
-      factor: 'style_mismatch',
-      impact: 0.2,
-      note: 'O mandante explorou os contra-ataques diante da postura ofensiva do visitante.',
+      factor: 'style_matchup',
+      impact: favorable ? 0.2 : -0.15,
+      note: favorable
+        ? `O estilo ${TACTIC_STYLE_LABELS[home.tactics.style]} do mandante levou vantagem contra o ${TACTIC_STYLE_LABELS[away.tactics.style]} do visitante.`
+        : `O estilo ${TACTIC_STYLE_LABELS[home.tactics.style]} do mandante rendeu menos diante do ${TACTIC_STYLE_LABELS[away.tactics.style]} do visitante.`,
+    });
+  }
+
+  const homeCoherence = formationStyleCoherence(home.tactics.formation, home.tactics.style, tacticalIntensity);
+  const awayCoherence = formationStyleCoherence(away.tactics.formation, away.tactics.style, tacticalIntensity);
+  if (homeCoherence < COHERENCE_NOTE_THRESHOLD || awayCoherence < COHERENCE_NOTE_THRESHOLD) {
+    const [side, formation, style, coherence] =
+      homeCoherence <= awayCoherence
+        ? (['mandante', home.tactics.formation, home.tactics.style, homeCoherence] as const)
+        : (['visitante', away.tactics.formation, away.tactics.style, awayCoherence] as const);
+    reasons.push({
+      factor: 'formation_style_mismatch',
+      impact: side === 'mandante' ? -(1 - coherence) : 1 - coherence,
+      note: `A formação ${formation} do ${side} não combina bem com o estilo ${TACTIC_STYLE_LABELS[style]}, tirando eficiência do ataque.`,
     });
   }
 
@@ -207,14 +236,28 @@ function buildExplanation(
  * Motor de partida: probabilístico, determinístico por seed, explicável.
  * Ver plano §7 — modelo de força por setor, geração de chances e trace de explicação.
  */
-export function simulateMatch(home: MatchTeamInput, away: MatchTeamInput, seed: number): MatchResult {
+export function simulateMatch(
+  home: MatchTeamInput,
+  away: MatchTeamInput,
+  seed: number,
+  tacticalIntensity: TacticalIntensity = 'subtle',
+  onChance?: (entry: EngineTraceEntry) => void,
+): MatchResult {
   assertValidLineup(home);
   assertValidLineup(away);
 
   const rng = mulberry32(seed);
 
-  const homeStrength = computeSectorStrengths(home.players, true);
-  const awayStrength = computeSectorStrengths(away.players, false);
+  const homeStrength = applyFormationShape(
+    computeSectorStrengths(home.players, true),
+    home.tactics.formation,
+    tacticalIntensity,
+  );
+  const awayStrength = applyFormationShape(
+    computeSectorStrengths(away.players, false),
+    away.tactics.formation,
+    tacticalIntensity,
+  );
 
   const possessionHome = clamp(
     compressRatio(homeStrength.midfield / (homeStrength.midfield + awayStrength.midfield || 1)),
@@ -223,8 +266,8 @@ export function simulateMatch(home: MatchTeamInput, away: MatchTeamInput, seed: 
   );
   const possessionAway = 1 - possessionHome;
 
-  const homeStyleMod = STYLE_MODIFIERS[home.tactics.style];
-  const awayStyleMod = STYLE_MODIFIERS[away.tactics.style];
+  const homeStyleMod = effectiveStyleModifiers(home.tactics.formation, home.tactics.style, away.tactics.style, tacticalIntensity);
+  const awayStyleMod = effectiveStyleModifiers(away.tactics.formation, away.tactics.style, home.tactics.style, tacticalIntensity);
 
   const homeChanceCount = rollChanceCount(rng, {
     attack: homeStrength.attack,
@@ -241,6 +284,15 @@ export function simulateMatch(home: MatchTeamInput, away: MatchTeamInput, seed: 
     possession: possessionAway,
   });
 
+  onChance?.({
+    kind: 'setup',
+    home: { clubId: home.clubId, attack: homeStrength.attack, defense: homeStrength.defense, midfield: homeStrength.midfield },
+    away: { clubId: away.clubId, attack: awayStrength.attack, defense: awayStrength.defense, midfield: awayStrength.midfield },
+    possessionHome,
+    homeChanceCount,
+    awayChanceCount,
+  });
+
   const events: MatchEvent[] = [];
   const goalsByPlayer = new Map<string, number>();
   let homeGoals = 0;
@@ -250,21 +302,61 @@ export function simulateMatch(home: MatchTeamInput, away: MatchTeamInput, seed: 
 
   for (let i = 0; i < homeChanceCount; i++) {
     const resolved = resolveChance(rng, homeStrength.attack, awayStrength.defense, homeStyleMod, home.players);
+    onChance?.({
+      kind: 'chance',
+      minute: resolved.minute,
+      teamId: home.clubId,
+      shooterId: resolved.shooter?.id,
+      attackStrength: homeStrength.attack,
+      defenseStrength: awayStrength.defense,
+      quality: resolved.quality,
+      goalProbability: resolved.goalProbability,
+      isOnTarget: resolved.isOnTarget,
+      isGoal: resolved.isGoal,
+    });
     if (resolved.isOnTarget) homeShotsOnTarget++;
-    if (resolved.isGoal && resolved.scorer) {
+    if (!resolved.shooter) continue;
+    if (resolved.isGoal) {
       homeGoals++;
-      goalsByPlayer.set(resolved.scorer.id, (goalsByPlayer.get(resolved.scorer.id) ?? 0) + 1);
-      events.push({ minute: resolved.minute, type: 'goal', teamId: home.clubId, playerId: resolved.scorer.id });
+      goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
+      events.push({ minute: resolved.minute, type: 'goal', teamId: home.clubId, playerId: resolved.shooter.id });
+    } else {
+      events.push({
+        minute: resolved.minute,
+        type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
+        teamId: home.clubId,
+        playerId: resolved.shooter.id,
+      });
     }
   }
 
   for (let i = 0; i < awayChanceCount; i++) {
     const resolved = resolveChance(rng, awayStrength.attack, homeStrength.defense, awayStyleMod, away.players);
+    onChance?.({
+      kind: 'chance',
+      minute: resolved.minute,
+      teamId: away.clubId,
+      shooterId: resolved.shooter?.id,
+      attackStrength: awayStrength.attack,
+      defenseStrength: homeStrength.defense,
+      quality: resolved.quality,
+      goalProbability: resolved.goalProbability,
+      isOnTarget: resolved.isOnTarget,
+      isGoal: resolved.isGoal,
+    });
     if (resolved.isOnTarget) awayShotsOnTarget++;
-    if (resolved.isGoal && resolved.scorer) {
+    if (!resolved.shooter) continue;
+    if (resolved.isGoal) {
       awayGoals++;
-      goalsByPlayer.set(resolved.scorer.id, (goalsByPlayer.get(resolved.scorer.id) ?? 0) + 1);
-      events.push({ minute: resolved.minute, type: 'goal', teamId: away.clubId, playerId: resolved.scorer.id });
+      goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
+      events.push({ minute: resolved.minute, type: 'goal', teamId: away.clubId, playerId: resolved.shooter.id });
+    } else {
+      events.push({
+        minute: resolved.minute,
+        type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
+        teamId: away.clubId,
+        playerId: resolved.shooter.id,
+      });
     }
   }
 
@@ -272,7 +364,16 @@ export function simulateMatch(home: MatchTeamInput, away: MatchTeamInput, seed: 
 
   const manOfTheMatch = pickManOfTheMatch(home, away, goalsByPlayer, homeGoals, awayGoals);
 
-  const explanation = buildExplanation(homeStrength, awayStrength, possessionHome, home, away, homeGoals, awayGoals);
+  const explanation = buildExplanation(
+    homeStrength,
+    awayStrength,
+    possessionHome,
+    home,
+    away,
+    homeGoals,
+    awayGoals,
+    tacticalIntensity,
+  );
 
   return {
     homeTeamId: home.clubId,

@@ -3,6 +3,10 @@ import type { PlayerId } from './player';
 
 export const MATCH_EVENT_TYPES = [
   'goal',
+  /** Chute no alvo que o goleiro defendeu. */
+  'shot_saved',
+  /** Chute que foi pra fora/por cima. */
+  'shot_missed',
   'own_goal',
   'yellow_card',
   'red_card',
@@ -49,3 +53,30 @@ export interface MatchResult {
   manOfTheMatch: PlayerId;
   explanation: Reason[];
 }
+
+/**
+ * Rastro técnico bruto do motor — os números reais por trás de cada rolagem.
+ * Não faz parte do MatchResult (não é persistido no estado de carreira);
+ * existe só pra transmitir ao vivo pro "modo geek" da UI, sob demanda.
+ */
+export type EngineTraceEntry =
+  | {
+      kind: 'setup';
+      home: { clubId: ClubId; attack: number; defense: number; midfield: number };
+      away: { clubId: ClubId; attack: number; defense: number; midfield: number };
+      possessionHome: number;
+      homeChanceCount: number;
+      awayChanceCount: number;
+    }
+  | {
+      kind: 'chance';
+      minute: number;
+      teamId: ClubId;
+      shooterId?: PlayerId;
+      attackStrength: number;
+      defenseStrength: number;
+      quality: number;
+      goalProbability: number;
+      isOnTarget: boolean;
+      isGoal: boolean;
+    };

@@ -91,6 +91,7 @@ function buildExampleCareerState(): CareerState {
       currentRound: 1,
     },
     history: [],
+    settings: { tacticalIntensity: 'subtle' },
   };
 }
 

@@ -1,22 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
-import { FORMATIONS, TACTIC_STYLES } from '../../engine/types';
+import { FORMATIONS, TACTIC_STYLE_LABELS, TACTIC_STYLES } from '../../engine/types';
 import type { Formation, Player, Position, TacticStyle } from '../../engine/types';
 import { useCareerStore } from '../../store/careerStore';
 import { resolveSquad } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
-import { Card } from '../components';
+import { Button, Card } from '../components';
 import './Lineup.css';
-
-const STYLE_LABELS: Record<TacticStyle, string> = {
-  offensive: 'Ofensivo',
-  balanced: 'Equilibrado',
-  defensive: 'Defensivo',
-  counter: 'Contra-ataque',
-  possession: 'Posse de bola',
-  direct: 'Direto',
-  pressing: 'Pressão',
-};
 
 interface Slot {
   id: string;
@@ -167,6 +157,46 @@ function assignToSlots(slots: Slot[], starters: Player[]): Record<string, string
   return assignments;
 }
 
+/**
+ * Auto-escalação: pra cada vaga, escolhe o jogador disponível com maior
+ * overall efetivo naquela posição exata (natural > parecida > ruim).
+ * Guloso por par (vaga, jogador) de maior score global, repetido até
+ * preencher as 11 vagas — assim o goleiro nato sempre fica com o gol
+ * (jogador de linha ali cairia muito no score) e as demais vagas ficam
+ * com quem realmente rende mais ali, não só com quem tem maior força bruta.
+ */
+function autoAssign(slots: Slot[], squad: Player[]): Record<string, string | null> {
+  const assignments: Record<string, string | null> = {};
+  for (const slot of slots) assignments[slot.id] = null;
+
+  const remainingSlots = [...slots];
+  const remainingPlayers = [...squad];
+
+  while (remainingSlots.length > 0 && remainingPlayers.length > 0) {
+    let bestSlotIndex = -1;
+    let bestPlayerIndex = -1;
+    let bestScore = -Infinity;
+
+    remainingSlots.forEach((slot, si) => {
+      remainingPlayers.forEach((player, pi) => {
+        const score = effectiveOverall(player.strength, positionFit(player.position, slot.canonical));
+        if (score > bestScore) {
+          bestScore = score;
+          bestSlotIndex = si;
+          bestPlayerIndex = pi;
+        }
+      });
+    });
+
+    if (bestSlotIndex === -1) break;
+    assignments[remainingSlots[bestSlotIndex].id] = remainingPlayers[bestPlayerIndex].id;
+    remainingSlots.splice(bestSlotIndex, 1);
+    remainingPlayers.splice(bestPlayerIndex, 1);
+  }
+
+  return assignments;
+}
+
 export function Lineup() {
   const career = useCareerStore((s) => s.career);
   const lineup = useCareerStore((s) => s.lineup);
@@ -267,6 +297,10 @@ export function Lineup() {
     setTactics({ ...tactics, formation });
   }
 
+  function handleAutoAssign() {
+    setAssignments(autoAssign(slots, squad));
+  }
+
   return (
     <div className="lineup">
       <div className="lineup__controls">
@@ -300,11 +334,15 @@ export function Lineup() {
           >
             {TACTIC_STYLES.map((s) => (
               <option key={s} value={s}>
-                {STYLE_LABELS[s]}
+                {TACTIC_STYLE_LABELS[s]}
               </option>
             ))}
           </select>
         </div>
+
+        <Button className="lineup__auto" variant="secondary" onClick={handleAutoAssign}>
+          Auto-escalação
+        </Button>
       </div>
 
       <div className="lineup__status">

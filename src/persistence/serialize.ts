@@ -14,9 +14,15 @@ export function importCareerFromJSON(json: string): CareerState {
     throw new Error('Arquivo não é um JSON válido.');
   }
 
-  const result = validateCareerState(parsed as CareerState);
+  // Saves de antes do modo tático (settings.tacticalIntensity) não têm o campo — completa com o padrão.
+  const state = parsed as CareerState;
+  if (!state.settings) {
+    state.settings = { tacticalIntensity: 'subtle' };
+  }
+
+  const result = validateCareerState(state);
   if (!result.valid) {
     throw new Error(`Save inválido: ${result.errors.slice(0, 5).join('; ')}`);
   }
-  return parsed as CareerState;
+  return state;
 }

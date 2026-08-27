@@ -115,3 +115,13 @@
   font-size: var(--text-sm);
   color: var(--pitch);
 }
+
+.tactical-intensity {
+  display: flex;
+  flex-direction: column;
+}
+
+.tactical-intensity__hint {
+  font-size: var(--text-sm);
+  color: var(--mist);
+}

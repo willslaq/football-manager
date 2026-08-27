@@ -55,8 +55,8 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
       : null;
   const outcomeLabel = outcome === 'win' ? 'Vitória' : outcome === 'loss' ? 'Derrota' : outcome === 'draw' ? 'Empate' : null;
 
-  const homeEvents = lastMatch.events.filter((e) => e.teamId === lastMatch.homeTeamId);
-  const awayEvents = lastMatch.events.filter((e) => e.teamId === lastMatch.awayTeamId);
+  const homeEvents = lastMatch.events.filter((e) => e.type === 'goal' && e.teamId === lastMatch.homeTeamId);
+  const awayEvents = lastMatch.events.filter((e) => e.type === 'goal' && e.teamId === lastMatch.awayTeamId);
 
   const motm = playersById.get(lastMatch.manOfTheMatch);
   const motmClub = home?.squad.includes(lastMatch.manOfTheMatch) ? home : away?.squad.includes(lastMatch.manOfTheMatch) ? away : undefined;

@@ -24,6 +24,27 @@ export const TACTIC_STYLES = [
 
 export type TacticStyle = (typeof TACTIC_STYLES)[number];
 
+/** Rótulo em pt-BR de cada estilo — usado tanto na UI (seletor) quanto nas explicações do motor. */
+export const TACTIC_STYLE_LABELS: Record<TacticStyle, string> = {
+  offensive: 'Ofensivo',
+  balanced: 'Equilibrado',
+  defensive: 'Defensivo',
+  counter: 'Contra-ataque',
+  possession: 'Posse de bola',
+  direct: 'Direto',
+  pressing: 'Pressão',
+};
+
+/**
+ * Quanto o motor leva formação/estilo em conta na simulação (RF tático):
+ * 'subtle' = ajuste leve, qualidade dos jogadores ainda domina o resultado;
+ * 'strong' = tática pesa mais, podendo decidir jogos parelhos.
+ * Configuração por save (CareerState.settings), não por partida.
+ */
+export const TACTICAL_INTENSITIES = ['subtle', 'strong'] as const;
+
+export type TacticalIntensity = (typeof TACTICAL_INTENSITIES)[number];
+
 export interface Tactics {
   formation: Formation;
   style: TacticStyle;

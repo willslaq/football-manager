@@ -1,5 +1,6 @@
 import { POSITIONS } from './types/player';
 import { SEASON_STATES } from './types/season';
+import { TACTICAL_INTENSITIES } from './types/tactics';
 import type { CareerState } from './types/career';
 import type { Player } from './types/player';
 import type { Club } from './types/club';
@@ -78,6 +79,10 @@ export function validateCareerState(state: CareerState): ValidationResult {
 
   if (!clubIds.has(state.playerClubId)) {
     errors.push(`playerClubId referencia clube inexistente (${state.playerClubId})`);
+  }
+
+  if (!TACTICAL_INTENSITIES.includes(state.settings?.tacticalIntensity)) {
+    errors.push(`settings.tacticalIntensity inválido (${state.settings?.tacticalIntensity})`);
   }
 
   if (!SEASON_STATES.includes(state.season.state)) {

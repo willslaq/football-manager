@@ -1,4 +1,15 @@
-import type { CareerState, Club, ClubId, Player, Position, StandingEntry } from '../engine/types';
+import type { CareerState, Club, ClubId, Player, Position, StandingEntry, TacticalIntensity } from '../engine/types';
+
+export const TACTICAL_INTENSITY_COPY: Record<TacticalIntensity, { label: string; hint: string }> = {
+  subtle: {
+    label: 'Simples',
+    hint: 'Formação e estilo pesam pouco — a qualidade do elenco decide a maior parte dos jogos.',
+  },
+  strong: {
+    label: 'Tática',
+    hint: 'Formação e estilo pesam mais — a escolha tática pode decidir jogos parelhos, mesmo contra elenco melhor.',
+  },
+};
 
 export type PositionGroup = 'GOL' | 'DEF' | 'MEI' | 'ATA';
 

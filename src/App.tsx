@@ -6,19 +6,25 @@ import { Home } from './ui/screens/Home';
 import { Squad } from './ui/screens/Squad';
 import { Lineup } from './ui/screens/Lineup';
 import { Table } from './ui/screens/Table';
+import { MatchLive } from './ui/screens/MatchLive';
 import { MatchResult } from './ui/screens/MatchResult';
 import { AppShell, type HubScreen } from './ui/components';
 import { CLUB_CRESTS } from './ui/clubCrests';
 import { findClub } from './ui/utils';
 
-export type Screen = HubScreen | 'matchResult';
+export type Screen = HubScreen | 'matchLive' | 'matchResult';
 type PreCareerScreen = 'start' | 'newCareer';
 
 function App() {
   const career = useCareerStore((s) => s.career);
   const lastMatch = useCareerStore((s) => s.lastMatch);
+  const liveMatch = useCareerStore((s) => s.liveMatch);
   const [screen, setScreen] = useState<Screen>('home');
   const [preCareerScreen, setPreCareerScreen] = useState<PreCareerScreen>('start');
+
+  useEffect(() => {
+    if (liveMatch) setScreen('matchLive');
+  }, [liveMatch]);
 
   useEffect(() => {
     if (lastMatch) setScreen('matchResult');
@@ -27,6 +33,10 @@ function App() {
   if (!career) {
     if (preCareerScreen === 'newCareer') return <NewCareer onBack={() => setPreCareerScreen('start')} />;
     return <Start onNewCareer={() => setPreCareerScreen('newCareer')} />;
+  }
+
+  if (screen === 'matchLive') {
+    return <MatchLive />;
   }
 
   if (screen === 'matchResult') {

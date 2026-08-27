@@ -39,6 +39,10 @@
   min-width: 12rem;
 }
 
+.lineup__auto {
+  margin-left: auto;
+}
+
 .lineup__status {
   display: flex;
   align-items: center;

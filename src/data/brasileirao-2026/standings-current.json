@@ -1,0 +1,212 @@
+{
+  "snapshotDate": "2026-08-27",
+  "currentRound": 25,
+  "totalRounds": 38,
+  "source": {
+    "provider": "campeonato-brasileiro-api (npm)",
+    "upstream": "ge.globo.com",
+    "note": "Classificação real capturada ao vivo em 27/08/2026, antes da 25ª rodada. Usada como ponto de partida da carreira (SRS M2, pivô para dados reais)."
+  },
+  "standings": [
+    {
+      "clubId": "palmeiras",
+      "played": 24,
+      "won": 15,
+      "drawn": 6,
+      "lost": 3,
+      "goalsFor": 44,
+      "goalsAgainst": 20,
+      "points": 51
+    },
+    {
+      "clubId": "flamengo",
+      "played": 23,
+      "won": 13,
+      "drawn": 6,
+      "lost": 4,
+      "goalsFor": 45,
+      "goalsAgainst": 21,
+      "points": 45
+    },
+    {
+      "clubId": "athletico-pr",
+      "played": 24,
+      "won": 13,
+      "drawn": 5,
+      "lost": 6,
+      "goalsFor": 34,
+      "goalsAgainst": 22,
+      "points": 44
+    },
+    {
+      "clubId": "fluminense",
+      "played": 24,
+      "won": 11,
+      "drawn": 8,
+      "lost": 5,
+      "goalsFor": 36,
+      "goalsAgainst": 29,
+      "points": 41
+    },
+    {
+      "clubId": "cruzeiro",
+      "played": 24,
+      "won": 11,
+      "drawn": 6,
+      "lost": 7,
+      "goalsFor": 34,
+      "goalsAgainst": 33,
+      "points": 39
+    },
+    {
+      "clubId": "bahia",
+      "played": 24,
+      "won": 9,
+      "drawn": 10,
+      "lost": 5,
+      "goalsFor": 34,
+      "goalsAgainst": 28,
+      "points": 37
+    },
+    {
+      "clubId": "bragantino",
+      "played": 23,
+      "won": 10,
+      "drawn": 5,
+      "lost": 8,
+      "goalsFor": 28,
+      "goalsAgainst": 23,
+      "points": 35
+    },
+    {
+      "clubId": "coritiba",
+      "played": 24,
+      "won": 9,
+      "drawn": 7,
+      "lost": 8,
+      "goalsFor": 30,
+      "goalsAgainst": 31,
+      "points": 34
+    },
+    {
+      "clubId": "atletico-mg",
+      "played": 23,
+      "won": 9,
+      "drawn": 6,
+      "lost": 8,
+      "goalsFor": 30,
+      "goalsAgainst": 27,
+      "points": 33
+    },
+    {
+      "clubId": "corinthians",
+      "played": 24,
+      "won": 8,
+      "drawn": 8,
+      "lost": 8,
+      "goalsFor": 26,
+      "goalsAgainst": 24,
+      "points": 32
+    },
+    {
+      "clubId": "botafogo",
+      "played": 23,
+      "won": 8,
+      "drawn": 6,
+      "lost": 9,
+      "goalsFor": 37,
+      "goalsAgainst": 37,
+      "points": 30
+    },
+    {
+      "clubId": "vitoria",
+      "played": 24,
+      "won": 8,
+      "drawn": 5,
+      "lost": 11,
+      "goalsFor": 23,
+      "goalsAgainst": 35,
+      "points": 29
+    },
+    {
+      "clubId": "sao-paulo",
+      "played": 23,
+      "won": 7,
+      "drawn": 6,
+      "lost": 10,
+      "goalsFor": 27,
+      "goalsAgainst": 27,
+      "points": 27
+    },
+    {
+      "clubId": "santos",
+      "played": 23,
+      "won": 6,
+      "drawn": 8,
+      "lost": 9,
+      "goalsFor": 33,
+      "goalsAgainst": 36,
+      "points": 26
+    },
+    {
+      "clubId": "gremio",
+      "played": 23,
+      "won": 6,
+      "drawn": 7,
+      "lost": 10,
+      "goalsFor": 24,
+      "goalsAgainst": 31,
+      "points": 25
+    },
+    {
+      "clubId": "internacional",
+      "played": 24,
+      "won": 5,
+      "drawn": 10,
+      "lost": 9,
+      "goalsFor": 24,
+      "goalsAgainst": 28,
+      "points": 25
+    },
+    {
+      "clubId": "mirassol",
+      "played": 23,
+      "won": 6,
+      "drawn": 6,
+      "lost": 11,
+      "goalsFor": 26,
+      "goalsAgainst": 36,
+      "points": 24
+    },
+    {
+      "clubId": "remo",
+      "played": 24,
+      "won": 5,
+      "drawn": 8,
+      "lost": 11,
+      "goalsFor": 28,
+      "goalsAgainst": 39,
+      "points": 23
+    },
+    {
+      "clubId": "vasco",
+      "played": 23,
+      "won": 5,
+      "drawn": 7,
+      "lost": 11,
+      "goalsFor": 24,
+      "goalsAgainst": 38,
+      "points": 22
+    },
+    {
+      "clubId": "chapecoense",
+      "played": 23,
+      "won": 2,
+      "drawn": 8,
+      "lost": 13,
+      "goalsFor": 24,
+      "goalsAgainst": 46,
+      "points": 14
+    }
+  ]
+}

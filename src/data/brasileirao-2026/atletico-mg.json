@@ -1,0 +1,367 @@
+{
+  "club": {
+    "id": "atletico-mg",
+    "name": "Clube Atlético Mineiro",
+    "shortName": "CAM",
+    "city": "Belo Horizonte",
+    "state": "MG",
+    "founded": 1908,
+    "stadium": "Arena MRV",
+    "stadiumCapacity": 46000,
+    "colors": {
+      "primary": "#000000",
+      "secondary": "#FFFFFF"
+    }
+  },
+  "squad": [
+    {
+      "name": "Gabriel Delfim",
+      "shirtNumber": 1,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Idade/data de nascimento divergem entre fontes (estimativa entre 21-24 anos); não confirmada com data exata."
+    },
+    {
+      "name": "Everson",
+      "shirtNumber": 22,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1991,
+      "age": 35,
+      "notes": "Idade divergiu entre fontes (estimativa entre 33-36 anos); não confirmada com data exata."
+    },
+    {
+      "name": "Robert",
+      "shirtNumber": 31,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": "Idade aproximada, data exata não confirmada."
+    },
+    {
+      "name": "Pedro Cobra",
+      "shirtNumber": 46,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Idade aproximada, data exata não confirmada."
+    },
+    {
+      "name": "Léo Duarte",
+      "shirtNumber": 3,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": "Recém-contratado como agente livre em 01/07/2026, ex-İstanbul Başakşehir."
+    },
+    {
+      "name": "Ruan Tressoldi",
+      "shirtNumber": 4,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Recém-contratado em 01/07/2026 (~€3,5M), ex-Sassuolo."
+    },
+    {
+      "name": "Lyanco",
+      "shirtNumber": 13,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Vitor Hugo",
+      "shirtNumber": 14,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1991,
+      "age": 35,
+      "notes": "Recém-contratado em 09/01/2026, ex-Bahia. Distinto de outro jogador de nome semelhante 'Victor Hugo' (meio-campista, camisa 30) no mesmo elenco."
+    },
+    {
+      "name": "Vitão",
+      "shirtNumber": 40,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base."
+    },
+    {
+      "name": "Rômulo",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Confiança baixa: aparece apenas no Transfermarkt sem confirmação cruzada de outra fonte; número de camisa não confirmado."
+    },
+    {
+      "name": "Natanael",
+      "shirtNumber": 2,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Idade estimada por falta de fonte pública confiável (lateral jovem, reserva)."
+    },
+    {
+      "name": "Ángelo Preciado",
+      "shirtNumber": 23,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "ECU",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Recém-contratado em 16/01/2026 (~€5M), ex-Sparta Praga."
+    },
+    {
+      "name": "Kauã Pascini",
+      "shirtNumber": 36,
+      "position": "LD",
+      "secondaryPositions": [
+        "LE"
+      ],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Formado na base do clube; fonte indica que pode atuar em ambas as laterais."
+    },
+    {
+      "name": "Renan Lodi",
+      "shirtNumber": 6,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Contratado como agente livre em 01/01/2026, primeiro reforço do clube no ano."
+    },
+    {
+      "name": "Alexsander",
+      "shirtNumber": 5,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Fred",
+      "shirtNumber": 7,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": "Recém-contratado em 14/08/2026 (~€2M), ex-Fenerbahçe."
+    },
+    {
+      "name": "Maycon",
+      "shirtNumber": 8,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Contratado como agente livre em 13/01/2026, ex-Shakhtar Donetsk."
+    },
+    {
+      "name": "Alan Franco",
+      "shirtNumber": 21,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "ECU",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Tomás Pérez",
+      "shirtNumber": 25,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Gustavo Scarpa",
+      "shirtNumber": 10,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1994,
+      "age": 32,
+      "notes": ""
+    },
+    {
+      "name": "Bernard",
+      "shirtNumber": 11,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 33,
+      "notes": "Fonte lista genericamente como meio-campista/atacante; pode atuar como ponta."
+    },
+    {
+      "name": "Kevin Castaño",
+      "shirtNumber": 15,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 2000,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Igor Gomes",
+      "shirtNumber": 17,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Reinier",
+      "shirtNumber": 19,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Patrick",
+      "shirtNumber": 20,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Victor Hugo",
+      "shirtNumber": 30,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Recém-contratado em 18/01/2026 (~€2,15M), ex-Flamengo. Distinto do zagueiro de nome semelhante 'Vitor Hugo' (camisa 14) no mesmo elenco."
+    },
+    {
+      "name": "Índio",
+      "shirtNumber": 38,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Nome de registro Hendel. Formado na base; posição específica não detalhada pela fonte."
+    },
+    {
+      "name": "Mamady Cissé",
+      "shirtNumber": 39,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "GUI",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem; status de registro no profissional não totalmente confirmado. Posição específica não detalhada pela fonte."
+    },
+    {
+      "name": "Mateo Cassierra",
+      "shirtNumber": 9,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Recém-contratado em 23/01/2026 (~€8M), ex-Zenit São Petersburgo."
+    },
+    {
+      "name": "Thiago Borbas",
+      "shirtNumber": 18,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Alan Minda",
+      "shirtNumber": 27,
+      "position": "PD",
+      "secondaryPositions": [
+        "CA"
+      ],
+      "nationality": "ECU",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Recém-contratado em 14/01/2026 (~€7M), ex-Cercle Brugge. Fonte cita atuação tanto como ponta quanto centroavante."
+    },
+    {
+      "name": "Tomás Cuello",
+      "shirtNumber": 28,
+      "position": "MEA",
+      "secondaryPositions": [
+        "CA"
+      ],
+      "nationality": "ARG",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": "Fonte cita atuação tanto como meia-atacante quanto centroavante."
+    },
+    {
+      "name": "Cauã Soares",
+      "shirtNumber": 29,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Formado na base do clube."
+    },
+    {
+      "name": "Dudu",
+      "shirtNumber": 92,
+      "position": "PD",
+      "secondaryPositions": [
+        "CA"
+      ],
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": "Fonte cita atuação tanto como ponta quanto centroavante."
+    }
+  ],
+  "sourceNotes": "Coleta em 27/08/2026, em duas rodadas. Primeira rodada: site oficial atletico.com.br, Transfermarkt (transfermarkt.us/atletico-mineiro/kader/verein/330) e Wikipédia em português, que renderam números de camisa, posições gerais e nacionalidades para 35 jogadores, mas sem datas de nascimento para a maioria. Segunda rodada (busca focada): datas de nascimento completas obtidas via perfis individuais do Transfermarkt para 28 jogadores (alta confiança, mas não recruzadas individualmente com uma segunda fonte para todos); idades dos 4 goleiros e do Vitão mantidas como estimativas aproximadas da primeira rodada (sem data exata confirmada), e Natanael segue sem data de nascimento encontrada em nenhuma fonte. Mateus José 'Iseppe' (camisa 48, meio-campo, formado na base) foi EXCLUÍDO do elenco por haver indício (Galo Digital, histórico Soccerway) de que estaria emprestado ao Nacional da Ilha da Madeira (Portugal) desde junho/2026 - não confirmado com certeza suficiente para incluí-lo como parte do elenco profissional ativo do Atlético-MG neste momento. Rômulo (zagueiro) incluído com confiança baixa (citado apenas no Transfermarkt, sem número de camisa confirmado). Posições de vários meio-campistas/atacantes (Bernard, Índio, Mamady Cissé, Alan Minda, Tomás Cuello, Dudu, Kauã Pascini) não foram detalhadas com precisão por posição específica nas fontes e foram codificadas com o código mais genérico plausível, com nota de incerteza. Cores oficiais (preto e branco) e capacidade da Arena MRV (~46.000) obtidas da Wikipédia/site oficial; códigos hexadecimais são estimativa de identidade visual comum, não confirmação de código oficial do clube."
+}

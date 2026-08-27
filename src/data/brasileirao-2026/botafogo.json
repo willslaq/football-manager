@@ -1,0 +1,381 @@
+{
+  "club": {
+    "id": "botafogo",
+    "name": "Botafogo de Futebol e Regatas",
+    "shortName": "BOT",
+    "city": "Rio de Janeiro",
+    "state": "RJ",
+    "founded": 1904,
+    "stadium": "Estádio Olímpico Nilton Santos (Engenhão)",
+    "stadiumCapacity": 46831,
+    "colors": {
+      "primary": "#000000",
+      "secondary": "#FFFFFF"
+    }
+  },
+  "squad": [
+    {
+      "name": "Gabriel Batista",
+      "shirtNumber": 12,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Warleson",
+      "shirtNumber": 17,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Cristhian Loor",
+      "shirtNumber": 40,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "ECU",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Ano de nascimento estimado a partir da idade informada pela fonte."
+    },
+    {
+      "name": "Vitinho",
+      "shirtNumber": 2,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Mateo Ponte",
+      "shirtNumber": 4,
+      "position": "LD",
+      "secondaryPositions": [
+        "ZAG"
+      ],
+      "nationality": "URU",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Fonte descreve como lateral-direito/zagueiro."
+    },
+    {
+      "name": "Kadu",
+      "shirtNumber": 42,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": "Jovem da base recém-registrado no profissional."
+    },
+    {
+      "name": "Alex Telles",
+      "shirtNumber": 13,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 33,
+      "notes": ""
+    },
+    {
+      "name": "Marçal",
+      "shirtNumber": 21,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1989,
+      "age": 37,
+      "notes": ""
+    },
+    {
+      "name": "Caio Roque",
+      "shirtNumber": 27,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Idade estimada por falta de fonte pública confiável (lateral jovem, reserva)."
+    },
+    {
+      "name": "Paulinho",
+      "shirtNumber": 29,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Jhoan Hernández",
+      "shirtNumber": 67,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Cedido por empréstimo; ano de nascimento estimado a partir da idade informada."
+    },
+    {
+      "name": "Ythallo",
+      "shirtNumber": 3,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Chegou do Toronto FC II."
+    },
+    {
+      "name": "Ferraresi",
+      "shirtNumber": 5,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "VEN",
+      "birthYear": 1998,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Anthony",
+      "shirtNumber": 26,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Kaio Pantaleão",
+      "shirtNumber": 31,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Lucas Monzón",
+      "shirtNumber": 33,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2001,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Justino",
+      "shirtNumber": 34,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base recém-registrado no profissional."
+    },
+    {
+      "name": "Kawan",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Retorno de empréstimo; número de camisa não confirmado nas fontes consultadas; ano de nascimento estimado a partir da idade."
+    },
+    {
+      "name": "Danilo",
+      "shirtNumber": 8,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": "Maior valor de mercado do elenco segundo Transfermarkt."
+    },
+    {
+      "name": "Allan",
+      "shirtNumber": 25,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": ""
+    },
+    {
+      "name": "Wallace Davi",
+      "shirtNumber": 55,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base; ano de nascimento estimado a partir da idade informada."
+    },
+    {
+      "name": "Huguinho",
+      "shirtNumber": 75,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base."
+    },
+    {
+      "name": "Edenilson",
+      "shirtNumber": 88,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1989,
+      "age": 36,
+      "notes": ""
+    },
+    {
+      "name": "Domingos Andrade",
+      "shirtNumber": 91,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "ANG",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    },
+    {
+      "name": "Cristian Medina",
+      "shirtNumber": 6,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Montoro",
+      "shirtNumber": 10,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "Jordan Barrera",
+      "shirtNumber": 14,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Fonte descreve genericamente como 'meia'; posição específica incerta."
+    },
+    {
+      "name": "Santi Rodríguez",
+      "shirtNumber": 23,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Júnior Santos",
+      "shirtNumber": 7,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1994,
+      "age": 31,
+      "notes": "Fonte indica cedido por empréstimo a outro clube; status atual no elenco não totalmente confirmado. Posição genérica 'atacante' na fonte."
+    },
+    {
+      "name": "Danilo Pereira",
+      "shirtNumber": 9,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 26,
+      "notes": "Emprestado pelo Rangers FC (Escócia). Posição genérica 'atacante' na fonte."
+    },
+    {
+      "name": "Matheus Martins",
+      "shirtNumber": 11,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Fonte descreve genericamente como 'atacante'; pode atuar como ponta."
+    },
+    {
+      "name": "Arthur Cabral",
+      "shirtNumber": 19,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Kadir",
+      "shirtNumber": 37,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "PAN",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Posição genérica 'atacante' na fonte; pode atuar como ponta."
+    },
+    {
+      "name": "Kauan Toledo",
+      "shirtNumber": 59,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base."
+    },
+    {
+      "name": "Lucas Villalba",
+      "shirtNumber": 77,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": "Chegou do Nacional (URU)."
+    },
+    {
+      "name": "Lucas Emanuel",
+      "shirtNumber": 79,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2009,
+      "age": 17,
+      "notes": "Jovem da base, categoria sub-20 recém-registrado no profissional."
+    }
+  ],
+  "sourceNotes": "Coleta em 27/08/2026. Fontes cruzadas: site oficial (botafogo.com.br/elenco/futebol), Predefinição de elenco da Wikipédia em português, e Transfermarkt (transfermarkt.us/botafogofr). Número de camisa e nome batido entre site oficial e Wikipédia para 35 jogadores; Kawan (zagueiro) citado apenas pelo Transfermarkt sem número de camisa confirmado, incluído mesmo assim por ser retorno de empréstimo ao elenco. Um nome adicional (Francisco das Chagas Soares dos Santos) apareceu em uma listagem do site oficial sem vínculo claro a um número de camisa e não foi incluído por falta de confirmação cruzada. Datas de nascimento completas obtidas para a maioria via site oficial; para ~8 jogadores (Caio Roque, Wallace Davi, Jhoan Hernández, Cristhian Loor, Kawan, entre outros) só havia idade aproximada do Transfermarkt, então o ano de nascimento foi estimado a partir da idade e sinalizado em notes. Capacidade do estádio Nilton Santos varia entre fontes (41.893 a 46.831); usado 46.831 (Wikipédia) como capacidade nominal de referência."
+}

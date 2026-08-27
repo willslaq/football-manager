@@ -1,0 +1,157 @@
+/*
+ * Design system — "Matchday": túnel de vestiário / gramado sob refletores.
+ * Dark é a identidade primária do produto; light é uma variante completa,
+ * não um segundo pensamento. Componentes só devem usar estas variáveis —
+ * nunca cores literais — para que os dois temas continuem consistentes.
+ */
+
+:root {
+  /* Cor — dark (padrão) */
+  --ink: #0a0e14;
+  --surface: #131a24;
+  --surface-2: #1b2430;
+  --pitch: #2fd968;
+  --pitch-strong: #22c55e;
+  --pitch-ink: #06210f;
+  --floodlight: #f4b740;
+  --floodlight-ink: #2a1c02;
+  --chalk: #edf2f0;
+  --mist: #8b98a5;
+  --line: rgb(237 242 240 / 10%);
+  --danger: #f2715a;
+  --danger-ink: #2a0d06;
+
+  /* Tipografia */
+  --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.75rem;
+  --text-4xl: 3.75rem;
+
+  /* Espaçamento (base 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-full: 999px;
+
+  --container: 88rem;
+  /** Medida de leitura confortável para blocos de texto corrido, independente da largura do container. */
+  --measure: 34rem;
+
+  /* Curvas de easing — nunca usar ease-in em UI (atrasa o momento que o usuário está observando). */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --ink: #f5f8f5;
+    --surface: #ffffff;
+    --surface-2: #eef2ee;
+    --pitch: #1c9a4c;
+    --pitch-strong: #16803c;
+    --pitch-ink: #eafcf1;
+    --floodlight: #a86a0a;
+    --floodlight-ink: #fdf3e0;
+    --chalk: #101713;
+    --mist: #5b6b63;
+    --line: rgb(16 23 19 / 10%);
+    --danger: #c8412a;
+    --danger-ink: #fdece8;
+
+    color-scheme: light;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ink);
+  color: var(--chalk);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pitch);
+  outline-offset: 2px;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pitch);
+}
+
+.error-banner {
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+}

@@ -1,0 +1,92 @@
+.new-career__back {
+  align-self: flex-start;
+}
+
+.new-career__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.new-career__title {
+  font-size: var(--text-3xl);
+  color: var(--chalk);
+}
+
+.new-career__meta {
+  font-size: var(--text-sm);
+  color: var(--mist);
+}
+
+.new-career__form-card {
+  max-width: 26rem;
+}
+
+.new-career__section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: var(--space-3);
+}
+
+.new-career__hint {
+  font-size: var(--text-sm);
+  color: var(--mist);
+}
+
+.club-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 18rem));
+  gap: var(--space-3);
+}
+
+.club-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.club-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.club-card__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.club-card__crest {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.club-card__identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.club-card__name {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--chalk);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.club-card__code {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  color: var(--mist);
+}

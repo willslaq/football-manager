@@ -1,0 +1,138 @@
+.standings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.standings__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.standings__title {
+  font-size: var(--text-2xl);
+  color: var(--chalk);
+}
+
+.standings__legend {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-size: var(--text-xs);
+  color: var(--mist);
+}
+
+.standings__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.standings__legend-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.card.standings__card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.standings__scroll {
+  overflow-x: auto;
+}
+
+.standings__table {
+  width: 100%;
+  min-width: 42rem;
+  border-collapse: collapse;
+}
+
+.standings__table th {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mist);
+  text-align: right;
+  padding: var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.standings__table th:nth-child(1),
+.standings__table th:nth-child(2) {
+  text-align: left;
+}
+
+.standings__table td {
+  padding: 0.55rem var(--space-2);
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+
+.standings__table td:nth-child(1),
+.standings__table td:nth-child(2) {
+  text-align: left;
+}
+
+.standings__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.standings__row--own {
+  background: color-mix(in srgb, var(--pitch) 8%, transparent);
+}
+
+.standings__row--own td {
+  font-weight: 700;
+}
+
+.standings__table td.standings__pos {
+  position: relative;
+  padding-left: var(--space-3);
+}
+
+.standings__pos::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  width: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--zone-color, transparent);
+}
+
+.standings__club {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.standings__crest {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.standings__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 12rem;
+}
+
+.standings__points {
+  font-weight: 800;
+  color: var(--chalk);
+}

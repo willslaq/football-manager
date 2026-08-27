@@ -1,0 +1,52 @@
+{
+  "id": "brasileirao-serie-a-2026",
+  "name": "Campeonato Brasileiro Série A 2026",
+  "season": {
+    "year": 2026,
+    "startDate": "2026-01-28",
+    "endDate": "2026-12-02"
+  },
+  "format": {
+    "type": "round-robin-double",
+    "teams": 20,
+    "rounds": 38,
+    "description": "Turno e returno: cada clube enfrenta todos os outros 19 clubes duas vezes (19 jogos de ida, 19 de volta)."
+  },
+  "points": {
+    "win": 3,
+    "draw": 1,
+    "loss": 0
+  },
+  "tiebreakers": [
+    "wins",
+    "goalDifference",
+    "goalsFor",
+    "headToHead",
+    "redCards",
+    "yellowCards",
+    "draw"
+  ],
+  "relegation": {
+    "spots": 4,
+    "positions": [17, 18, 19, 20],
+    "description": "Os 4 últimos colocados (17º ao 20º) são rebaixados para a Série B."
+  },
+  "continentalQualification": [
+    {
+      "competition": "Copa Libertadores 2027",
+      "stage": "group_stage",
+      "positions": [1, 2, 3, 4]
+    },
+    {
+      "competition": "Copa Libertadores 2027",
+      "stage": "preliminary_round",
+      "positions": [5]
+    },
+    {
+      "competition": "Copa Sul-Americana 2027",
+      "stage": "group_stage",
+      "positions": [6, 7, 8, 9, 10, 11]
+    }
+  ],
+  "sourceNotes": "Regras confirmadas via pesquisa web em 2026-08-27 (Wikipédia pt-BR, Terra Esportes). Fora do MVP (M2): a máquina de vagas continentais é registrada aqui apenas como referência de domínio; não será usada em lógica de jogo antes da Fase 2 do SRS."
+}

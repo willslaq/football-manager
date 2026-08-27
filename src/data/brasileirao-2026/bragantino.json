@@ -1,0 +1,489 @@
+{
+  "club": {
+    "id": "bragantino",
+    "name": "Red Bull Bragantino",
+    "shortName": "RBB",
+    "city": "Bragança Paulista",
+    "state": "SP",
+    "founded": 1928,
+    "stadium": "Estádio Nabi Abi Chedid (Nabizão)",
+    "stadiumCapacity": 17128,
+    "colors": {
+      "primary": "#e4022a",
+      "secondary": "#ffffff"
+    }
+  },
+  "squad": [
+    {
+      "name": "Cleiton",
+      "shirtNumber": 1,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Tiago Volpi",
+      "shirtNumber": 18,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1991,
+      "age": 35,
+      "notes": "Reforço de 2026, ex-Grêmio"
+    },
+    {
+      "name": "Fabrício",
+      "shirtNumber": 37,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "João Gabriel Montes Madeira",
+      "shirtNumber": 50,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base. Idade estimada por falta de fonte pública confiável (goleiro da base)."
+    },
+    {
+      "name": "Gustavo Reis",
+      "shirtNumber": 56,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Guzmán Rodríguez",
+      "shirtNumber": 2,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Eduardo Santos",
+      "shirtNumber": 3,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Alix Vinicius",
+      "shirtNumber": 4,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Vanderlan",
+      "shirtNumber": 12,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    },
+    {
+      "name": "Pedro Henrique",
+      "shirtNumber": 14,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Gustavo Marques",
+      "shirtNumber": 16,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Posição defensiva genérica; especialidade não confirmada pela fonte"
+    },
+    {
+      "name": "Agustín Sant'Anna",
+      "shirtNumber": 23,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Juninho Capixaba",
+      "shirtNumber": 29,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "José Hurtado",
+      "shirtNumber": 34,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "ECU",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Breno de Moraes",
+      "shirtNumber": 46,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Caue Nascimento Santos",
+      "shirtNumber": 51,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Ryan Augusto",
+      "shirtNumber": 52,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Edgar González",
+      "shirtNumber": 53,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Weimar Vivas",
+      "shirtNumber": 54,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Fabinho",
+      "shirtNumber": 5,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Gabriel",
+      "shirtNumber": 6,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": "Posição genérica; função exata não confirmada pela fonte"
+    },
+    {
+      "name": "Ramires",
+      "shirtNumber": 7,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": "Posição genérica ('meio-campo'); função exata não confirmada"
+    },
+    {
+      "name": "Ignacio Sosa",
+      "shirtNumber": 15,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Rodriguinho",
+      "shirtNumber": 20,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Reforço de 2026, ex-São Paulo"
+    },
+    {
+      "name": "Lucas Barbosa",
+      "shirtNumber": 21,
+      "position": "PE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": "Lado do campo inferido; fonte era genérica ('meio-campo')"
+    },
+    {
+      "name": "Gustavinho",
+      "shirtNumber": 22,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Bruno Conceição",
+      "shirtNumber": 25,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Davi Gomes",
+      "shirtNumber": 27,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Ignacio Laquintana",
+      "shirtNumber": 33,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Matheus Fernandes",
+      "shirtNumber": 35,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Yuri",
+      "shirtNumber": 41,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Luis Gustavo",
+      "shirtNumber": 49,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Chrystian Delfino",
+      "shirtNumber": 55,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Marcelinho Braz",
+      "shirtNumber": 57,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Gabriel Lopes",
+      "shirtNumber": 58,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Marquinhos",
+      "shirtNumber": 62,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Número de camisa duplicado com Vini Krygsman em uma das fontes"
+    },
+    {
+      "name": "Vini Krygsman",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base; número de camisa 62 tinha conflito de fonte com Marquinhos — removido por falta de confirmação (mantido em Marquinhos)."
+    },
+    {
+      "name": "Eduardo Sasha",
+      "shirtNumber": 8,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": ""
+    },
+    {
+      "name": "Isidro Pitta",
+      "shirtNumber": 9,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Artilheiro do clube na Série A 2026"
+    },
+    {
+      "name": "Fernando",
+      "shirtNumber": 11,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Vinicinho",
+      "shirtNumber": 17,
+      "position": "PE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Costuma atuar como ponta esquerda"
+    },
+    {
+      "name": "Bruno Gonçalves",
+      "shirtNumber": 19,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    },
+    {
+      "name": "Yuri Leles",
+      "shirtNumber": 28,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Henry Mosquera",
+      "shirtNumber": 30,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "José Herrera",
+      "shirtNumber": 32,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    },
+    {
+      "name": "Filipe",
+      "shirtNumber": 59,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Jhuan Nunes",
+      "shirtNumber": 67,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base"
+    }
+  ],
+  "sourceNotes": "Coleta em 27/08/2026. Fonte principal: ESPN Brasil (elenco/_/id/6079), com idades e nacionalidades para praticamente todo o elenco. Cruzamento com reportagem da Itatiaia sobre reforços/saídas de 2026 (confirma chegadas de Tiago Volpi, Rodriguinho e Nacho/Ignacio Sosa, e saídas de Jhon Jhon e Thiago Borbas — este último não constava mais na lista, consistente). O jogador uruguaio de meio-campo citado como reforço na reportagem ('Nacho Sosa', ex-Peñarol) foi identificado como 'Ignacio Sosa' (#15) na lista da ESPN. Idades convertidas a partir de 'idade em anos' informada pela fonte (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano. Muitas posições de meio-campistas e defensores jovens/reservas foram registradas de forma genérica (MC/ZAG) pois a fonte só indicava a categoria ampla ('meio-campista'/'defensor'), sem especificar função exata — sinalizado nas notas individuais. O elenco listado (47 atletas) é grande por incluir numerosos jovens da base com números altos (40+) já registrados no departamento profissional; não foi possível confirmar de forma independente cada um desses nomes em uma segunda fonte."
+}

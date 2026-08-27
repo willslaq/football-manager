@@ -1,0 +1,130 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink);
+}
+
+.app-shell__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 0 clamp(1rem, 4vw, 3rem);
+  height: 4rem;
+}
+
+.app-shell__brand {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  letter-spacing: 0.03em;
+  color: var(--chalk);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.app-shell__brand span {
+  color: var(--pitch);
+}
+
+.app-shell__tabs {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  height: 100%;
+}
+
+.app-shell__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.app-shell__tab {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mist);
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.app-shell__tab:hover {
+  color: var(--chalk);
+}
+
+.app-shell__tab--active {
+  color: var(--chalk);
+  border-bottom-color: var(--pitch);
+}
+
+.app-shell__club {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.app-shell__club-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.25;
+}
+
+.app-shell__club-name {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--chalk);
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell__club-round {
+  font-size: var(--text-xs);
+  color: var(--mist);
+}
+
+.app-shell__crest {
+  width: 2.25rem;
+  height: 2.25rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.app-shell__content {
+  position: relative;
+  flex: 1;
+  background:
+    radial-gradient(55% 38% at 50% -10%, color-mix(in srgb, var(--pitch) 16%, transparent), transparent 70%),
+    radial-gradient(34% 26% at 92% 0%, color-mix(in srgb, var(--floodlight) 10%, transparent), transparent 70%),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--chalk) 3%, transparent) 0,
+      color-mix(in srgb, var(--chalk) 3%, transparent) 1px,
+      transparent 1px,
+      transparent 64px
+    ),
+    var(--ink);
+}
+
+.app-shell__container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-6) clamp(1rem, 4vw, 3rem) var(--space-8);
+}

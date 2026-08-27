@@ -1,0 +1,449 @@
+{
+  "club": {
+    "id": "remo",
+    "name": "Remo",
+    "shortName": "REM",
+    "city": "Belém",
+    "state": "PA",
+    "founded": 1905,
+    "stadium": "Estádio Baenão (Banpará Baenão)",
+    "stadiumCapacity": 13792,
+    "colors": {
+      "primary": "#0033a0",
+      "secondary": "#ffffff"
+    }
+  },
+  "squad": [
+    {
+      "name": "Marcelo Rangel",
+      "shirtNumber": 88,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1988,
+      "age": 38,
+      "notes": "Líder do elenco"
+    },
+    {
+      "name": "Ygor Vinhas",
+      "shirtNumber": 94,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1994,
+      "age": 32,
+      "notes": ""
+    },
+    {
+      "name": "Leo Lang",
+      "shirtNumber": 30,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "João Victor",
+      "shirtNumber": 12,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Caio",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": "Posição genérica, dados limitados"
+    },
+    {
+      "name": "Jorge",
+      "shirtNumber": 6,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": "Posição genérica ('defensor'); especialidade não confirmada"
+    },
+    {
+      "name": "Pedro",
+      "shirtNumber": 2,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": "Lado do campo inferido pela numeração; não confirmado explicitamente pela fonte"
+    },
+    {
+      "name": "Cristian Tassano",
+      "shirtNumber": 17,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": "Posição genérica; especialidade (zagueiro/lateral) não confirmada"
+    },
+    {
+      "name": "Rafael Castro",
+      "shirtNumber": 38,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Nathan",
+      "shirtNumber": 23,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Lado do campo inferido; há mais dois jogadores chamados 'Nathan' no elenco (meio-campo, #8 e #48) — possível confusão de homônimos na fonte"
+    },
+    {
+      "name": "Kawan",
+      "shirtNumber": 54,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Jovem, posição genérica"
+    },
+    {
+      "name": "Kayky",
+      "shirtNumber": 27,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": "Lado do campo inferido; posição não confirmada explicitamente"
+    },
+    {
+      "name": "Klaus",
+      "shirtNumber": 4,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1994,
+      "age": 32,
+      "notes": ""
+    },
+    {
+      "name": "Alan Rodríguez",
+      "shirtNumber": 21,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Luan (Martins Gonçalves)",
+      "shirtNumber": 5,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": "Numeração (5) é atipicamente usada por volantes no Brasil, mas a fonte classifica o jogador como defensor"
+    },
+    {
+      "name": "Savio",
+      "shirtNumber": 16,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": "Lado do campo inferido; não confirmado explicitamente"
+    },
+    {
+      "name": "Marcelinho",
+      "shirtNumber": 79,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Caio Vinicius",
+      "shirtNumber": 34,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Marllon",
+      "shirtNumber": 13,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": "Zagueiro experiente citado como titular por reportagem da Itatiaia; não constava na lista da ESPN consultada. Idade estimada por falta de fonte pública confiável (descrito como experiente)."
+    },
+    {
+      "name": "Tico",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem, posição genérica"
+    },
+    {
+      "name": "Dodô",
+      "shirtNumber": 31,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Nathan",
+      "shirtNumber": 8,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": "Homônimo de outros dois jogadores chamados Nathan no elenco (#23 defesa, #48 meio-campo); distinguir por número"
+    },
+    {
+      "name": "Madison",
+      "shirtNumber": 98,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Yago",
+      "shirtNumber": 28,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Nathan",
+      "shirtNumber": 48,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": "Jovem; homônimo de outros dois jogadores chamados Nathan no elenco (#23 defesa, #8 meio-campo); distinguir por número"
+    },
+    {
+      "name": "Freitas",
+      "shirtNumber": 35,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Darilson",
+      "shirtNumber": 91,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Victor Cantillo",
+      "shirtNumber": 20,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 1994,
+      "age": 32,
+      "notes": ""
+    },
+    {
+      "name": "Reynaldo",
+      "shirtNumber": 29,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Régis",
+      "shirtNumber": 22,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": "Posição genérica ('meio-campo')"
+    },
+    {
+      "name": "Panagiotis Tachtsidis",
+      "shirtNumber": 77,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "GRE",
+      "birthYear": 1991,
+      "age": 35,
+      "notes": "Reforço de 2026, ex-futebol italiano"
+    },
+    {
+      "name": "Pedro Castro",
+      "shirtNumber": 11,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": "Posição genérica ('meio-campo')"
+    },
+    {
+      "name": "Giovanni Confreste",
+      "shirtNumber": 7,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Posição genérica"
+    },
+    {
+      "name": "Zé Ricardo",
+      "shirtNumber": null,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Reforço confirmado para 2026, ex-Shonan Bellmare (Japão). Idade estimada por falta de fonte pública confiável (reforço vindo do exterior)."
+    },
+    {
+      "name": "Eduardo",
+      "shirtNumber": 39,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Jaderson",
+      "shirtNumber": 10,
+      "position": "PD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": "Classificado como atacante pela fonte, mas geralmente atua como ponta"
+    },
+    {
+      "name": "Janderson",
+      "shirtNumber": 99,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "João Pedro",
+      "shirtNumber": 45,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "GUI",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Nacionalidade informada pela fonte apenas como 'Guiné'; não foi possível confirmar se Guiné ou Guiné-Bissau"
+    },
+    {
+      "name": "Nicolás Ferreira",
+      "shirtNumber": 25,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Marrony",
+      "shirtNumber": 26,
+      "position": "PE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Costuma atuar como ponta esquerda"
+    },
+    {
+      "name": "Diego Hernández",
+      "shirtNumber": 33,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": "Reforço confirmado para 2026"
+    },
+    {
+      "name": "Pedro Rocha",
+      "shirtNumber": 32,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Alef Manga",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Reforço confirmado para 2026, ex-Avaí. Idade estimada por falta de fonte pública confiável (reforço recente de outro clube da Série A/B)."
+    }
+  ],
+  "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/4936, base principal com idades, alturas e nacionalidades), reportagens do DOL e Itatiaia sobre numeração oficial e reforços de 2026 do Remo para a Série A (confirmam contratações de Alef Manga, Zé Ricardo, Diego Hernández e Panagiotis Tachtsidis, e citam o zagueiro Marllon como titular de camisa 13), e Wikipédia em português (Clube do Remo) para dados institucionais do clube (fundação, estádio, cores). O Remo manda a maior parte de seus jogos no Estádio Baenão (13.792 lugares), mas também utiliza o Mangueirão (53.617 lugares) para partidas de maior público; optou-se pelo Baenão como estádio principal por ser o mando de campo padrão do clube. Idades convertidas a partir de 'idade em anos' informada pela fonte (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano. Há três jogadores chamados 'Nathan' no elenco listados pela ESPN (defesa #23, meio-campo #8 e #48) — mantidos como entradas separadas, mas sinalizados como possível fonte de confusão/erro da fonte original. Técnico da equipe: Léo Condé (substituiu Juan Carlos Osorio em março/2026). Elenco listado com 43 atletas; alguns reforços recentes (Alef Manga, Zé Ricardo, Marllon) foram incluídos com dados parciais por não constarem na lista principal da ESPN, mas terem confirmação em reportagens específicas do clube."
+}

@@ -1,0 +1,529 @@
+{
+  "club": {
+    "id": "palmeiras",
+    "name": "Palmeiras",
+    "shortName": "PAL",
+    "city": "São Paulo",
+    "state": "SP",
+    "founded": 1914,
+    "stadium": "Nubank Parque (ex-Allianz Parque)",
+    "stadiumCapacity": 43713,
+    "colors": {
+      "primary": "#006437",
+      "secondary": "#ffffff"
+    }
+  },
+  "squad": [
+    {
+      "name": "Carlos Miguel",
+      "shirtNumber": 1,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Marcelo Lomba",
+      "shirtNumber": 14,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1987,
+      "age": 39,
+      "notes": ""
+    },
+    {
+      "name": "Kaique",
+      "shirtNumber": 21,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    },
+    {
+      "name": "Kauan Lima",
+      "shirtNumber": 72,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "Luiz Fernando",
+      "shirtNumber": 73,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Bruno",
+      "shirtNumber": null,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Sem número de camisa confirmado pelas fontes"
+    },
+    {
+      "name": "Alexander Barboza",
+      "shirtNumber": 2,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Bruno Fuchs",
+      "shirtNumber": 3,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Agustín Giay",
+      "shirtNumber": 4,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Jefté",
+      "shirtNumber": 6,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Khellven",
+      "shirtNumber": 12,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Gustavo Gómez",
+      "shirtNumber": 15,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": "Capitão da equipe"
+    },
+    {
+      "name": "Joaquín Piquerez",
+      "shirtNumber": 22,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Murilo",
+      "shirtNumber": 26,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Luiz Benedetti",
+      "shirtNumber": 43,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Posição defensiva genérica; especialidade (zagueiro/lateral) não confirmada pela fonte"
+    },
+    {
+      "name": "Mohamed Koné (Koné Zié Mohamed)",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "CIV",
+      "birthYear": 2007,
+      "age": 18,
+      "notes": "Zagueiro marfinense contratado para a base/profissional em 2026, apto desde janeiro/2026"
+    },
+    {
+      "name": "Derick",
+      "shirtNumber": 46,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Luis Saboia",
+      "shirtNumber": 52,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Luccas Ramon",
+      "shirtNumber": 53,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2009,
+      "age": 17,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Thiago Soares",
+      "shirtNumber": 54,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Arthur Gabriel",
+      "shirtNumber": 56,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "André Lucas",
+      "shirtNumber": 66,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Felipe Anderson",
+      "shirtNumber": 7,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": "Fonte genérica indicava apenas 'meio-campo'; jogador também atua como ponta"
+    },
+    {
+      "name": "Andreas Pereira",
+      "shirtNumber": 8,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Jhon Arias",
+      "shirtNumber": 11,
+      "position": "PD",
+      "secondaryPositions": [],
+      "nationality": "COL",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Atua principalmente como ponta direita"
+    },
+    {
+      "name": "Marlon Freitas",
+      "shirtNumber": 17,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Maurício",
+      "shirtNumber": 18,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Lucas Evangelista",
+      "shirtNumber": 30,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Emiliano Martínez",
+      "shirtNumber": 32,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Allan",
+      "shirtNumber": 40,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Número/posição conforme predefinição da Wikipédia; uma fonte (ESPN) listava um jogador diferente ('Allan Elias', atacante jovem) sob o mesmo número 40 — possível erro/desatualização de uma das fontes"
+    },
+    {
+      "name": "Erick Machado",
+      "shirtNumber": 45,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Victor Gabriel",
+      "shirtNumber": 47,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Larson",
+      "shirtNumber": 48,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Luis Felipe",
+      "shirtNumber": 50,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Rafael Coutinho",
+      "shirtNumber": 55,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base, posição genérica; número 55 também atribuído a 'Isaac' por uma das fontes"
+    },
+    {
+      "name": "João Paulo",
+      "shirtNumber": 57,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Ruan Yago",
+      "shirtNumber": 58,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2009,
+      "age": 17,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Guilherme Nogueira",
+      "shirtNumber": 60,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Jovem da base, posição genérica"
+    },
+    {
+      "name": "Erick Belé",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Citado como inscrito no Brasileirão 2026 por reportagem (Lance.com.br). Idade estimada por falta de fonte pública confiável (jovem da base sem camisa/idade confirmada)."
+    },
+    {
+      "name": "Luis Pacheco",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Citado como inscrito no Brasileirão 2026 por reportagem (Lance.com.br). Idade estimada por falta de fonte pública confiável (jovem da base sem camisa/idade confirmada)."
+    },
+    {
+      "name": "Vitor Roque",
+      "shirtNumber": 9,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Paulinho",
+      "shirtNumber": 10,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Ramón Sosa",
+      "shirtNumber": 19,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": "Fonte genérica 'atacante'; pode também atuar como ponta"
+    },
+    {
+      "name": "Flaco López",
+      "shirtNumber": 42,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": "Nome de registro José Manuel López"
+    },
+    {
+      "name": "Riquelme",
+      "shirtNumber": 37,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "Heittor",
+      "shirtNumber": 39,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Eduardo",
+      "shirtNumber": 41,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2010,
+      "age": 16,
+      "notes": "Jovem da base, 16 anos"
+    },
+    {
+      "name": "Juan Gabriel",
+      "shirtNumber": 49,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Kauã",
+      "shirtNumber": 61,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2009,
+      "age": 17,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Felipe Teresa",
+      "shirtNumber": 71,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base"
+    },
+    {
+      "name": "Miguel Cinoncelli Bilong",
+      "shirtNumber": 29,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Nacionalidade assumida como BRA (categoria de base do clube, sem indicação em contrário). Idade estimada por falta de fonte pública confiável (jovem da base)."
+    }
+  ],
+  "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/2029, base principal com idades e nacionalidades), predefinição de elenco da Wikipédia em português (Sociedade Esportiva Palmeiras, numeração de camisa, atualizada em 21/07/2026), reportagem do Lance! sobre a lista de inscritos no Brasileirão 2026, e buscas específicas para confirmar a nacionalidade de Mohamed Koné (Costa do Marfim) e o status de empréstimo de Raphael Veiga, Luighi e Bruno Rodrigues. Raphael Veiga, Luighi e Bruno Rodrigues foram EXCLUÍDOS do elenco listado por estarem emprestados a outros clubes (Veiga no América-MEX até dez/2026; Luighi e Bruno Rodrigues emprestados até 31/12/2026), portanto não fazem parte do elenco profissional em atividade no clube. Idades convertidas a partir de 'idade em anos' informada pelas fontes (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano, exceto Mohamed Koné (data de nascimento exata confirmada: 20/10/2007). Há uma divergência entre fontes quanto ao jogador de número 40 (Allan, volante, segundo a Wikipédia x 'Allan Elias', atacante, segundo a ESPN), registrada em notas. O elenco tem 52 atletas listados, o que é compatível com o perfil do Palmeiras de manter grande número de jovens da base com contrato profissional registrados no BID."
+}

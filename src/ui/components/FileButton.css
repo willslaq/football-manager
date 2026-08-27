@@ -1,0 +1,11 @@
+.file-button {
+  position: relative;
+  display: inline-flex;
+}
+
+.file-button__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}

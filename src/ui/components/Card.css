@@ -1,0 +1,25 @@
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.card--accent {
+  border-top: 3px solid var(--accent-color, var(--pitch));
+}
+
+.card--interactive {
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.card--interactive:hover {
+  border-color: var(--accent-color, var(--pitch));
+  background: var(--surface-2);
+}

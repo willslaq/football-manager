@@ -1,0 +1,1712 @@
+[
+  {
+    "round": 1,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "santos"
+      }
+    ]
+  },
+  {
+    "round": 2,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "mirassol"
+      }
+    ]
+  },
+  {
+    "round": 3,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "coritiba"
+      }
+    ]
+  },
+  {
+    "round": 4,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "internacional"
+      }
+    ]
+  },
+  {
+    "round": 5,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "fluminense"
+      }
+    ]
+  },
+  {
+    "round": 6,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "gremio"
+      }
+    ]
+  },
+  {
+    "round": 7,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "corinthians"
+      }
+    ]
+  },
+  {
+    "round": 8,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "bahia"
+      }
+    ]
+  },
+  {
+    "round": 9,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "atletico-mg"
+      }
+    ]
+  },
+  {
+    "round": 10,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "vitoria"
+      }
+    ]
+  },
+  {
+    "round": 11,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "vasco"
+      }
+    ]
+  },
+  {
+    "round": 12,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "botafogo"
+      }
+    ]
+  },
+  {
+    "round": 13,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "cruzeiro"
+      }
+    ]
+  },
+  {
+    "round": 14,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "bragantino"
+      }
+    ]
+  },
+  {
+    "round": 15,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "palmeiras"
+      }
+    ]
+  },
+  {
+    "round": 16,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "remo"
+      }
+    ]
+  },
+  {
+    "round": 17,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "athletico-pr"
+      }
+    ]
+  },
+  {
+    "round": 18,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "sao-paulo"
+      }
+    ]
+  },
+  {
+    "round": 19,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "flamengo"
+      }
+    ]
+  },
+  {
+    "round": 20,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "vitoria"
+      }
+    ]
+  },
+  {
+    "round": 21,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "vasco"
+      }
+    ]
+  },
+  {
+    "round": 22,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "atletico-mg"
+      }
+    ]
+  },
+  {
+    "round": 23,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "bahia"
+      }
+    ]
+  },
+  {
+    "round": 24,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "sao-paulo"
+      }
+    ]
+  },
+  {
+    "round": 25,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "coritiba"
+      }
+    ]
+  },
+  {
+    "round": 26,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "flamengo"
+      }
+    ]
+  },
+  {
+    "round": 27,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "internacional"
+      }
+    ]
+  },
+  {
+    "round": 28,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "santos"
+      }
+    ]
+  },
+  {
+    "round": 29,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "gremio"
+      }
+    ]
+  },
+  {
+    "round": 30,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "athletico-pr"
+      }
+    ]
+  },
+  {
+    "round": 31,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "bragantino"
+      }
+    ]
+  },
+  {
+    "round": 32,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "fluminense"
+      }
+    ]
+  },
+  {
+    "round": 33,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "botafogo"
+      }
+    ]
+  },
+  {
+    "round": 34,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "mirassol"
+      }
+    ]
+  },
+  {
+    "round": 35,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "palmeiras"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "chapecoense"
+      }
+    ]
+  },
+  {
+    "round": 36,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "corinthians"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "cruzeiro"
+      }
+    ]
+  },
+  {
+    "round": 37,
+    "matches": [
+      {
+        "homeTeamId": "fluminense",
+        "awayTeamId": "cruzeiro"
+      },
+      {
+        "homeTeamId": "botafogo",
+        "awayTeamId": "bahia"
+      },
+      {
+        "homeTeamId": "sao-paulo",
+        "awayTeamId": "remo"
+      },
+      {
+        "homeTeamId": "corinthians",
+        "awayTeamId": "gremio"
+      },
+      {
+        "homeTeamId": "mirassol",
+        "awayTeamId": "athletico-pr"
+      },
+      {
+        "homeTeamId": "atletico-mg",
+        "awayTeamId": "vasco"
+      },
+      {
+        "homeTeamId": "internacional",
+        "awayTeamId": "bragantino"
+      },
+      {
+        "homeTeamId": "coritiba",
+        "awayTeamId": "flamengo"
+      },
+      {
+        "homeTeamId": "vitoria",
+        "awayTeamId": "santos"
+      },
+      {
+        "homeTeamId": "chapecoense",
+        "awayTeamId": "palmeiras"
+      }
+    ]
+  },
+  {
+    "round": 38,
+    "matches": [
+      {
+        "homeTeamId": "flamengo",
+        "awayTeamId": "chapecoense"
+      },
+      {
+        "homeTeamId": "vasco",
+        "awayTeamId": "vitoria"
+      },
+      {
+        "homeTeamId": "santos",
+        "awayTeamId": "botafogo"
+      },
+      {
+        "homeTeamId": "palmeiras",
+        "awayTeamId": "coritiba"
+      },
+      {
+        "homeTeamId": "bragantino",
+        "awayTeamId": "fluminense"
+      },
+      {
+        "homeTeamId": "cruzeiro",
+        "awayTeamId": "internacional"
+      },
+      {
+        "homeTeamId": "gremio",
+        "awayTeamId": "mirassol"
+      },
+      {
+        "homeTeamId": "athletico-pr",
+        "awayTeamId": "sao-paulo"
+      },
+      {
+        "homeTeamId": "bahia",
+        "awayTeamId": "atletico-mg"
+      },
+      {
+        "homeTeamId": "remo",
+        "awayTeamId": "corinthians"
+      }
+    ]
+  }
+]

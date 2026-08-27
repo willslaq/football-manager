@@ -1,0 +1,25 @@
+.backdrop {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(60% 42% at 50% -8%, color-mix(in srgb, var(--pitch) 22%, transparent), transparent 70%),
+    radial-gradient(38% 30% at 88% 8%, color-mix(in srgb, var(--floodlight) 12%, transparent), transparent 70%),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--chalk) 3%, transparent) 0,
+      color-mix(in srgb, var(--chalk) 3%, transparent) 1px,
+      transparent 1px,
+      transparent 64px
+    ),
+    var(--ink);
+}
+
+.backdrop__container {
+  position: relative;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-8) clamp(1rem, 4vw, 4rem) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}

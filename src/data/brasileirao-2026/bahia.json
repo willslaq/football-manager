@@ -1,0 +1,381 @@
+{
+  "club": {
+    "id": "bahia",
+    "name": "Esporte Clube Bahia",
+    "shortName": "ECB",
+    "city": "Salvador",
+    "state": "BA",
+    "founded": 1931,
+    "stadium": "Arena Fonte Nova",
+    "stadiumCapacity": 50025,
+    "colors": {
+      "primary": "#0033A0",
+      "secondary": "#D2232A"
+    }
+  },
+  "squad": [
+    {
+      "name": "Ronaldo",
+      "shirtNumber": 1,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Guido Herrera",
+      "shirtNumber": 17,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": "Possui dupla cidadania argentina/italiana."
+    },
+    {
+      "name": "Léo Vieira",
+      "shirtNumber": 22,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1990,
+      "age": 35,
+      "notes": ""
+    },
+    {
+      "name": "Victor",
+      "shirtNumber": 61,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Confiança baixa: citado em apenas uma fonte adicional, dados não cruzados."
+    },
+    {
+      "name": "João Paulo",
+      "shirtNumber": 34,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": "Emprestado pelo Santos até dezembro/2026. Idade estimada por falta de fonte pública confiável (goleiro reserva/emprestado)."
+    },
+    {
+      "name": "Marco Moreno",
+      "shirtNumber": 3,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "ESP",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Kanu",
+      "shirtNumber": 4,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Santiago Ramos Mingo",
+      "shirtNumber": 21,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Possui dupla cidadania argentina/italiana."
+    },
+    {
+      "name": "David Duarte",
+      "shirtNumber": 33,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Luiz Gustavo",
+      "shirtNumber": 43,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base, promovido ao profissional."
+    },
+    {
+      "name": "Marcos Victor",
+      "shirtNumber": 44,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Fredi",
+      "shirtNumber": 83,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": "Jovem da base. Sobrenome divergente entre fontes (Lippert/Gomes) - não confirmado."
+    },
+    {
+      "name": "Luciano Juba",
+      "shirtNumber": 46,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Zé Guilherme",
+      "shirtNumber": 66,
+      "position": "LE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Iago Borduchi",
+      "shirtNumber": 25,
+      "position": "LE",
+      "secondaryPositions": [
+        "ALE"
+      ],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": "Fonte indica que atua amplamente também como ala. Idade diverge entre fontes (26-29)."
+    },
+    {
+      "name": "Román Gómez",
+      "shirtNumber": 31,
+      "position": "LD",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Caio Alexandre",
+      "shirtNumber": 8,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Nicolás Acevedo",
+      "shirtNumber": 5,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Erick",
+      "shirtNumber": 14,
+      "position": "VOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "Jean Lucas",
+      "shirtNumber": 6,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": "Vice-capitão do time."
+    },
+    {
+      "name": "Rodrigo Nestor",
+      "shirtNumber": 11,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "David Martins",
+      "shirtNumber": 63,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Confiança baixa: jovem da base citado em apenas uma fonte adicional. Idade estimada por falta de fonte pública confiável (jovem da base)."
+    },
+    {
+      "name": "Kauê Furquim",
+      "shirtNumber": 57,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Confiança baixa: jovem da base, posição diverge entre fontes (meio-campo/atacante). Idade estimada por falta de fonte pública confiável (jovem da base)."
+    },
+    {
+      "name": "Éverton Ribeiro",
+      "shirtNumber": 10,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1989,
+      "age": 37,
+      "notes": "Capitão do time."
+    },
+    {
+      "name": "Roger Gabriel",
+      "shirtNumber": 80,
+      "position": "MEA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Confiança baixa: citado em apenas uma fonte adicional. Número de camisa 80 também associado a outro jogador (Cauly) em outra fonte - possível conflito/realocação de número não resolvido."
+    },
+    {
+      "name": "Erick Pulga",
+      "shirtNumber": 16,
+      "position": "PE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Mateo Sanabria",
+      "shirtNumber": 23,
+      "position": "PE",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Possui dupla cidadania argentina/italiana."
+    },
+    {
+      "name": "Ruan Pablo",
+      "shirtNumber": 77,
+      "position": "PE",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, recém-promovido ao profissional."
+    },
+    {
+      "name": "Michel Araújo",
+      "shirtNumber": 15,
+      "position": "PD",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Ademir",
+      "shirtNumber": 7,
+      "position": "PD",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Cristian Olivera",
+      "shirtNumber": 99,
+      "position": "PD",
+      "secondaryPositions": [],
+      "nationality": "URU",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Conhecido como 'Kike' Olivera. Emprestado pelo Grêmio; atualmente no elenco do Bahia."
+    },
+    {
+      "name": "Alejo Véliz",
+      "shirtNumber": 9,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "ARG",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Willian José",
+      "shirtNumber": 12,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": "Possui dupla cidadania brasileira/espanhola."
+    },
+    {
+      "name": "Everaldo",
+      "shirtNumber": 27,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 1991,
+      "age": 35,
+      "notes": "Emprestado pelo Fluminense; atualmente no elenco do Bahia."
+    },
+    {
+      "name": "Dell",
+      "shirtNumber": 89,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "notes": "Jovem da base, recém-promovido ao profissional."
+    },
+    {
+      "name": "Caio Suassuna",
+      "shirtNumber": 90,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": "Confiança baixa: jovem da base citado em apenas uma fonte adicional. Idade estimada por falta de fonte pública confiável (jovem da base)."
+    }
+  ],
+  "sourceNotes": "Coleta em 27/08/2026. Fontes cruzadas: Predefinição de elenco da Wikipédia PT/EN (artigo '2026 Esporte Clube Bahia season'), Transfermarkt (kader e leihspieler/emprestados), Goal.com Brasil, e busca complementar (futbahia.com.br, de menor confiabilidade, usado apenas para nomes de reserva/base). O site oficial (ecbahia.com / esporteclubebahia.com.br) e o Sofascore retornaram erro HTTP 403 (bloqueio anti-bot) e não puderam ser acessados diretamente nesta pesquisa; dados desses vieram apenas indiretamente de resultados de busca. Núcleo de 30 jogadores com alta confiança (cruzado em 3+ fontes, batendo com a contagem de '31 jogadores' do plantel ativo no Transfermarkt); adicionados 6 jogadores de confiança baixa (Victor, João Paulo, David Martins, Kauê Furquim, Roger Gabriel, Caio Suassuna) citados apenas em fonte secundária, marcados individualmente em notes. Jogadores emprestados PARA FORA do Bahia (Kayky ao Internacional, Gabriel Xavier ao Shenzhen Peng City, Cauly ao São Paulo FC, Vitinho ao Santa Cruz FC, e um 'Iago' lateral-esquerdo ambíguo/possivelmente duplicado de Iago Borduchi) foram EXCLUÍDOS do elenco por não estarem fisicamente disputando pelo Bahia no momento. Idades em sua maioria aproximadas (não datas completas de nascimento) - ano de nascimento derivado da idade informada, com pequena margem de erro possível. Capacidade da Arena Fonte Nova é 50.025 (oficial), embora operação reportada gire em torno de 48.000 por restrições de venda."
+}

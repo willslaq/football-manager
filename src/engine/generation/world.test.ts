@@ -11,7 +11,10 @@ describe('generateWorld', () => {
   it('produz atributos diferentes para seeds diferentes', () => {
     const a = generateWorld(1);
     const b = generateWorld(2);
-    expect(a.players[0].attributes).not.toEqual(b.players[0].attributes);
+    // morale é sempre procedural (mesmo para jogadores com dado real do EA FC 26),
+    // então continua sensível à seed independente de attributes/strength serem fixos.
+    const anyMoraleDiffers = a.players.some((p, i) => p.morale !== b.players[i].morale);
+    expect(anyMoraleDiffers).toBe(true);
   });
 
   it('carrega os 20 clubes da Série A 2026 com elenco não vazio', () => {

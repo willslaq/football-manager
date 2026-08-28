@@ -55,11 +55,11 @@
 
 .squad__row {
   display: grid;
-  grid-template-columns: 2.4fr 0.7fr 0.6fr 0.8fr 0.9fr 0.8fr;
+  grid-template-columns: 2.4fr 0.7fr 0.6fr 0.8fr 0.9fr 0.8fr 1.1fr 0.9fr;
   align-items: center;
   gap: var(--space-3);
   padding: 0 var(--space-4);
-  min-width: 34rem;
+  min-width: 44rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -89,6 +89,10 @@
 
 .squad__sort:not(:first-child) {
   justify-content: flex-end;
+}
+
+.squad__sort--static {
+  cursor: default;
 }
 
 .squad__sort-arrow {
@@ -127,4 +131,9 @@
 
 .squad__stat--low {
   color: var(--floodlight);
+}
+
+.squad__stat--muted {
+  font-weight: 500;
+  color: var(--mist);
 }

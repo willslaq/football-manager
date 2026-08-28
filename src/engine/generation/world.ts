@@ -22,9 +22,10 @@ function loadRawClubs(): RawClubFile[] {
 /**
  * Monta o mundo (clubes + jogadores) a partir dos dados reais do Brasileirão
  * Série A 2026 (src/data/brasileirao-2026). Identidade dos jogadores (nome,
- * posição, idade, nacionalidade) é fixa — só os atributos de jogo são
- * derivados deterministicamente a partir da seed (não existe fonte pública
- * para finalização/drible/etc. de cada atleta real).
+ * posição, idade, nacionalidade) é fixa. Para jogadores casados com o mod do
+ * EA FC 26 (campo `overall` presente), strength/potential/attributes vêm dos
+ * dados reais (ver `generatePlayerDerived`); para os demais, continuam
+ * derivados deterministicamente a partir da seed, como antes.
  */
 export function generateWorld(seed: number): World {
   const rawClubs = loadRawClubs();
@@ -43,7 +44,15 @@ export function generateWorld(seed: number): World {
     raw.squad.forEach((rawPlayer, index) => {
       const id = `${raw.club.id}-${index + 1}`;
       const rng = mulberry32(playerSeed(seed, id));
-      const derived = generatePlayerDerived(rng, rawPlayer.position, rawPlayer.age, reputation);
+      const real =
+        rawPlayer.overall != null && rawPlayer.attributes
+          ? {
+              overall: rawPlayer.overall,
+              potential: rawPlayer.potential ?? rawPlayer.overall,
+              attributes: rawPlayer.attributes,
+            }
+          : undefined;
+      const derived = generatePlayerDerived(rng, rawPlayer.position, rawPlayer.age, reputation, real);
 
       players.push({
         id,
@@ -58,6 +67,10 @@ export function generateWorld(seed: number): World {
         morale: derived.morale,
         potential: derived.potential,
         seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 },
+        height: rawPlayer.height,
+        weight: rawPlayer.weight,
+        preferredFoot: rawPlayer.preferredFoot,
+        weakFoot: rawPlayer.weakFoot,
       });
       squad.push(id);
     });

@@ -71,4 +71,12 @@ export interface Player {
   /** 0-100. Oculto da UI voltada ao jogador (SRS §8). */
   potential: number;
   seasonStats: PlayerSeasonStats;
+  /** Altura em cm. Só disponível para jogadores com dado real (ver TODO.md). Exibição apenas. */
+  height?: number;
+  /** Peso em kg. Só disponível para jogadores com dado real. Exibição apenas. */
+  weight?: number;
+  /** Pé preferido. Só disponível para jogadores com dado real. Exibição apenas. */
+  preferredFoot?: 'right' | 'left';
+  /** Pé fraco, 1-5 estrelas. Só disponível para jogadores com dado real. Exibição apenas. */
+  weakFoot?: number;
 }

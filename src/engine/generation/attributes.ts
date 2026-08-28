@@ -1,10 +1,47 @@
 import type { RNG } from '../rng';
 import { deriveSeed, roll } from '../rng';
 import type { Position, PlayerAttributes } from '../types/player';
+import type { RawFifaAttributes } from './rawData';
 import { ATTRIBUTE_KEYS, POSITION_ATTRIBUTE_WEIGHTS } from './attributeWeights';
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, Math.round(value)));
+}
+
+function avg(...values: (number | undefined)[]): number {
+  const present = values.filter((v): v is number => typeof v === 'number');
+  if (present.length === 0) return 50;
+  return clamp(present.reduce((sum, v) => sum + v, 0) / present.length, 0, 100);
+}
+
+/**
+ * Dados reais (EA FC 26) de um jogador, quando disponíveis — substitui a
+ * geração procedural de strength/potential/attributes por valores reais.
+ * Ver TODO.md: altura/peso/pé ainda não entram na simulação, só na UI.
+ */
+export interface RealPlayerData {
+  overall: number;
+  potential: number;
+  attributes: RawFifaAttributes;
+}
+
+/**
+ * Reduz os 33 atributos granulares do FIFA aos 9 campos internos
+ * (modelo simplificado do motor), fazendo a média dos sub-atributos mais
+ * correlatos a cada categoria. Único lugar desse mapeamento — ajustar aqui.
+ */
+function mapRealAttributes(a: RawFifaAttributes): PlayerAttributes {
+  return {
+    finishing: avg(a.finishing, a.shotpower, a.volleys, a.penalties, a.longshots),
+    speed: avg(a.acceleration, a.sprintspeed),
+    dribbling: avg(a.dribbling, a.agility, a.balance, a.ballcontrol),
+    passing: avg(a.shortpassing, a.longpassing, a.crossing, a.vision, a.curve, a.freekickaccuracy),
+    heading: avg(a.headingaccuracy, a.jumping),
+    marking: avg(a.defensiveawareness, a.interceptions),
+    tackling: avg(a.standingtackle, a.slidingtackle),
+    positioning: avg(a.positioning, a.reactions, a.composure),
+    reflexes: avg(a.gkreflexes, a.gkdiving, a.gkhandling, a.gkpositioning, a.gkkicking),
+  };
 }
 
 /** Combina a seed global da carreira com o id do jogador — mesma carreira, mesmo jogador, mesmos atributos. */
@@ -44,7 +81,20 @@ export function generatePlayerDerived(
   position: Position,
   age: number,
   clubReputation: number,
+  real?: RealPlayerData,
 ): DerivedPlayerData {
+  const morale = clamp(70 + roll(rng, -10, 10), 30, 100);
+
+  if (real) {
+    return {
+      attributes: mapRealAttributes(real.attributes),
+      strength: clamp(real.overall, 0, 100),
+      potential: clamp(real.potential, 0, 100),
+      condition: 100,
+      morale,
+    };
+  }
+
   const weights = POSITION_ATTRIBUTE_WEIGHTS[position];
   const baseLevel = clamp(clubReputation * ageFactor(age), 20, 95);
 
@@ -67,8 +117,6 @@ export function generatePlayerDerived(
   const youthRoom = Math.max(0, 26 - age);
   const potentialBoost = youthRoom > 0 ? roll(rng, 0, youthRoom * 2) : roll(rng, 0, 3);
   const potential = clamp(strength + potentialBoost, strength, 99);
-
-  const morale = clamp(70 + roll(rng, -10, 10), 30, 100);
 
   return {
     attributes,

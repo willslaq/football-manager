@@ -50,6 +50,20 @@ function statClass(value: number): string {
   return 'squad__stat';
 }
 
+function formatPhysical(player: Player): string {
+  if (!player.height && !player.weight) return '—';
+  const h = player.height ? `${player.height}cm` : '—';
+  const w = player.weight ? `${player.weight}kg` : '—';
+  return `${h} / ${w}`;
+}
+
+function formatFoot(player: Player): string {
+  if (!player.preferredFoot) return '—';
+  const foot = player.preferredFoot === 'right' ? 'D' : 'E';
+  const stars = player.weakFoot ? '★'.repeat(player.weakFoot) + '☆'.repeat(5 - player.weakFoot) : '';
+  return stars ? `${foot} ${stars}` : foot;
+}
+
 export function Squad() {
   const career = useCareerStore((s) => s.career);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -123,6 +137,8 @@ export function Squad() {
                 {sort.field === col.field && <span className="squad__sort-arrow">{sort.direction === 'asc' ? '▲' : '▼'}</span>}
               </button>
             ))}
+            <span className="squad__sort squad__sort--static">Físico</span>
+            <span className="squad__sort squad__sort--static">Pé</span>
           </div>
 
           <div ref={parentRef} className="squad__scroll">
@@ -150,6 +166,8 @@ export function Squad() {
                     <span className={`numeric ${statClass(player.strength)}`}>{player.strength}</span>
                     <span className={`numeric ${statClass(player.condition)}`}>{player.condition}</span>
                     <span className={`numeric ${statClass(player.morale)}`}>{player.morale}</span>
+                    <span className="numeric squad__stat squad__stat--muted">{formatPhysical(player)}</span>
+                    <span className="numeric squad__stat squad__stat--muted">{formatFoot(player)}</span>
                   </div>
                 );
               })}

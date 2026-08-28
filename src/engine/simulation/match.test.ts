@@ -77,8 +77,10 @@ describe('simulateMatch', () => {
 
     console.log(`Palmeiras (mandante) ${homeWins} - ${draws} - ${awayWins} Chapecoense (visitante), em ${N} jogos`);
 
-    expect(homeWins).toBeGreaterThan(awayWins);
-    expect(homeWins / N).toBeGreaterThan(0.5);
+    // Com overalls reais (EA FC 26) o gap entre os dois times é mais comprimido do
+    // que o gerador procedural antigo produzia, então empates ficam mais comuns —
+    // o mandante vence bem mais que o visitante, mas não necessariamente >50% bruto.
+    expect(homeWins).toBeGreaterThan(awayWins * 1.2);
     // Mesmo o time muito mais fraco deve vencer algumas vezes — resultado não pode ser determinístico demais.
     expect(awayWins).toBeGreaterThan(0);
   });

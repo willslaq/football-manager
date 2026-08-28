@@ -1,5 +1,47 @@
 import type { Position } from '../types/player';
 
+/**
+ * Atributos FIFA (0-99) extraídos do squad file do EA FC 26 via engenharia
+ * reversa do formato FBCHUNKS/T3DB. Presentes só nos jogadores que
+ * conseguimos casar com o mod real (ver memória do projeto / TODO.md).
+ */
+export interface RawFifaAttributes {
+  acceleration?: number;
+  sprintspeed?: number;
+  agility?: number;
+  balance?: number;
+  reactions?: number;
+  jumping?: number;
+  stamina?: number;
+  strength?: number;
+  aggression?: number;
+  positioning?: number;
+  ballcontrol?: number;
+  dribbling?: number;
+  crossing?: number;
+  finishing?: number;
+  headingaccuracy?: number;
+  shortpassing?: number;
+  volleys?: number;
+  curve?: number;
+  freekickaccuracy?: number;
+  longpassing?: number;
+  longshots?: number;
+  shotpower?: number;
+  vision?: number;
+  penalties?: number;
+  composure?: number;
+  interceptions?: number;
+  standingtackle?: number;
+  slidingtackle?: number;
+  defensiveawareness?: number;
+  gkdiving?: number;
+  gkhandling?: number;
+  gkkicking?: number;
+  gkpositioning?: number;
+  gkreflexes?: number;
+}
+
 /** Formato dos arquivos brutos coletados em src/data/brasileirao-2026/*.json. */
 export interface RawSquadPlayer {
   name: string;
@@ -10,6 +52,14 @@ export interface RawSquadPlayer {
   birthYear: number | null;
   age: number;
   notes: string;
+  /** Overall real (EA FC 26), quando casado com o mod. Ausente = geração procedural. */
+  overall?: number;
+  potential?: number;
+  height?: number;
+  weight?: number;
+  preferredFoot?: 'right' | 'left';
+  weakFoot?: number;
+  attributes?: RawFifaAttributes;
 }
 
 export interface RawClubFile {

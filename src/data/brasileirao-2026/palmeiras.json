@@ -22,6 +22,7 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
+      "marketValue": 7000000,
       "notes": ""
     },
     {
@@ -32,6 +33,7 @@
       "nationality": "BRA",
       "birthYear": 1987,
       "age": 39,
+      "marketValue": 75000,
       "notes": ""
     },
     {
@@ -42,7 +44,8 @@
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 23,
-      "notes": ""
+      "marketValue": 2000000,
+      "notes": "Nome completo no Transfermarkt: Kaique Pereira."
     },
     {
       "name": "Kauan Lima",
@@ -65,14 +68,14 @@
       "notes": "Jovem da base"
     },
     {
-      "name": "Bruno",
+      "name": "Bruno Bertinato",
       "shirtNumber": null,
       "position": "GOL",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Sem número de camisa confirmado pelas fontes"
+      "notes": "Sem número de camisa confirmado pelas fontes. Nome completo e presença no elenco atual confirmados pelo Transfermarkt (27/08/2026); sem valor de mercado atribuído pela fonte."
     },
     {
       "name": "Alexander Barboza",
@@ -82,6 +85,7 @@
       "nationality": "ARG",
       "birthYear": 1995,
       "age": 31,
+      "marketValue": 5000000,
       "notes": ""
     },
     {
@@ -92,6 +96,7 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
+      "marketValue": 4000000,
       "notes": ""
     },
     {
@@ -102,6 +107,7 @@
       "nationality": "ARG",
       "birthYear": 2004,
       "age": 22,
+      "marketValue": 10000000,
       "notes": ""
     },
     {
@@ -112,6 +118,7 @@
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
+      "marketValue": 4000000,
       "notes": ""
     },
     {
@@ -122,6 +129,7 @@
       "nationality": "BRA",
       "birthYear": 2001,
       "age": 25,
+      "marketValue": 6000000,
       "notes": ""
     },
     {
@@ -132,6 +140,7 @@
       "nationality": "PAR",
       "birthYear": 1993,
       "age": 33,
+      "marketValue": 3500000,
       "notes": "Capitão da equipe"
     },
     {
@@ -142,6 +151,7 @@
       "nationality": "URU",
       "birthYear": 1998,
       "age": 28,
+      "marketValue": 12000000,
       "notes": ""
     },
     {
@@ -152,6 +162,7 @@
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
+      "marketValue": 5000000,
       "notes": ""
     },
     {
@@ -162,7 +173,8 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Posição defensiva genérica; especialidade (zagueiro/lateral) não confirmada pela fonte"
+      "marketValue": 4000000,
+      "notes": "Posição confirmada como zagueiro (ZAG) pelo Transfermarkt em 27/08/2026."
     },
     {
       "name": "Mohamed Koné (Koné Zié Mohamed)",
@@ -217,12 +229,13 @@
     {
       "name": "Arthur Gabriel",
       "shirtNumber": 56,
-      "position": "ZAG",
+      "position": "LE",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Jovem da base, posição genérica"
+      "marketValue": 3000000,
+      "notes": "CORRIGIDO: posição era registrada como zagueiro (genérica, fonte original incerta entre zagueiro/lateral); Transfermarkt (27/08/2026) confirma como lateral-esquerdo (LE), já titular do elenco profissional, não mais 'jovem da base'."
     },
     {
       "name": "André Lucas",
@@ -238,11 +251,14 @@
       "name": "Felipe Anderson",
       "shirtNumber": 7,
       "position": "MEA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PE"
+      ],
       "nationality": "BRA",
       "birthYear": 1993,
       "age": 33,
-      "notes": "Fonte genérica indicava apenas 'meio-campo'; jogador também atua como ponta"
+      "marketValue": 1500000,
+      "notes": "Fonte genérica indicava apenas 'meio-campo'; jogador também atua como ponta. Transfermarkt (27/08/2026) classifica como ponta-esquerda (LW); mantido MEA como posição principal por refletir melhor o papel observado, com PE como secundária."
     },
     {
       "name": "Andreas Pereira",
@@ -252,6 +268,7 @@
       "nationality": "BRA",
       "birthYear": 1996,
       "age": 30,
+      "marketValue": 14000000,
       "notes": ""
     },
     {
@@ -262,6 +279,7 @@
       "nationality": "COL",
       "birthYear": 1998,
       "age": 28,
+      "marketValue": 15000000,
       "notes": "Atua principalmente como ponta direita"
     },
     {
@@ -272,17 +290,21 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
+      "marketValue": 6000000,
       "notes": ""
     },
     {
       "name": "Maurício",
       "shirtNumber": 18,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MEA"
+      ],
       "nationality": "PAR",
       "birthYear": 2001,
       "age": 25,
-      "notes": ""
+      "marketValue": 15000000,
+      "notes": "Transfermarkt (27/08/2026) classifica como meia-ofensivo (AM); mantido MC como principal, MEA como secundária."
     },
     {
       "name": "Lucas Evangelista",
@@ -292,6 +314,7 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
+      "marketValue": 4000000,
       "notes": ""
     },
     {
@@ -302,17 +325,19 @@
       "nationality": "URU",
       "birthYear": 1999,
       "age": 27,
+      "marketValue": 6500000,
       "notes": ""
     },
     {
       "name": "Allan",
       "shirtNumber": 40,
-      "position": "VOL",
+      "position": "PD",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 1997,
-      "age": 29,
-      "notes": "Número/posição conforme predefinição da Wikipédia; uma fonte (ESPN) listava um jogador diferente ('Allan Elias', atacante jovem) sob o mesmo número 40 — possível erro/desatualização de uma das fontes"
+      "birthYear": 2004,
+      "age": 22,
+      "marketValue": 20000000,
+      "notes": "CORRIGIDO: registro anterior (volante, 1997, 29 anos) seguia a predefinição da Wikipédia. Transfermarkt (27/08/2026) confirma que a camisa 40 pertence a um ponta-direita de 22 anos — a versão da ESPN ('Allan Elias', atacante jovem) estava correta, não a da Wikipédia. Ano de nascimento é estimativa a partir da idade informada pelo Transfermarkt (mês de nascimento não confirmado)."
     },
     {
       "name": "Erick Machado",
@@ -342,7 +367,8 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Jovem da base, posição genérica"
+      "marketValue": 400000,
+      "notes": "Confirmado no elenco profissional (Meia Central) pelo Transfermarkt em 27/08/2026, não mais apenas 'jovem da base'."
     },
     {
       "name": "Luis Felipe",
@@ -396,23 +422,29 @@
     },
     {
       "name": "Erick Belé",
-      "shirtNumber": null,
+      "shirtNumber": 33,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Citado como inscrito no Brasileirão 2026 por reportagem (Lance.com.br). Idade estimada por falta de fonte pública confiável (jovem da base sem camisa/idade confirmada)."
+      "marketValue": 1000000,
+      "notes": "Citado como inscrito no Brasileirão 2026 por reportagem (Lance.com.br). Confirmado no elenco profissional pelo Transfermarkt em 27/08/2026 (camisa 33, idade 19 batendo com a estimativa anterior); classificado lá como meia-ofensivo (AM), mantido MC como principal com MEA secundária."
     },
     {
       "name": "Luis Pacheco",
-      "shirtNumber": null,
+      "shirtNumber": 50,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "VOL"
+      ],
       "nationality": "BRA",
-      "birthYear": 2007,
-      "age": 19,
-      "notes": "Citado como inscrito no Brasileirão 2026 por reportagem (Lance.com.br). Idade estimada por falta de fonte pública confiável (jovem da base sem camisa/idade confirmada)."
+      "birthYear": 2008,
+      "age": 18,
+      "marketValue": 500000,
+      "notes": "Citado como inscrito no Brasileirão 2026 por reportagem (Lance.com.br). Confirmado no elenco profissional pelo Transfermarkt em 27/08/2026 (camisa 50, idade 18 — corrige estimativa anterior de 19); classificado lá como volante (DM), mantido MC como principal com VOL secundária."
     },
     {
       "name": "Vitor Roque",
@@ -422,27 +454,34 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
+      "marketValue": 38000000,
       "notes": ""
     },
     {
       "name": "Paulinho",
       "shirtNumber": 10,
       "position": "CA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "SA"
+      ],
       "nationality": "BRA",
       "birthYear": 2000,
       "age": 26,
-      "notes": ""
+      "marketValue": 9000000,
+      "notes": "Transfermarkt (27/08/2026) classifica como segundo-atacante (ST); mantido CA como principal com SA secundária."
     },
     {
       "name": "Ramón Sosa",
       "shirtNumber": 19,
       "position": "CA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "SA"
+      ],
       "nationality": "PAR",
       "birthYear": 2000,
       "age": 26,
-      "notes": "Fonte genérica 'atacante'; pode também atuar como ponta"
+      "marketValue": 10000000,
+      "notes": "Fonte genérica 'atacante'; pode também atuar como ponta. Transfermarkt (27/08/2026) classifica como segundo-atacante (ST); mantido CA como principal com SA secundária."
     },
     {
       "name": "Flaco López",
@@ -452,17 +491,21 @@
       "nationality": "ARG",
       "birthYear": 2001,
       "age": 25,
-      "notes": "Nome de registro José Manuel López"
+      "marketValue": 25000000,
+      "notes": "Nome de registro José Manuel López — confirmado como Centroavante (CF) pelo Transfermarkt em 27/08/2026."
     },
     {
       "name": "Riquelme",
       "shirtNumber": 37,
       "position": "CA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PE"
+      ],
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": ""
+      "marketValue": 1000000,
+      "notes": "Nome completo no Transfermarkt: Riquelme Fillipi. Classificado lá como ponta-esquerda (LW); mantido CA como principal com PE secundária."
     },
     {
       "name": "Heittor",
@@ -525,5 +568,5 @@
       "notes": "Nacionalidade assumida como BRA (categoria de base do clube, sem indicação em contrário). Idade estimada por falta de fonte pública confiável (jovem da base)."
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/2029, base principal com idades e nacionalidades), predefinição de elenco da Wikipédia em português (Sociedade Esportiva Palmeiras, numeração de camisa, atualizada em 21/07/2026), reportagem do Lance! sobre a lista de inscritos no Brasileirão 2026, e buscas específicas para confirmar a nacionalidade de Mohamed Koné (Costa do Marfim) e o status de empréstimo de Raphael Veiga, Luighi e Bruno Rodrigues. Raphael Veiga, Luighi e Bruno Rodrigues foram EXCLUÍDOS do elenco listado por estarem emprestados a outros clubes (Veiga no América-MEX até dez/2026; Luighi e Bruno Rodrigues emprestados até 31/12/2026), portanto não fazem parte do elenco profissional em atividade no clube. Idades convertidas a partir de 'idade em anos' informada pelas fontes (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano, exceto Mohamed Koné (data de nascimento exata confirmada: 20/10/2007). Há uma divergência entre fontes quanto ao jogador de número 40 (Allan, volante, segundo a Wikipédia x 'Allan Elias', atacante, segundo a ESPN), registrada em notas. O elenco tem 52 atletas listados, o que é compatível com o perfil do Palmeiras de manter grande número de jovens da base com contrato profissional registrados no BID."
+  "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/2029, base principal com idades e nacionalidades), predefinição de elenco da Wikipédia em português (Sociedade Esportiva Palmeiras, numeração de camisa, atualizada em 21/07/2026), reportagem do Lance! sobre a lista de inscritos no Brasileirão 2026, e buscas específicas para confirmar a nacionalidade de Mohamed Koné (Costa do Marfim) e o status de empréstimo de Raphael Veiga, Luighi e Bruno Rodrigues. Raphael Veiga, Luighi e Bruno Rodrigues foram EXCLUÍDOS do elenco listado por estarem emprestados a outros clubes (Veiga no América-MEX até dez/2026; Luighi e Bruno Rodrigues emprestados até 31/12/2026), portanto não fazem parte do elenco profissional em atividade no clube. Idades convertidas a partir de 'idade em anos' informada pelas fontes (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano, exceto Mohamed Koné (data de nascimento exata confirmada: 20/10/2007). Havia uma divergência entre fontes quanto ao jogador de número 40 (Allan, volante de 1997 segundo a Wikipédia x 'Allan Elias', atacante jovem, segundo a ESPN) — RESOLVIDA na passagem de valor de mercado abaixo: o Transfermarkt confirma a versão da ESPN. O elenco tem 52 atletas listados, o que é compatível com o perfil do Palmeiras de manter grande número de jovens da base com contrato profissional registrados no BID. Valor de mercado e posição secundária cruzados com o Transfermarkt (transfermarkt.com.br/palmeiras, verein/1023) em 27/08/2026: a página de elenco oficial lista 30 atletas no time profissional registrado, com valor de mercado total de €232,48 milhões e idade média de 26,4 anos; os 29 desses 30 jogadores identificados com segurança no elenco deste arquivo receberam o campo marketValue (em euros, número inteiro, sem separadores) — o goleiro Bruno Bertinato (antes listado apenas como 'Bruno') teve a presença no elenco e o nome completo confirmados, mas o Transfermarkt não atribui valor de mercado a ele. Os demais ~21 atletas do arquivo são jovens da base/reservas fora da lista oficial de 30 do Transfermarkt e permanecem sem marketValue — omissão deliberada, não descuido, para não inventar valores sem fonte. secondaryPositions foi preenchido quando a classificação de posição do Transfermarkt diverge da posição principal já registrada aqui (ex.: Felipe Anderson MEA com PE secundária, Maurício MC com MEA secundária, Paulinho/Ramón Sosa CA com SA secundária, Riquelme CA com PE secundária, Erick Belé/Luis Pacheco MC com MEA/VOL secundária); a posição principal só foi alterada quando a fonte original já indicava incerteza e o Transfermarkt resolveu com clareza (Arthur Gabriel: ZAG genérico → LE confirmado; ver nota individual). Luis Pacheco teve o ano de nascimento corrigido de 2007 para 2008 (idade 18, não 19) conforme o Transfermarkt."
 }

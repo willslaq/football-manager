@@ -22,6 +22,7 @@
       "nationality": "BRA",
       "birthYear": 1988,
       "age": 38,
+      "marketValue": 50000,
       "notes": "Líder do elenco"
     },
     {
@@ -32,6 +33,7 @@
       "nationality": "BRA",
       "birthYear": 1994,
       "age": 32,
+      "marketValue": 50000,
       "notes": ""
     },
     {
@@ -42,7 +44,7 @@
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": ""
+      "notes": "Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Caxias. marketValue não preenchido."
     },
     {
       "name": "João Victor",
@@ -88,11 +90,12 @@
       "name": "Cristian Tassano",
       "shirtNumber": 17,
       "position": "ZAG",
-      "secondaryPositions": [],
+      "secondaryPositions": ["LD"],
       "nationality": "URU",
       "birthYear": 1996,
       "age": 30,
-      "notes": "Posição genérica; especialidade (zagueiro/lateral) não confirmada"
+      "marketValue": 350000,
+      "notes": "Posição confirmada pelo Transfermarkt como zagueiro (Centre-Back), com atuação eventual como lateral-direito"
     },
     {
       "name": "Rafael Castro",
@@ -102,7 +105,7 @@
       "nationality": "BRA",
       "birthYear": 1996,
       "age": 30,
-      "notes": ""
+      "notes": "Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Volta Redonda. marketValue não preenchido."
     },
     {
       "name": "Nathan",
@@ -177,12 +180,13 @@
     {
       "name": "Marcelinho",
       "shirtNumber": 79,
-      "position": "ZAG",
+      "position": "LD",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Posição genérica"
+      "marketValue": 600000,
+      "notes": "Posição corrigida para lateral-direito (Right-Back) conforme Transfermarkt; fonte original tinha posição genérica de zagueiro"
     },
     {
       "name": "Caio Vinicius",
@@ -202,17 +206,18 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
-      "notes": "Zagueiro experiente citado como titular por reportagem da Itatiaia; não constava na lista da ESPN consultada. Idade estimada por falta de fonte pública confiável (descrito como experiente)."
+      "marketValue": 350000,
+      "notes": "Zagueiro experiente citado como titular por reportagem da Itatiaia; não constava na lista da ESPN consultada. Idade estimada por falta de fonte pública confiável (descrito como experiente). Confirmado no elenco atual do Transfermarkt (camisa 13, zagueiro), com idade de 34 anos segundo essa fonte — divergência de ~3 anos frente à estimativa original, mantida como estava por falta de data de nascimento exata."
     },
     {
       "name": "Tico",
-      "shirtNumber": null,
-      "position": "MC",
+      "shirtNumber": 61,
+      "position": "PD",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem, posição genérica"
+      "notes": "Confirmado no elenco atual do Transfermarkt como ponta-direita (Right Winger), camisa 61 — substitui a posição genérica e o número não confirmado da fonte original. Sem valor de mercado listado pelo Transfermarkt (jogador jovem/pouco cotado); marketValue não preenchido."
     },
     {
       "name": "Dodô",
@@ -222,7 +227,7 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica. Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Vila Nova. marketValue não preenchido."
     },
     {
       "name": "Nathan",
@@ -346,13 +351,14 @@
     },
     {
       "name": "Zé Ricardo",
-      "shirtNumber": null,
+      "shirtNumber": 55,
       "position": "VOL",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
-      "notes": "Reforço confirmado para 2026, ex-Shonan Bellmare (Japão). Idade estimada por falta de fonte pública confiável (reforço vindo do exterior)."
+      "marketValue": 500000,
+      "notes": "Reforço confirmado para 2026, ex-Shonan Bellmare (Japão). Idade estimada por falta de fonte pública confiável (reforço vindo do exterior). Camisa 55 e posição de volante (Defensive Midfield) confirmadas pelo Transfermarkt."
     },
     {
       "name": "Eduardo",
@@ -362,17 +368,19 @@
       "nationality": "BRA",
       "birthYear": 2001,
       "age": 25,
-      "notes": ""
+      "marketValue": 75000,
+      "notes": "Nome completo Eduardo Melo, conforme Transfermarkt (mesma camisa 39, mesma posição, mesma idade)."
     },
     {
       "name": "Jaderson",
       "shirtNumber": 10,
-      "position": "PD",
+      "position": "PE",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 2000,
       "age": 26,
-      "notes": "Classificado como atacante pela fonte, mas geralmente atua como ponta"
+      "marketValue": 750000,
+      "notes": "Classificado como atacante pela fonte original, mas geralmente atua como ponta. Transfermarkt (camisa 10 confirmada) classifica como ponta-esquerda (Left Winger); posição corrigida de PD para PE."
     },
     {
       "name": "Janderson",
@@ -412,7 +420,7 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
-      "notes": "Costuma atuar como ponta esquerda"
+      "notes": "Costuma atuar como ponta esquerda. Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Atlético-GO. marketValue não preenchido."
     },
     {
       "name": "Diego Hernández",
@@ -436,14 +444,15 @@
     },
     {
       "name": "Alef Manga",
-      "shirtNumber": null,
+      "shirtNumber": 11,
       "position": "CA",
-      "secondaryPositions": [],
+      "secondaryPositions": ["PE"],
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
-      "notes": "Reforço confirmado para 2026, ex-Avaí. Idade estimada por falta de fonte pública confiável (reforço recente de outro clube da Série A/B)."
+      "marketValue": 600000,
+      "notes": "Reforço confirmado para 2026, ex-Avaí. Idade estimada por falta de fonte pública confiável (reforço recente de outro clube da Série A/B). Camisa 11 confirmada pelo Transfermarkt, que o classifica como ponta-esquerda (Left Winger); mantido como centroavante (posição principal segundo Wikipédia, ogol e anúncio do clube) com PE como secundária."
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/4936, base principal com idades, alturas e nacionalidades), reportagens do DOL e Itatiaia sobre numeração oficial e reforços de 2026 do Remo para a Série A (confirmam contratações de Alef Manga, Zé Ricardo, Diego Hernández e Panagiotis Tachtsidis, e citam o zagueiro Marllon como titular de camisa 13), e Wikipédia em português (Clube do Remo) para dados institucionais do clube (fundação, estádio, cores). O Remo manda a maior parte de seus jogos no Estádio Baenão (13.792 lugares), mas também utiliza o Mangueirão (53.617 lugares) para partidas de maior público; optou-se pelo Baenão como estádio principal por ser o mando de campo padrão do clube. Idades convertidas a partir de 'idade em anos' informada pela fonte (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano. Há três jogadores chamados 'Nathan' no elenco listados pela ESPN (defesa #23, meio-campo #8 e #48) — mantidos como entradas separadas, mas sinalizados como possível fonte de confusão/erro da fonte original. Técnico da equipe: Léo Condé (substituiu Juan Carlos Osorio em março/2026). Elenco listado com 43 atletas; alguns reforços recentes (Alef Manga, Zé Ricardo, Marllon) foram incluídos com dados parciais por não constarem na lista principal da ESPN, mas terem confirmação em reportagens específicas do clube."
+  "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/4936, base principal com idades, alturas e nacionalidades), reportagens do DOL e Itatiaia sobre numeração oficial e reforços de 2026 do Remo para a Série A (confirmam contratações de Alef Manga, Zé Ricardo, Diego Hernández e Panagiotis Tachtsidis, e citam o zagueiro Marllon como titular de camisa 13), e Wikipédia em português (Clube do Remo) para dados institucionais do clube (fundação, estádio, cores). O Remo manda a maior parte de seus jogos no Estádio Baenão (13.792 lugares), mas também utiliza o Mangueirão (53.617 lugares) para partidas de maior público; optou-se pelo Baenão como estádio principal por ser o mando de campo padrão do clube. Idades convertidas a partir de 'idade em anos' informada pela fonte (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano. Há três jogadores chamados 'Nathan' no elenco listados pela ESPN (defesa #23, meio-campo #8 e #48) — mantidos como entradas separadas, mas sinalizados como possível fonte de confusão/erro da fonte original. Técnico da equipe: Léo Condé (substituiu Juan Carlos Osorio em março/2026). Elenco listado com 43 atletas; alguns reforços recentes (Alef Manga, Zé Ricardo, Marllon) foram incluídos com dados parciais por não constarem na lista principal da ESPN, mas terem confirmação em reportagens específicas do clube. ATUALIZAÇÃO 27/08/2026 (valor de mercado e posição secundária): elenco cruzado com o Transfermarkt (transfermarkt.us/clube-do-remo-pa-/kader/verein/10997, elenco 'temporada 2026'), que lista apenas 33 atletas — bem menos que os 43 desta lista, refletindo tanto a curadoria mais enxuta do Transfermarkt (times menores/Série B costumam ter cobertura parcial de elenco na base e reservas) quanto uma renovação real de elenco em 2026. Dos 43 jogadores, 10 foram identificados com confiança razoável (nome e, quando disponível, número de camisa coincidentes) e receberam marketValue em euros: Marcelo Rangel (€50k), Ygor Vinhas (€50k), Cristian Tassano (€350k), Marllon (€350k), Marcelinho (€600k), Tico (sem valor listado), Zé Ricardo (€500k), Eduardo/Eduardo Melo (€75k), Jaderson (€750k) e Alef Manga (€600k). Para Marcelinho, Tico e Jaderson, a posição principal foi corrigida com base na classificação do Transfermarkt (que era genérica/não confirmada na fonte original ou conflitante); para Tassano e Alef Manga, a classificação do Transfermarkt foi adicionada como posição secundária por haver fontes conflitantes sobre a principal. Quatro jogadores (Marrony, Dodô, Rafael Castro, Leo Lang) foram confirmados como transferidos para outros clubes por reportagens de agosto/2026 (Marrony ao Atlético-GO, Dodô ao Vila Nova, Rafael Castro ao Volta Redonda, Leo Lang ao Caxias) e tiveram isso registrado em notes, sem marketValue. Os demais 29 jogadores não puderam ser confiavelmente localizados no elenco atual do Transfermarkt (nomes não coincidentes com nenhuma entrada da tabela) — marketValue e secondaryPositions permanecem como estavam (não preenchidos), por não haver confirmação positiva nem de permanência nem de saída do clube; nenhum valor foi estimado/inventado para esses casos. Busca por posição secundária individual (perfis de jogador) foi feita de forma seletiva, só para os 10 atletas confirmados, não para o elenco completo."
 }

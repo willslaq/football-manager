@@ -2,15 +2,15 @@
   "club": {
     "id": "bahia",
     "name": "Esporte Clube Bahia",
-    "shortName": "ECB",
+    "shortName": "BAH",
     "city": "Salvador",
     "state": "BA",
     "founded": 1931,
     "stadium": "Arena Fonte Nova",
-    "stadiumCapacity": 50025,
+    "stadiumCapacity": 47364,
     "colors": {
-      "primary": "#0033A0",
-      "secondary": "#D2232A"
+      "primary": "#1E4D9B",
+      "secondary": "#FFFFFF"
     }
   },
   "squad": [
@@ -22,6 +22,7 @@
       "nationality": "BRA",
       "birthYear": 1996,
       "age": 30,
+      "marketValue": 2000000,
       "notes": ""
     },
     {
@@ -32,6 +33,7 @@
       "nationality": "ARG",
       "birthYear": 1992,
       "age": 34,
+      "marketValue": 1500000,
       "notes": "Possui dupla cidadania argentina/italiana."
     },
     {
@@ -42,6 +44,7 @@
       "nationality": "BRA",
       "birthYear": 1990,
       "age": 35,
+      "marketValue": 200000,
       "notes": ""
     },
     {
@@ -52,27 +55,19 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Confiança baixa: citado em apenas uma fonte adicional, dados não cruzados."
+      "marketValue": null,
+      "notes": "Sem valor de mercado atribuído pelo Transfermarkt."
     },
     {
-      "name": "João Paulo",
-      "shirtNumber": 34,
-      "position": "GOL",
-      "secondaryPositions": [],
-      "nationality": "BRA",
-      "birthYear": 2003,
-      "age": 23,
-      "notes": "Emprestado pelo Santos até dezembro/2026. Idade estimada por falta de fonte pública confiável (goleiro reserva/emprestado)."
-    },
-    {
-      "name": "Marco Moreno",
-      "shirtNumber": 3,
+      "name": "Santiago Ramos Mingo",
+      "shirtNumber": 21,
       "position": "ZAG",
       "secondaryPositions": [],
-      "nationality": "ESP",
+      "nationality": "ARG",
       "birthYear": 2001,
-      "age": 25,
-      "notes": ""
+      "age": 24,
+      "marketValue": 12000000,
+      "notes": "Possui dupla cidadania argentina/italiana."
     },
     {
       "name": "Kanu",
@@ -82,17 +77,8 @@
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
+      "marketValue": 3000000,
       "notes": ""
-    },
-    {
-      "name": "Santiago Ramos Mingo",
-      "shirtNumber": 21,
-      "position": "ZAG",
-      "secondaryPositions": [],
-      "nationality": "ARG",
-      "birthYear": 2002,
-      "age": 24,
-      "notes": "Possui dupla cidadania argentina/italiana."
     },
     {
       "name": "David Duarte",
@@ -102,6 +88,18 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
+      "marketValue": 1500000,
+      "notes": ""
+    },
+    {
+      "name": "Marco Moreno",
+      "shirtNumber": 3,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "ESP",
+      "birthYear": 2001,
+      "age": 25,
+      "marketValue": 900000,
       "notes": ""
     },
     {
@@ -112,7 +110,8 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Jovem da base, promovido ao profissional."
+      "marketValue": 600000,
+      "notes": ""
     },
     {
       "name": "Marcos Victor",
@@ -120,28 +119,47 @@
       "position": "ZAG",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 2002,
+      "birthYear": 2001,
       "age": 24,
+      "marketValue": 450000,
       "notes": ""
     },
     {
-      "name": "Fredi",
+      "name": "Fredi Gomes",
       "shirtNumber": 83,
       "position": "ZAG",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Jovem da base. Sobrenome divergente entre fontes (Lippert/Gomes) - não confirmado."
+      "marketValue": null,
+      "notes": "Sem valor de mercado atribuído pelo Transfermarkt."
     },
     {
       "name": "Luciano Juba",
       "shirtNumber": 46,
       "position": "LE",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PE",
+        "ME"
+      ],
       "nationality": "BRA",
-      "birthYear": 2000,
+      "birthYear": 1999,
       "age": 26,
+      "marketValue": 14000000,
+      "notes": ""
+    },
+    {
+      "name": "Iago",
+      "shirtNumber": 25,
+      "position": "LE",
+      "secondaryPositions": [
+        "ME"
+      ],
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "marketValue": 3500000,
       "notes": ""
     },
     {
@@ -152,19 +170,8 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
+      "marketValue": 400000,
       "notes": ""
-    },
-    {
-      "name": "Iago Borduchi",
-      "shirtNumber": 25,
-      "position": "LE",
-      "secondaryPositions": [
-        "ALE"
-      ],
-      "nationality": "BRA",
-      "birthYear": 1999,
-      "age": 27,
-      "notes": "Fonte indica que atua amplamente também como ala. Idade diverge entre fontes (26-29)."
     },
     {
       "name": "Román Gómez",
@@ -174,187 +181,197 @@
       "nationality": "ARG",
       "birthYear": 2004,
       "age": 22,
+      "marketValue": 1500000,
       "notes": ""
     },
     {
       "name": "Caio Alexandre",
       "shirtNumber": 8,
       "position": "VOL",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MC",
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
+      "marketValue": 7000000,
       "notes": ""
     },
     {
       "name": "Nicolás Acevedo",
       "shirtNumber": 5,
       "position": "VOL",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "ZAG",
+        "MC"
+      ],
       "nationality": "URU",
       "birthYear": 1999,
       "age": 27,
+      "marketValue": 6000000,
       "notes": ""
     },
     {
       "name": "Erick",
       "shirtNumber": 14,
       "position": "VOL",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "LD",
+        "MC"
+      ],
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 28,
+      "marketValue": 4000000,
       "notes": ""
     },
     {
       "name": "Jean Lucas",
       "shirtNumber": 6,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Vice-capitão do time."
+      "marketValue": 13000000,
+      "notes": ""
     },
     {
       "name": "Rodrigo Nestor",
       "shirtNumber": 11,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 2000,
       "age": 26,
+      "marketValue": 7000000,
       "notes": ""
     },
     {
-      "name": "David Martins",
-      "shirtNumber": 63,
-      "position": "MC",
-      "secondaryPositions": [],
-      "nationality": "BRA",
-      "birthYear": 2007,
-      "age": 19,
-      "notes": "Confiança baixa: jovem da base citado em apenas uma fonte adicional. Idade estimada por falta de fonte pública confiável (jovem da base)."
-    },
-    {
-      "name": "Kauê Furquim",
-      "shirtNumber": 57,
-      "position": "MC",
-      "secondaryPositions": [],
-      "nationality": "BRA",
-      "birthYear": 2007,
-      "age": 19,
-      "notes": "Confiança baixa: jovem da base, posição diverge entre fontes (meio-campo/atacante). Idade estimada por falta de fonte pública confiável (jovem da base)."
-    },
-    {
-      "name": "Éverton Ribeiro",
+      "name": "Everton Ribeiro",
       "shirtNumber": 10,
       "position": "MEA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PD",
+        "SA"
+      ],
       "nationality": "BRA",
       "birthYear": 1989,
       "age": 37,
-      "notes": "Capitão do time."
+      "marketValue": 1000000,
+      "notes": ""
     },
     {
       "name": "Roger Gabriel",
       "shirtNumber": 80,
       "position": "MEA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "SA"
+      ],
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Confiança baixa: citado em apenas uma fonte adicional. Número de camisa 80 também associado a outro jogador (Cauly) em outra fonte - possível conflito/realocação de número não resolvido."
+      "marketValue": null,
+      "notes": "Sem valor de mercado atribuído pelo Transfermarkt."
     },
     {
       "name": "Erick Pulga",
       "shirtNumber": 16,
       "position": "PE",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PD"
+      ],
       "nationality": "BRA",
-      "birthYear": 2001,
+      "birthYear": 2000,
       "age": 25,
+      "marketValue": 11000000,
+      "notes": ""
+    },
+    {
+      "name": "Ruan Pablo",
+      "shirtNumber": 52,
+      "position": "PE",
+      "secondaryPositions": [
+        "PD",
+        "SA"
+      ],
+      "nationality": "BRA",
+      "birthYear": 2008,
+      "age": 18,
+      "marketValue": 8000000,
       "notes": ""
     },
     {
       "name": "Mateo Sanabria",
       "shirtNumber": 23,
       "position": "PE",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PD"
+      ],
       "nationality": "ARG",
       "birthYear": 2004,
       "age": 22,
+      "marketValue": 2000000,
       "notes": "Possui dupla cidadania argentina/italiana."
     },
     {
-      "name": "Ruan Pablo",
-      "shirtNumber": 77,
-      "position": "PE",
-      "secondaryPositions": [],
-      "nationality": "BRA",
-      "birthYear": 2008,
-      "age": 18,
-      "notes": "Jovem da base, recém-promovido ao profissional."
+      "name": "Cristian Olivera",
+      "shirtNumber": 99,
+      "position": "PD",
+      "secondaryPositions": [
+        "PE"
+      ],
+      "nationality": "URU",
+      "birthYear": 2002,
+      "age": 24,
+      "marketValue": 5000000,
+      "notes": ""
     },
     {
       "name": "Michel Araújo",
       "shirtNumber": 15,
       "position": "PD",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MEA",
+        "PE"
+      ],
       "nationality": "URU",
-      "birthYear": 1997,
+      "birthYear": 1996,
       "age": 29,
+      "marketValue": 2500000,
       "notes": ""
     },
     {
       "name": "Ademir",
       "shirtNumber": 7,
       "position": "PD",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PE",
+        "SA"
+      ],
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
+      "marketValue": 1200000,
       "notes": ""
     },
     {
-      "name": "Cristian Olivera",
-      "shirtNumber": 99,
-      "position": "PD",
-      "secondaryPositions": [],
-      "nationality": "URU",
-      "birthYear": 2002,
-      "age": 24,
-      "notes": "Conhecido como 'Kike' Olivera. Emprestado pelo Grêmio; atualmente no elenco do Bahia."
-    },
-    {
-      "name": "Alejo Véliz",
+      "name": "Alejo Veliz",
       "shirtNumber": 9,
       "position": "CA",
       "secondaryPositions": [],
       "nationality": "ARG",
-      "birthYear": 2004,
+      "birthYear": 2003,
       "age": 22,
-      "notes": ""
-    },
-    {
-      "name": "Willian José",
-      "shirtNumber": 12,
-      "position": "CA",
-      "secondaryPositions": [],
-      "nationality": "BRA",
-      "birthYear": 1992,
-      "age": 34,
-      "notes": "Possui dupla cidadania brasileira/espanhola."
-    },
-    {
-      "name": "Everaldo",
-      "shirtNumber": 27,
-      "position": "CA",
-      "secondaryPositions": [],
-      "nationality": "BRA",
-      "birthYear": 1991,
-      "age": 35,
-      "notes": "Emprestado pelo Fluminense; atualmente no elenco do Bahia."
+      "marketValue": 4000000,
+      "notes": "Emprestado pelo Tottenham."
     },
     {
       "name": "Dell",
@@ -364,18 +381,33 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Jovem da base, recém-promovido ao profissional."
+      "marketValue": 4000000,
+      "notes": ""
     },
     {
-      "name": "Caio Suassuna",
-      "shirtNumber": 90,
+      "name": "Willian José",
+      "shirtNumber": 12,
       "position": "CA",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 2007,
-      "age": 19,
-      "notes": "Confiança baixa: jovem da base citado em apenas uma fonte adicional. Idade estimada por falta de fonte pública confiável (jovem da base)."
+      "birthYear": 1991,
+      "age": 34,
+      "marketValue": 1200000,
+      "notes": "Possui dupla cidadania brasileira/espanhola."
+    },
+    {
+      "name": "Everaldo",
+      "shirtNumber": 27,
+      "position": "CA",
+      "secondaryPositions": [
+        "SA"
+      ],
+      "nationality": "BRA",
+      "birthYear": 1991,
+      "age": 35,
+      "marketValue": 350000,
+      "notes": ""
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Fontes cruzadas: Predefinição de elenco da Wikipédia PT/EN (artigo '2026 Esporte Clube Bahia season'), Transfermarkt (kader e leihspieler/emprestados), Goal.com Brasil, e busca complementar (futbahia.com.br, de menor confiabilidade, usado apenas para nomes de reserva/base). O site oficial (ecbahia.com / esporteclubebahia.com.br) e o Sofascore retornaram erro HTTP 403 (bloqueio anti-bot) e não puderam ser acessados diretamente nesta pesquisa; dados desses vieram apenas indiretamente de resultados de busca. Núcleo de 30 jogadores com alta confiança (cruzado em 3+ fontes, batendo com a contagem de '31 jogadores' do plantel ativo no Transfermarkt); adicionados 6 jogadores de confiança baixa (Victor, João Paulo, David Martins, Kauê Furquim, Roger Gabriel, Caio Suassuna) citados apenas em fonte secundária, marcados individualmente em notes. Jogadores emprestados PARA FORA do Bahia (Kayky ao Internacional, Gabriel Xavier ao Shenzhen Peng City, Cauly ao São Paulo FC, Vitinho ao Santa Cruz FC, e um 'Iago' lateral-esquerdo ambíguo/possivelmente duplicado de Iago Borduchi) foram EXCLUÍDOS do elenco por não estarem fisicamente disputando pelo Bahia no momento. Idades em sua maioria aproximadas (não datas completas de nascimento) - ano de nascimento derivado da idade informada, com pequena margem de erro possível. Capacidade da Arena Fonte Nova é 50.025 (oficial), embora operação reportada gire em torno de 48.000 por restrições de venda."
+  "sourceNotes": "Dados consultados no Transfermarkt em 27/08/2026. A página detalhada do elenco registra 31 jogadores e valor total de mercado de aproximadamente €115,3 milhões. Posições secundárias foram convertidas a partir da página 'Squad by position' do Transfermarkt. Valores sem avaliação foram representados como null, preservando a distinção entre ausência de avaliação e valor zero. O elenco atual utilizado pelo Transfermarkt inclui Guido Herrera e não inclui Marcos Felipe no grupo principal atual. Luciano Juba é atualmente o jogador mais valioso do elenco, com €14 milhões, seguido por Jean Lucas (€13 milhões), Santiago Ramos Mingo (€12 milhões) e Erick Pulga (€11 milhões)."
 }

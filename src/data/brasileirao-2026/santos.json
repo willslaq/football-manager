@@ -8,41 +8,424 @@
     "founded": 1912,
     "stadium": "Estádio Urbano Caldeira (Vila Belmiro)",
     "stadiumCapacity": 16798,
-    "colors": { "primary": "#ffffff", "secondary": "#000000" }
+    "colors": {
+      "primary": "#ffffff",
+      "secondary": "#000000"
+    }
   },
   "squad": [
-    { "name": "Gabriel Brazão", "shirtNumber": 77, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2000, "age": 25, "notes": "" },
-    { "name": "João Paulo", "shirtNumber": 34, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1995, "age": 31, "notes": "" },
-    { "name": "Diógenes", "shirtNumber": 1, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2001, "age": 25, "notes": "" },
-    { "name": "Rodrigo Falcão", "shirtNumber": 67, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2005, "age": 21, "notes": "" },
-    { "name": "Lucas Veríssimo", "shirtNumber": 4, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1995, "age": 31, "notes": "" },
-    { "name": "Alexis Duarte", "shirtNumber": null, "position": "ZAG", "secondaryPositions": [], "nationality": "PAR", "birthYear": 2000, "age": 26, "notes": "" },
-    { "name": "Luan Peres", "shirtNumber": 14, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1994, "age": 32, "notes": "" },
-    { "name": "João Ananias", "shirtNumber": 26, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2007, "age": 19, "notes": "" },
-    { "name": "João Alencar", "shirtNumber": 42, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2007, "age": 19, "notes": "" },
-    { "name": "Vinicius Lira", "shirtNumber": 3, "position": "LE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2007, "age": 18, "notes": "" },
-    { "name": "Gonzalo Escobar", "shirtNumber": 31, "position": "LE", "secondaryPositions": [], "nationality": "ARG", "birthYear": 1997, "age": 29, "notes": "" },
-    { "name": "Gabriel Menino", "shirtNumber": 25, "position": "LD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2000, "age": 25, "notes": "" },
-    { "name": "Igor Vinícius", "shirtNumber": 18, "position": "LD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1997, "age": 29, "notes": "" },
-    { "name": "Christian Oliva", "shirtNumber": 28, "position": "VOL", "secondaryPositions": [], "nationality": "URU", "birthYear": 1996, "age": 30, "notes": "" },
-    { "name": "Willian Arão", "shirtNumber": 15, "position": "VOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1992, "age": 34, "notes": "" },
-    { "name": "João Schmidt", "shirtNumber": 5, "position": "VOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1993, "age": 33, "notes": "" },
-    { "name": "Gustavinho", "shirtNumber": 48, "position": "VOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2005, "age": 21, "notes": "" },
-    { "name": "Gabriel Bontempo", "shirtNumber": 49, "position": "MC", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2005, "age": 21, "notes": "Fonte descreveu apenas como 'meia', posição genérica atribuída" },
-    { "name": "Neymar", "shirtNumber": 10, "position": "MEA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1992, "age": 34, "notes": "" },
-    { "name": "Miguelito", "shirtNumber": 30, "position": "MEA", "secondaryPositions": [], "nationality": "BOL", "birthYear": 2004, "age": 22, "notes": "" },
-    { "name": "Thaciano", "shirtNumber": 16, "position": "MEA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1995, "age": 31, "notes": "" },
-    { "name": "Pepê Fermino", "shirtNumber": 20, "position": "MEA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2007, "age": 19, "notes": "" },
-    { "name": "Álvaro Barreal", "shirtNumber": 22, "position": "PE", "secondaryPositions": [], "nationality": "ARG", "birthYear": 2000, "age": 26, "notes": "" },
-    { "name": "Moisés", "shirtNumber": 21, "position": "PE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1996, "age": 29, "notes": "" },
-    { "name": "Gustavo Caballero", "shirtNumber": 17, "position": "PE", "secondaryPositions": [], "nationality": "PAR", "birthYear": 2001, "age": 24, "notes": "" },
-    { "name": "Mateus Xavier", "shirtNumber": 47, "position": "PE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2007, "age": 19, "notes": "" },
-    { "name": "Benjamín Rollheiser", "shirtNumber": 32, "position": "PD", "secondaryPositions": [], "nationality": "ARG", "birthYear": 2000, "age": 26, "notes": "" },
-    { "name": "Robinho Junior", "shirtNumber": 7, "position": "PD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2007, "age": 18, "notes": "" },
-    { "name": "Andrey Quintino", "shirtNumber": null, "position": "PD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2002, "age": 24, "notes": "" },
-    { "name": "Enzo Boer", "shirtNumber": null, "position": "PD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2005, "age": 21, "notes": "" },
-    { "name": "Rony", "shirtNumber": 11, "position": "CA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1995, "age": 31, "notes": "" },
-    { "name": "Gabriel Barbosa", "shirtNumber": 9, "position": "CA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1996, "age": 29, "notes": "Conhecido como Gabigol" }
+    {
+      "name": "Gabriel Brazão",
+      "shirtNumber": 77,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 12000000,
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "João Paulo",
+      "shirtNumber": 34,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 2000000,
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Diógenes",
+      "shirtNumber": 1,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 200000,
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Rodrigo Falcão",
+      "shirtNumber": 67,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 0,
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Lucas Veríssimo",
+      "shirtNumber": 4,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "marketValue": 4500000,
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Alexis Duarte",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "marketValue": 1800000,
+      "nationality": "PAR",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Luan Peres",
+      "shirtNumber": 14,
+      "position": "ZAG",
+      "secondaryPositions": [
+        "LE"
+      ],
+      "marketValue": 700000,
+      "nationality": "BRA",
+      "birthYear": 1994,
+      "age": 32,
+      "notes": ""
+    },
+    {
+      "name": "João Ananias",
+      "shirtNumber": 26,
+      "position": "ZAG",
+      "secondaryPositions": [
+        "LE"
+      ],
+      "marketValue": 500000,
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "João Alencar",
+      "shirtNumber": 42,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "marketValue": 0,
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "Vinicius Lira",
+      "shirtNumber": 3,
+      "position": "LE",
+      "secondaryPositions": [],
+      "marketValue": 4000000,
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 18,
+      "notes": ""
+    },
+    {
+      "name": "Gonzalo Escobar",
+      "shirtNumber": 31,
+      "position": "LE",
+      "secondaryPositions": [],
+      "marketValue": 800000,
+      "nationality": "ARG",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Gabriel Menino",
+      "shirtNumber": 25,
+      "position": "MC",
+      "secondaryPositions": [
+        "VOL",
+        "LD"
+      ],
+      "marketValue": 7000000,
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Igor Vinícius",
+      "shirtNumber": 18,
+      "position": "LD",
+      "secondaryPositions": [
+        "PD"
+      ],
+      "marketValue": 2000000,
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Christian Oliva",
+      "shirtNumber": 28,
+      "position": "VOL",
+      "secondaryPositions": [
+        "MC"
+      ],
+      "marketValue": 1400000,
+      "nationality": "URU",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Willian Arão",
+      "shirtNumber": 15,
+      "position": "VOL",
+      "secondaryPositions": [
+        "ZAG",
+        "MC"
+      ],
+      "marketValue": 800000,
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": ""
+    },
+    {
+      "name": "João Schmidt",
+      "shirtNumber": 5,
+      "position": "VOL",
+      "secondaryPositions": [
+        "MC"
+      ],
+      "marketValue": 700000,
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": ""
+    },
+    {
+      "name": "Gustavinho",
+      "shirtNumber": 48,
+      "position": "VOL",
+      "secondaryPositions": [
+        "MC",
+        "LD"
+      ],
+      "marketValue": 500000,
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Gabriel Bontempo",
+      "shirtNumber": 49,
+      "position": "MC",
+      "secondaryPositions": [
+        "MD",
+        "MEA"
+      ],
+      "marketValue": 9000000,
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Neymar",
+      "shirtNumber": 10,
+      "position": "MEA",
+      "secondaryPositions": [
+        "PE",
+        "SA"
+      ],
+      "marketValue": 8000000,
+      "nationality": "BRA",
+      "birthYear": 1992,
+      "age": 34,
+      "notes": ""
+    },
+    {
+      "name": "Miguelito",
+      "shirtNumber": 30,
+      "position": "MEA",
+      "secondaryPositions": [
+        "PD",
+        "PE"
+      ],
+      "marketValue": 5000000,
+      "nationality": "BOL",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Thaciano",
+      "shirtNumber": 16,
+      "position": "MEA",
+      "secondaryPositions": [
+        "SA",
+        "CA"
+      ],
+      "marketValue": 1000000,
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Pepê Fermino",
+      "shirtNumber": 20,
+      "position": "MEA",
+      "secondaryPositions": [
+        "CA"
+      ],
+      "marketValue": 0,
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "Álvaro Barreal",
+      "shirtNumber": 22,
+      "position": "PE",
+      "secondaryPositions": [
+        "ME",
+        "PD"
+      ],
+      "marketValue": 7000000,
+      "nationality": "ARG",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Moisés",
+      "shirtNumber": 21,
+      "position": "PE",
+      "secondaryPositions": [
+        "PD",
+        "SA"
+      ],
+      "marketValue": 2000000,
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Gustavo Caballero",
+      "shirtNumber": 17,
+      "position": "PE",
+      "secondaryPositions": [],
+      "marketValue": 1000000,
+      "nationality": "PAR",
+      "birthYear": 2001,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Mateus Xavier",
+      "shirtNumber": 47,
+      "position": "PE",
+      "secondaryPositions": [
+        "PD",
+        "MEA"
+      ],
+      "marketValue": 400000,
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 19,
+      "notes": ""
+    },
+    {
+      "name": "Benjamín Rollheiser",
+      "shirtNumber": 32,
+      "position": "PD",
+      "secondaryPositions": [
+        "MEA",
+        "CA"
+      ],
+      "marketValue": 9000000,
+      "nationality": "ARG",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Robinho Junior",
+      "shirtNumber": 7,
+      "position": "PD",
+      "secondaryPositions": [
+        "MEA",
+        "PE"
+      ],
+      "marketValue": 5000000,
+      "nationality": "BRA",
+      "birthYear": 2007,
+      "age": 18,
+      "notes": ""
+    },
+    {
+      "name": "Andrey Quintino",
+      "shirtNumber": null,
+      "position": "PD",
+      "secondaryPositions": [
+        "LD",
+        "PE"
+      ],
+      "marketValue": 0,
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": ""
+    },
+    {
+      "name": "Enzo Boer",
+      "shirtNumber": null,
+      "position": "PD",
+      "secondaryPositions": [
+        "MEA",
+        "PE"
+      ],
+      "marketValue": 0,
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Rony",
+      "shirtNumber": 11,
+      "position": "CA",
+      "secondaryPositions": [
+        "PE",
+        "PD"
+      ],
+      "marketValue": 4500000,
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Gabriel Barbosa",
+      "shirtNumber": 9,
+      "position": "CA",
+      "secondaryPositions": [
+        "SA",
+        "PD"
+      ],
+      "marketValue": 3000000,
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 29,
+      "notes": "Conhecido como Gabigol"
+    }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Fontes: Transfermarkt (transfermarkt.us/fc-santos, visualizações compacta e detalhada). A página da Wikipédia em pt.br foi consultada mas o conteúdo retornado estava truncado antes da seção de elenco, não sendo utilizável. Total de 32 jogadores confirmados no BID conforme Transfermarkt. Alguns jogadores (Alexis Duarte, Andrey Quintino, Enzo Boer) aparecem sem número de camisa atribuído na fonte."
+  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Os valores são armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-' para o valor de mercado, marketValue foi definido como 0. Posições secundárias foram convertidas para os códigos do sistema: GOL (Goalkeeper), ZAG (Centre-Back), LE (Left-Back), LD (Right-Back), VOL (Defensive Midfield), MC (Central Midfield), MEA (Attacking Midfield), ME (Left Midfield), MD (Right Midfield), PE (Left Winger), PD (Right Winger), CA (Centre-Forward), SA (Second Striker)."
 }

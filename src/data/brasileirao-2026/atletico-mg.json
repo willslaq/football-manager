@@ -20,9 +20,10 @@
       "position": "GOL",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 2004,
-      "age": 22,
-      "notes": "Idade/data de nascimento divergem entre fontes (estimativa entre 21-24 anos); não confirmada com data exata."
+      "birthYear": 2002,
+      "age": 24,
+      "marketValue": 300000,
+      "notes": ""
     },
     {
       "name": "Everson",
@@ -30,9 +31,10 @@
       "position": "GOL",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 1991,
-      "age": 35,
-      "notes": "Idade divergiu entre fontes (estimativa entre 33-36 anos); não confirmada com data exata."
+      "birthYear": 1990,
+      "age": 36,
+      "marketValue": 900000,
+      "notes": ""
     },
     {
       "name": "Robert",
@@ -42,7 +44,8 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Idade aproximada, data exata não confirmada."
+      "marketValue": null,
+      "notes": ""
     },
     {
       "name": "Pedro Cobra",
@@ -50,19 +53,23 @@
       "position": "GOL",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 2007,
-      "age": 19,
-      "notes": "Idade aproximada, data exata não confirmada."
+      "birthYear": 2006,
+      "age": 20,
+      "marketValue": 600000,
+      "notes": ""
     },
     {
       "name": "Léo Duarte",
       "shirtNumber": 3,
       "position": "ZAG",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "LD"
+      ],
       "nationality": "BRA",
       "birthYear": 1996,
       "age": 30,
-      "notes": "Recém-contratado como agente livre em 01/07/2026, ex-İstanbul Başakşehir."
+      "marketValue": 2500000,
+      "notes": "Transfermarkt atualmente o registra como camisa 15; posição principal ZAG e secundária LD."
     },
     {
       "name": "Ruan Tressoldi",
@@ -72,16 +79,20 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
-      "notes": "Recém-contratado em 01/07/2026 (~€3,5M), ex-Sassuolo."
+      "marketValue": 4000000,
+      "notes": "Transfermarkt utiliza Ruan como nome de exibição."
     },
     {
       "name": "Lyanco",
       "shirtNumber": 13,
       "position": "ZAG",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "LD"
+      ],
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
+      "marketValue": 4500000,
       "notes": ""
     },
     {
@@ -92,7 +103,8 @@
       "nationality": "BRA",
       "birthYear": 1991,
       "age": 35,
-      "notes": "Recém-contratado em 09/01/2026, ex-Bahia. Distinto de outro jogador de nome semelhante 'Victor Hugo' (meio-campista, camisa 30) no mesmo elenco."
+      "marketValue": 500000,
+      "notes": ""
     },
     {
       "name": "Vitão",
@@ -102,6 +114,7 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
+      "marketValue": null,
       "notes": "Jovem da base."
     },
     {
@@ -112,7 +125,8 @@
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
-      "notes": "Confiança baixa: aparece apenas no Transfermarkt sem confirmação cruzada de outra fonte; número de camisa não confirmado."
+      "marketValue": 450000,
+      "notes": ""
     },
     {
       "name": "Natanael",
@@ -120,191 +134,252 @@
       "position": "LD",
       "secondaryPositions": [],
       "nationality": "BRA",
-      "birthYear": 2006,
-      "age": 20,
-      "notes": "Idade estimada por falta de fonte pública confiável (lateral jovem, reserva)."
+      "birthYear": 2002,
+      "age": 24,
+      "marketValue": 4500000,
+      "notes": ""
     },
     {
       "name": "Ángelo Preciado",
       "shirtNumber": 23,
       "position": "LD",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MD",
+        "PD"
+      ],
       "nationality": "ECU",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Recém-contratado em 16/01/2026 (~€5M), ex-Sparta Praga."
+      "marketValue": 3500000,
+      "notes": ""
     },
     {
       "name": "Kauã Pascini",
       "shirtNumber": 36,
-      "position": "LD",
-      "secondaryPositions": [
-        "LE"
-      ],
+      "position": "LE",
+      "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Formado na base do clube; fonte indica que pode atuar em ambas as laterais."
+      "marketValue": 500000,
+      "notes": "Transfermarkt o classifica como lateral-esquerdo."
     },
     {
       "name": "Renan Lodi",
       "shirtNumber": 6,
       "position": "LE",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "ME"
+      ],
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Contratado como agente livre em 01/01/2026, primeiro reforço do clube no ano."
+      "marketValue": 11000000,
+      "notes": ""
     },
     {
       "name": "Alexsander",
       "shirtNumber": 5,
       "position": "VOL",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "LE",
+        "MC"
+      ],
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 22,
+      "marketValue": 5500000,
       "notes": ""
     },
     {
       "name": "Fred",
       "shirtNumber": 7,
-      "position": "VOL",
-      "secondaryPositions": [],
+      "position": "MC",
+      "secondaryPositions": [
+        "VOL"
+      ],
       "nationality": "BRA",
       "birthYear": 1993,
       "age": 33,
-      "notes": "Recém-contratado em 14/08/2026 (~€2M), ex-Fenerbahçe."
+      "marketValue": 4500000,
+      "notes": "Contratado do Fenerbahçe em agosto/2026. Transfermarkt o classifica como MC."
     },
     {
       "name": "Maycon",
       "shirtNumber": 8,
-      "position": "VOL",
-      "secondaryPositions": [],
+      "position": "MC",
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
-      "notes": "Contratado como agente livre em 13/01/2026, ex-Shakhtar Donetsk."
+      "marketValue": 2000000,
+      "notes": ""
     },
     {
       "name": "Alan Franco",
       "shirtNumber": 21,
-      "position": "VOL",
-      "secondaryPositions": [],
+      "position": "MC",
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
       "nationality": "ECU",
       "birthYear": 1998,
       "age": 28,
+      "marketValue": 4500000,
       "notes": ""
     },
     {
       "name": "Tomás Pérez",
       "shirtNumber": 25,
       "position": "VOL",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MC"
+      ],
       "nationality": "ARG",
       "birthYear": 2005,
       "age": 21,
-      "notes": ""
+      "marketValue": 3000000,
+      "notes": "Emprestado pelo FC Porto."
     },
     {
       "name": "Gustavo Scarpa",
       "shirtNumber": 10,
-      "position": "MC",
-      "secondaryPositions": [],
+      "position": "MEA",
+      "secondaryPositions": [
+        "MD",
+        "ME"
+      ],
       "nationality": "BRA",
       "birthYear": 1994,
       "age": 32,
-      "notes": ""
+      "marketValue": 4500000,
+      "notes": "Possui dupla cidadania brasileira/italiana."
     },
     {
       "name": "Bernard",
       "shirtNumber": 11,
-      "position": "MEA",
-      "secondaryPositions": [],
+      "position": "PE",
+      "secondaryPositions": [
+        "PD",
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 1992,
       "age": 33,
-      "notes": "Fonte lista genericamente como meio-campista/atacante; pode atuar como ponta."
+      "marketValue": 600000,
+      "notes": ""
     },
     {
       "name": "Kevin Castaño",
       "shirtNumber": 15,
-      "position": "MC",
-      "secondaryPositions": [],
+      "position": "VOL",
+      "secondaryPositions": [
+        "MC"
+      ],
       "nationality": "COL",
       "birthYear": 2000,
       "age": 25,
-      "notes": ""
+      "marketValue": 5000000,
+      "notes": "Transfermarkt o classifica como volante, com MC como posição secundária."
     },
     {
       "name": "Igor Gomes",
       "shirtNumber": 17,
-      "position": "MC",
-      "secondaryPositions": [],
+      "position": "MEA",
+      "secondaryPositions": [
+        "MC"
+      ],
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
+      "marketValue": 2500000,
       "notes": ""
     },
     {
       "name": "Reinier",
       "shirtNumber": 19,
-      "position": "MC",
-      "secondaryPositions": [],
+      "position": "MEA",
+      "secondaryPositions": [
+        "PE",
+        "PD"
+      ],
       "nationality": "BRA",
       "birthYear": 2002,
       "age": 24,
+      "marketValue": 2000000,
       "notes": ""
     },
     {
       "name": "Patrick",
       "shirtNumber": 20,
-      "position": "MC",
-      "secondaryPositions": [],
+      "position": "VOL",
+      "secondaryPositions": [
+        "MC"
+      ],
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
+      "marketValue": 1500000,
       "notes": ""
     },
     {
       "name": "Victor Hugo",
       "shirtNumber": 30,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
-      "notes": "Recém-contratado em 18/01/2026 (~€2,15M), ex-Flamengo. Distinto do zagueiro de nome semelhante 'Vitor Hugo' (camisa 14) no mesmo elenco."
+      "marketValue": 7000000,
+      "notes": "Distinto do zagueiro Vitor Hugo, camisa 14."
     },
     {
       "name": "Índio",
       "shirtNumber": 38,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "MD"
+      ],
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Nome de registro Hendel. Formado na base; posição específica não detalhada pela fonte."
+      "marketValue": null,
+      "notes": "Transfermarkt o classifica como MC/MD."
     },
     {
       "name": "Mamady Cissé",
       "shirtNumber": 39,
       "position": "MC",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
       "nationality": "GUI",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem; status de registro no profissional não totalmente confirmado. Posição específica não detalhada pela fonte."
+      "marketValue": 1000000,
+      "notes": ""
     },
     {
       "name": "Mateo Cassierra",
       "shirtNumber": 9,
       "position": "CA",
-      "secondaryPositions": [],
+      "secondaryPositions": [
+        "PE",
+        "PD"
+      ],
       "nationality": "COL",
       "birthYear": 1997,
       "age": 29,
-      "notes": "Recém-contratado em 23/01/2026 (~€8M), ex-Zenit São Petersburgo."
+      "marketValue": 8000000,
+      "notes": ""
     },
     {
       "name": "Thiago Borbas",
@@ -314,54 +389,62 @@
       "nationality": "URU",
       "birthYear": 2002,
       "age": 24,
-      "notes": ""
+      "marketValue": 3500000,
+      "notes": "Emprestado pelo Red Bull Bragantino."
     },
     {
       "name": "Alan Minda",
       "shirtNumber": 27,
       "position": "PD",
       "secondaryPositions": [
-        "CA"
+        "PE",
+        "SA"
       ],
       "nationality": "ECU",
       "birthYear": 2003,
       "age": 23,
-      "notes": "Recém-contratado em 14/01/2026 (~€7M), ex-Cercle Brugge. Fonte cita atuação tanto como ponta quanto centroavante."
+      "marketValue": 3000000,
+      "notes": ""
     },
     {
       "name": "Tomás Cuello",
       "shirtNumber": 28,
-      "position": "MEA",
+      "position": "PE",
       "secondaryPositions": [
-        "CA"
+        "PD",
+        "MEA"
       ],
       "nationality": "ARG",
       "birthYear": 2000,
       "age": 26,
-      "notes": "Fonte cita atuação tanto como meia-atacante quanto centroavante."
+      "marketValue": 6000000,
+      "notes": ""
     },
     {
       "name": "Cauã Soares",
       "shirtNumber": 29,
-      "position": "CA",
+      "position": "SA",
       "secondaryPositions": [],
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Formado na base do clube."
+      "marketValue": 500000,
+      "notes": ""
     },
     {
       "name": "Dudu",
       "shirtNumber": 92,
-      "position": "PD",
+      "position": "PE",
       "secondaryPositions": [
-        "CA"
+        "PD",
+        "MEA"
       ],
       "nationality": "BRA",
       "birthYear": 1992,
       "age": 34,
-      "notes": "Fonte cita atuação tanto como ponta quanto centroavante."
+      "marketValue": 800000,
+      "notes": ""
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026, em duas rodadas. Primeira rodada: site oficial atletico.com.br, Transfermarkt (transfermarkt.us/atletico-mineiro/kader/verein/330) e Wikipédia em português, que renderam números de camisa, posições gerais e nacionalidades para 35 jogadores, mas sem datas de nascimento para a maioria. Segunda rodada (busca focada): datas de nascimento completas obtidas via perfis individuais do Transfermarkt para 28 jogadores (alta confiança, mas não recruzadas individualmente com uma segunda fonte para todos); idades dos 4 goleiros e do Vitão mantidas como estimativas aproximadas da primeira rodada (sem data exata confirmada), e Natanael segue sem data de nascimento encontrada em nenhuma fonte. Mateus José 'Iseppe' (camisa 48, meio-campo, formado na base) foi EXCLUÍDO do elenco por haver indício (Galo Digital, histórico Soccerway) de que estaria emprestado ao Nacional da Ilha da Madeira (Portugal) desde junho/2026 - não confirmado com certeza suficiente para incluí-lo como parte do elenco profissional ativo do Atlético-MG neste momento. Rômulo (zagueiro) incluído com confiança baixa (citado apenas no Transfermarkt, sem número de camisa confirmado). Posições de vários meio-campistas/atacantes (Bernard, Índio, Mamady Cissé, Alan Minda, Tomás Cuello, Dudu, Kauã Pascini) não foram detalhadas com precisão por posição específica nas fontes e foram codificadas com o código mais genérico plausível, com nota de incerteza. Cores oficiais (preto e branco) e capacidade da Arena MRV (~46.000) obtidas da Wikipédia/site oficial; códigos hexadecimais são estimativa de identidade visual comum, não confirmação de código oficial do clube."
+  "sourceNotes": "Dados de posição principal, posições secundárias e valores de mercado conferidos no Transfermarkt em 27/08/2026. O Transfermarkt apresenta atualmente o Atlético-MG com 34 jogadores e €98,65 milhões em valor total de mercado. Os valores individuais utilizados são os exibidos na atualização mais recente disponível para cada jogador. Jogadores sem valor atribuído pelo Transfermarkt foram representados como null. O JSON mantém os 35 jogadores fornecidos pelo usuário, mesmo quando há diferença entre essa lista e o elenco atualmente exibido pelo Transfermarkt."
 }

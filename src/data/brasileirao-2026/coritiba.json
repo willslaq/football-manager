@@ -8,38 +8,379 @@
     "founded": 1909,
     "stadium": "Estádio Major Antônio Couto Pereira",
     "stadiumCapacity": 40502,
-    "colors": { "primary": "#046A38", "secondary": "#ffffff" }
+    "colors": {
+      "primary": "#046A38",
+      "secondary": "#ffffff"
+    }
   },
   "squad": [
-    { "name": "Pedro Morisco", "shirtNumber": 1, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2004, "age": 22, "notes": "" },
-    { "name": "Pedro Rangel", "shirtNumber": 22, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2000, "age": 26, "notes": "" },
-    { "name": "Keiller", "shirtNumber": 13, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1997, "age": 29, "notes": "Possui também cidadania italiana." },
-    { "name": "Benassi", "shirtNumber": 67, "position": "GOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2004, "age": 22, "notes": "" },
-    { "name": "Jacy", "shirtNumber": 55, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1997, "age": 29, "notes": "" },
-    { "name": "Tiago Cóser", "shirtNumber": 23, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2004, "age": 22, "notes": "Possui também cidadania italiana." },
-    { "name": "Maicon", "shirtNumber": 3, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1989, "age": 37, "notes": "Possui também cidadania portuguesa." },
-    { "name": "Rodrigo Moledo", "shirtNumber": 4, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1988, "age": 38, "notes": "" },
-    { "name": "Thiago Santos", "shirtNumber": 21, "position": "ZAG", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1990, "age": 36, "notes": "" },
-    { "name": "Felipe Jonatan", "shirtNumber": 6, "position": "LE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1998, "age": 28, "notes": "" },
-    { "name": "João Almeida", "shirtNumber": 16, "position": "LE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2006, "age": 20, "notes": "" },
-    { "name": "Bruno Melo", "shirtNumber": 26, "position": "LE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1993, "age": 33, "notes": "" },
-    { "name": "JP Chermont", "shirtNumber": 44, "position": "LD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2006, "age": 20, "notes": "" },
-    { "name": "Tinga", "shirtNumber": 2, "position": "LD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1994, "age": 32, "notes": "Reforço para a temporada 2026." },
-    { "name": "Vini Paulista", "shirtNumber": 36, "position": "VOL", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2001, "age": 25, "notes": "" },
-    { "name": "Sebastián Gómez", "shirtNumber": 19, "position": "MC", "secondaryPositions": [], "nationality": "COL", "birthYear": 1996, "age": 30, "notes": "" },
-    { "name": "Fernando Sobral", "shirtNumber": 88, "position": "MC", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1995, "age": 31, "notes": "" },
-    { "name": "Gustavo", "shirtNumber": 39, "position": "MEA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2003, "age": 23, "notes": "" },
-    { "name": "Josué", "shirtNumber": 10, "position": "MEA", "secondaryPositions": [], "nationality": "POR", "birthYear": 1991, "age": 35, "notes": "" },
-    { "name": "Joaquín Lavega", "shirtNumber": 7, "position": "PE", "secondaryPositions": [], "nationality": "URU", "birthYear": 2005, "age": 21, "notes": "" },
-    { "name": "Breno Lopes", "shirtNumber": 77, "position": "PE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1996, "age": 30, "notes": "" },
-    { "name": "Brian Ocampo", "shirtNumber": 17, "position": "PE", "secondaryPositions": [], "nationality": "URU", "birthYear": 1999, "age": 27, "notes": "" },
-    { "name": "Keno", "shirtNumber": 20, "position": "PE", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1990, "age": 36, "notes": "" },
-    { "name": "Lucas Ronier", "shirtNumber": 11, "position": "PD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2005, "age": 21, "notes": "" },
-    { "name": "Fabinho", "shirtNumber": 28, "position": "PD", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2000, "age": 26, "notes": "" },
-    { "name": "Pedro Rocha", "shirtNumber": 32, "position": "CA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1995, "age": 31, "notes": "Reforço para a temporada 2026." },
-    { "name": "Renato Marques", "shirtNumber": 78, "position": "CA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2004, "age": 22, "notes": "" },
-    { "name": "Rodrigo Rodrigues", "shirtNumber": 99, "position": "CA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 1996, "age": 30, "notes": "" },
-    { "name": "Éberth", "shirtNumber": 12, "position": "CA", "secondaryPositions": [], "nationality": "BRA", "birthYear": 2003, "age": 23, "notes": "" }
+    {
+      "name": "Pedro Morisco",
+      "shirtNumber": 1,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 5000000,
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Pedro Rangel",
+      "shirtNumber": 22,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 1000000,
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Keiller",
+      "shirtNumber": 13,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 500000,
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": "Possui também cidadania italiana."
+    },
+    {
+      "name": "Benassi",
+      "shirtNumber": 67,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "marketValue": 50000,
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Jacy",
+      "shirtNumber": 55,
+      "position": "ZAG",
+      "secondaryPositions": [
+        "VOL"
+      ],
+      "marketValue": 2500000,
+      "nationality": "BRA",
+      "birthYear": 1997,
+      "age": 29,
+      "notes": ""
+    },
+    {
+      "name": "Tiago Cóser",
+      "shirtNumber": 23,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "marketValue": 1500000,
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": "Possui também cidadania italiana."
+    },
+    {
+      "name": "Maicon",
+      "shirtNumber": 3,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "marketValue": 100000,
+      "nationality": "BRA",
+      "birthYear": 1989,
+      "age": 37,
+      "notes": "Possui também cidadania portuguesa."
+    },
+    {
+      "name": "Rodrigo Moledo",
+      "shirtNumber": 4,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "marketValue": 100000,
+      "nationality": "BRA",
+      "birthYear": 1988,
+      "age": 38,
+      "notes": ""
+    },
+    {
+      "name": "Thiago Santos",
+      "shirtNumber": 21,
+      "position": "ZAG",
+      "secondaryPositions": [
+        "VOL",
+        "MC"
+      ],
+      "marketValue": 100000,
+      "nationality": "BRA",
+      "birthYear": 1990,
+      "age": 36,
+      "notes": ""
+    },
+    {
+      "name": "Felipe Jonatan",
+      "shirtNumber": 6,
+      "position": "LE",
+      "secondaryPositions": [],
+      "marketValue": 2000000,
+      "nationality": "BRA",
+      "birthYear": 1998,
+      "age": 28,
+      "notes": ""
+    },
+    {
+      "name": "João Almeida",
+      "shirtNumber": 16,
+      "position": "LE",
+      "secondaryPositions": [],
+      "marketValue": 400000,
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": ""
+    },
+    {
+      "name": "Bruno Melo",
+      "shirtNumber": 26,
+      "position": "LE",
+      "secondaryPositions": [
+        "ZAG"
+      ],
+      "marketValue": 250000,
+      "nationality": "BRA",
+      "birthYear": 1993,
+      "age": 33,
+      "notes": ""
+    },
+    {
+      "name": "JP Chermont",
+      "shirtNumber": 44,
+      "position": "LD",
+      "secondaryPositions": [
+        "MD"
+      ],
+      "marketValue": 4000000,
+      "nationality": "BRA",
+      "birthYear": 2006,
+      "age": 20,
+      "notes": ""
+    },
+    {
+      "name": "Tinga",
+      "shirtNumber": 2,
+      "position": "LD",
+      "secondaryPositions": [
+        "ZAG"
+      ],
+      "marketValue": 450000,
+      "nationality": "BRA",
+      "birthYear": 1994,
+      "age": 32,
+      "notes": "Reforço para a temporada 2026."
+    },
+    {
+      "name": "Vini Paulista",
+      "shirtNumber": 36,
+      "position": "VOL",
+      "secondaryPositions": [
+        "MC",
+        "MEA"
+      ],
+      "marketValue": 1000000,
+      "nationality": "BRA",
+      "birthYear": 2001,
+      "age": 25,
+      "notes": ""
+    },
+    {
+      "name": "Sebastián Gómez",
+      "shirtNumber": 19,
+      "position": "MC",
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
+      "marketValue": 1800000,
+      "nationality": "COL",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Fernando Sobral",
+      "shirtNumber": 88,
+      "position": "MC",
+      "secondaryPositions": [
+        "VOL",
+        "MEA"
+      ],
+      "marketValue": 1500000,
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": ""
+    },
+    {
+      "name": "Gustavo",
+      "shirtNumber": 39,
+      "position": "MEA",
+      "secondaryPositions": [
+        "PE",
+        "SA"
+      ],
+      "marketValue": 500000,
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    },
+    {
+      "name": "Josué",
+      "shirtNumber": 10,
+      "position": "MEA",
+      "secondaryPositions": [
+        "MC",
+        "PD"
+      ],
+      "marketValue": 350000,
+      "nationality": "POR",
+      "birthYear": 1991,
+      "age": 35,
+      "notes": ""
+    },
+    {
+      "name": "Joaquín Lavega",
+      "shirtNumber": 7,
+      "position": "PE",
+      "secondaryPositions": [
+        "PD",
+        "SA"
+      ],
+      "marketValue": 4000000,
+      "nationality": "URU",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Breno Lopes",
+      "shirtNumber": 77,
+      "position": "PE",
+      "secondaryPositions": [
+        "SA",
+        "PD"
+      ],
+      "marketValue": 3000000,
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Brian Ocampo",
+      "shirtNumber": 17,
+      "position": "PE",
+      "secondaryPositions": [
+        "PD"
+      ],
+      "marketValue": 1000000,
+      "nationality": "URU",
+      "birthYear": 1999,
+      "age": 27,
+      "notes": ""
+    },
+    {
+      "name": "Keno",
+      "shirtNumber": 20,
+      "position": "PE",
+      "secondaryPositions": [
+        "PD",
+        "SA"
+      ],
+      "marketValue": 300000,
+      "nationality": "BRA",
+      "birthYear": 1990,
+      "age": 36,
+      "notes": ""
+    },
+    {
+      "name": "Lucas Ronier",
+      "shirtNumber": 11,
+      "position": "PD",
+      "secondaryPositions": [
+        "PE",
+        "MEA"
+      ],
+      "marketValue": 6000000,
+      "nationality": "BRA",
+      "birthYear": 2005,
+      "age": 21,
+      "notes": ""
+    },
+    {
+      "name": "Fabinho",
+      "shirtNumber": 28,
+      "position": "PD",
+      "secondaryPositions": [
+        "PE",
+        "CA"
+      ],
+      "marketValue": 1000000,
+      "nationality": "BRA",
+      "birthYear": 2000,
+      "age": 26,
+      "notes": ""
+    },
+    {
+      "name": "Pedro Rocha",
+      "shirtNumber": 32,
+      "position": "CA",
+      "secondaryPositions": [
+        "PE",
+        "SA"
+      ],
+      "marketValue": 1500000,
+      "nationality": "BRA",
+      "birthYear": 1995,
+      "age": 31,
+      "notes": "Reforço para a temporada 2026."
+    },
+    {
+      "name": "Renato Marques",
+      "shirtNumber": 78,
+      "position": "CA",
+      "secondaryPositions": [],
+      "marketValue": 1000000,
+      "nationality": "BRA",
+      "birthYear": 2004,
+      "age": 22,
+      "notes": ""
+    },
+    {
+      "name": "Rodrigo Rodrigues",
+      "shirtNumber": 99,
+      "position": "CA",
+      "secondaryPositions": [
+        "SA"
+      ],
+      "marketValue": 500000,
+      "nationality": "BRA",
+      "birthYear": 1996,
+      "age": 30,
+      "notes": ""
+    },
+    {
+      "name": "Éberth",
+      "shirtNumber": 12,
+      "position": "CA",
+      "secondaryPositions": [],
+      "marketValue": 250000,
+      "nationality": "BRA",
+      "birthYear": 2003,
+      "age": 23,
+      "notes": ""
+    }
   ],
-  "sourceNotes": "Dados coletados em 27/08/2026 via Transfermarkt (transfermarkt.us/coritiba-fc/kader/verein/776, plantel detalhado 2025/26) e cruzados com a Predefinição:Elenco Coritiba Foot Ball Club na Wikipédia em português (atualizada em 08/12/2025) e matéria da Rádio Itatiaia sobre a apresentação do elenco em janeiro/2026 (citando reforços como Tinga, Willian Oliveira e Pedro Rocha). Elenco de 29 atletas — mais enxuto que o BID completo estimado de 35-45; possíveis lacunas em reservas/juniores recém-promovidos não confirmados nas fontes consultadas (ex.: Willian Oliveira citado na imprensa não confirmado no Transfermarkt no momento da coleta, por isso não incluído). Idades conforme Transfermarkt em 27/08/2026; ano de nascimento estimado a partir da idade (pode variar em até 1 ano). Técnico Fernando Seabra não incluído (comissão técnica)."
+  "sourceNotes": "Dados atualizados em 27/08/2026 com base no Transfermarkt. O Transfermarkt registra atualmente €43,23 milhões como valor total do elenco principal e 32 jogadores no plantel. Os valores individuais de mercado utilizados nesta base têm como última atualização de mercado 26/05/2026. As posições principais foram alinhadas à posição principal atualmente exibida pelo Transfermarkt; as posições secundárias foram obtidas da classificação 'Squad composition by position' e dos perfis individuais do Transfermarkt quando disponíveis. O JSON original possui 29 atletas; o elenco atual do Transfermarkt também inclui Wallisson (VOL/MC), Willian Oliveira (VOL/MC) e Geovane Meurer (MC), que não foram adicionados para preservar exatamente a lista fornecida. JP Chermont é LD com MD como posição secundária; Tinga é LD com ZAG; Jacy é ZAG com VOL; Thiago Santos é ZAG com VOL/MC; Vini Paulista é VOL com MC/MEA; Sebastián Gómez é MC com VOL/MEA; Fernando Sobral é MC com VOL/MEA; Gustavo é MEA com PE/SA; Josué é MEA com MC/PD; Joaquín Lavega é PE com PD/SA; Breno Lopes é PE com SA/PD; Lucas Ronier é PD com PE/MEA; Fabinho é PD com PE/CA; Pedro Rocha é CA com PE/SA; Rodrigo Rodrigues é CA com SA. Keno aparece no perfil individual como PE com PD/SA. Pedro Rocha e Rodrigo Rodrigues também têm essas posições secundárias explicitamente registradas nos perfis individuais do Transfermarkt."
 }

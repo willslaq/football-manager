@@ -6,7 +6,7 @@ import { formationStyleCoherence } from '../../engine';
 import { useCareerStore } from '../../store/careerStore';
 import { resolveSquad } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
-import { Button, Card } from '../components';
+import { Button, Card, TextField } from '../components';
 import './Lineup.css';
 
 interface Slot {
@@ -210,12 +210,18 @@ export function Lineup() {
   const autoSaveEnabled = useCareerStore((s) => s.autoSaveEnabled);
   const saveCurrentCareer = useCareerStore((s) => s.saveCurrentCareer);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  const [nameFilter, setNameFilter] = useState('');
 
   const squad = useMemo(
     () => (career ? resolveSquad(career, career.playerClubId).sort((a, b) => b.strength - a.strength) : []),
     [career],
   );
   const playersById = useMemo(() => new Map(squad.map((p) => [p.id, p])), [squad]);
+  const visibleSquad = useMemo(() => {
+    const query = nameFilter.trim().toLowerCase();
+    if (!query) return squad;
+    return squad.filter((p) => p.name.toLowerCase().includes(query));
+  }, [squad, nameFilter]);
 
   const [assignments, setAssignments] = useState<Record<string, string | null>>(() => {
     const startersNow = (lineup?.starters ?? []).map((id) => playersById.get(id)).filter((p): p is Player => !!p);
@@ -386,6 +392,14 @@ export function Lineup() {
         <div className="lineup__sidebar">
           <span className="eyebrow">Elenco disponível · arraste pro campo</span>
 
+          <TextField
+            type="text"
+            className="lineup__search"
+            placeholder="Buscar jogador..."
+            value={nameFilter}
+            onChange={(e) => setNameFilter(e.target.value)}
+          />
+
           <Card className="lineup__card">
             <div className="lineup__row lineup__row--head">
               <span />
@@ -394,7 +408,8 @@ export function Lineup() {
               <span className="numeric">For</span>
             </div>
             <div className="lineup__row-scroll">
-              {squad.map((player) => {
+              {visibleSquad.length === 0 && <p className="lineup__search-empty">Nenhum jogador encontrado.</p>}
+              {visibleSquad.map((player) => {
                 const selected = assignedIds.has(player.id);
                 return (
                   <div

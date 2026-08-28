@@ -71,6 +71,9 @@ function formatTraceEntry(
       `  posse=${fmt(entry.possessionHome * 100, 0)}%/${fmt((1 - entry.possessionHome) * 100, 0)}%  chances=${entry.homeChanceCount}/${entry.awayChanceCount}`,
     ].join('\n');
   }
+  if (entry.kind === 'possession') {
+    return `#${i} [${entry.minute}'] posse=${fmt(entry.possessionHome * 100, 0)}%`;
+  }
   const outcome = entry.isGoal ? 'GOL' : entry.isOnTarget ? 'no alvo (defendido)' : 'fora';
   const shooter = entry.shooterId ? playerName(entry.shooterId) : '?';
   return `#${i} [${entry.minute}'] ${clubName(entry.teamId)} · ${shooter}  atk=${fmt(entry.attackStrength)} vs def=${fmt(entry.defenseStrength)} → quality=${fmt(entry.quality, 3)} → prob=${fmt(entry.goalProbability * 100, 0)}% → ${outcome}`;

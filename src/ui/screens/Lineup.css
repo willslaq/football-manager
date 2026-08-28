@@ -272,6 +272,18 @@
   letter-spacing: 0.03em;
 }
 
+.lineup__search {
+  width: 100%;
+}
+
+.lineup__search-empty {
+  margin: 0;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--mist);
+  text-align: center;
+}
+
 /* Lista do elenco */
 
 .card.lineup__card {

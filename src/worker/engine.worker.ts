@@ -108,7 +108,7 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           respond({
             type: 'roundResult',
             requestId: request.requestId,
-            payload: { state: nextState, playerMatch, suggestedLineup: buildSuggestedLineup(nextState) },
+            payload: { state: nextState, playerMatch },
           });
         };
 

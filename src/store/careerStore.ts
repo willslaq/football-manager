@@ -162,7 +162,6 @@ export const useCareerStore = create<CareerStore>((set, get) => {
         liveMatchRequestId = null;
         set({
           career: response.payload.state,
-          lineup: response.payload.suggestedLineup,
           lastMatch: response.payload.playerMatch,
           liveMatch: null,
           loading: false,

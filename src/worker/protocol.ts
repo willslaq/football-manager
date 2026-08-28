@@ -100,7 +100,7 @@ export interface CareerStateResponse {
 export interface RoundResultResponse {
   type: 'roundResult';
   requestId: string;
-  payload: { state: CareerState; playerMatch: MatchResult | null; suggestedLineup: Lineup };
+  payload: { state: CareerState; playerMatch: MatchResult | null };
 }
 
 /** Disparado assim que a partida do jogador começa a ser transmitida ao vivo (antes do roundResult final). */

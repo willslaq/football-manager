@@ -32,6 +32,17 @@ export const POSITION_GROUP: Record<Position, PositionGroup> = {
   CA: 'ATA',
 };
 
+export type PlayerListFilter = PositionGroup | 'ALL';
+
+/** Filtro de setor — mesmo conjunto usado no Elenco e na Escalação. */
+export const POSITION_FILTERS: { id: PlayerListFilter; label: string }[] = [
+  { id: 'ALL', label: 'Todos' },
+  { id: 'GOL', label: 'Goleiros' },
+  { id: 'DEF', label: 'Defesa' },
+  { id: 'MEI', label: 'Meio' },
+  { id: 'ATA', label: 'Ataque' },
+];
+
 export function findClub(career: CareerState, clubId: ClubId): Club | undefined {
   return career.world.clubs.find((c) => c.id === clubId);
 }

@@ -1,22 +1,14 @@
 import { useMemo, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCareerStore } from '../../store/careerStore';
-import { POSITION_GROUP, resolveSquad, type PositionGroup } from '../utils';
+import { POSITION_FILTERS, POSITION_GROUP, resolveSquad, type PlayerListFilter } from '../utils';
 import { Card } from '../components';
 import type { Player } from '../../engine/types';
 import './Squad.css';
 
-type Filter = PositionGroup | 'ALL';
+type Filter = PlayerListFilter;
 type SortField = 'name' | 'position' | 'age' | 'strength' | 'condition' | 'morale';
 type SortDirection = 'asc' | 'desc';
-
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: 'ALL', label: 'Todos' },
-  { id: 'GOL', label: 'Goleiros' },
-  { id: 'DEF', label: 'Defesa' },
-  { id: 'MEI', label: 'Meio' },
-  { id: 'ATA', label: 'Ataque' },
-];
 
 const COLUMNS: { field: SortField; label: string; defaultDirection: SortDirection }[] = [
   { field: 'name', label: 'Nome', defaultDirection: 'asc' },
@@ -110,7 +102,7 @@ export function Squad() {
       <div className="squad__header">
         <span className="eyebrow">{fullSquad.length} jogadores federados no profissional</span>
         <div className="squad__filters">
-          {FILTERS.map((f) => (
+          {POSITION_FILTERS.map((f) => (
             <button
               key={f.id}
               type="button"

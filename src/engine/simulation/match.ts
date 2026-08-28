@@ -1,7 +1,7 @@
 import { chance, mulberry32, weighted } from '../rng';
 import type { ClubId } from '../types/club';
 import type { EngineTraceEntry, MatchEvent, MatchResult, Reason } from '../types/match';
-import type { Player } from '../types/player';
+import type { Player, PlayerId, Position } from '../types/player';
 import { TACTIC_STYLE_LABELS, type TacticalIntensity, type Tactics } from '../types/tactics';
 import {
   BASE_CHANCES_PER_TEAM,
@@ -36,6 +36,8 @@ export interface MatchTeamInput {
   /** Exatamente 11 titulares. */
   players: Player[];
   tactics: Tactics;
+  /** Vaga exata (LD, ZAG, PE...) de cada titular na formação — ver computeSectorStrengths. */
+  slotPositionByPlayerId?: Record<PlayerId, Position>;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -291,12 +293,12 @@ export function simulateMatch(
   const awayGoalkeeper = away.players.find((p) => p.position === 'GOL');
 
   const homeStrength = applyFormationShape(
-    computeSectorStrengths(home.players, true),
+    computeSectorStrengths(home.players, true, home.slotPositionByPlayerId),
     home.tactics.formation,
     tacticalIntensity,
   );
   const awayStrength = applyFormationShape(
-    computeSectorStrengths(away.players, false),
+    computeSectorStrengths(away.players, false, away.slotPositionByPlayerId),
     away.tactics.formation,
     tacticalIntensity,
   );

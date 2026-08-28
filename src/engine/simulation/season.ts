@@ -5,7 +5,7 @@ import type { Competition, Fixture, StandingEntry } from '../types/competition';
 import type { EngineTraceEntry } from '../types/match';
 import type { Player } from '../types/player';
 import type { Lineup, Tactics } from '../types/tactics';
-import { pickAutoLineup } from './autoLineup';
+import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
 import { simulateMatch, type MatchTeamInput } from './match';
 
 /** Escalação/tática usada para todo clube que não é o do jogador (SRS M4: "escalação automática"). */
@@ -34,18 +34,34 @@ function buildTeamInput(
   playersById: Map<string, Player>,
 ): MatchTeamInput {
   if (isPlayerControlled) {
+    const lineup = input.playerLineup;
+    const slotPositionByPlayerId = lineup.slotAssignments
+      ? slotPositionsByPlayer(buildSlots(lineup.formation), lineup.slotAssignments)
+      : undefined;
     return {
       clubId,
-      players: resolvePlayers(input.playerLineup.starters, playersById),
+      players: resolvePlayers(lineup.starters, playersById),
       tactics: input.playerTactics,
+      slotPositionByPlayerId,
     };
   }
 
   const club = clubsById.get(clubId);
   if (!club) throw new Error(`advanceRound: clube inexistente (${clubId})`);
   const squad = resolvePlayers(club.squad, playersById);
-  const starters = pickAutoLineup(squad, DEFAULT_AUTO_TACTICS.formation);
-  return { clubId, players: starters, tactics: DEFAULT_AUTO_TACTICS };
+  // Times sem escalação manual (SRS M4) usam a mesma auto-escalação gulosa por
+  // vaga da tela de Escalação (não a mais simples pickAutoLineup) — assim o
+  // encaixe posicional (bônus de posição principal, penalidade fora de
+  // posição) também vale pra CPU, não só pro time do jogador.
+  const slots = buildSlots(DEFAULT_AUTO_TACTICS.formation);
+  const slotAssignments = autoAssign(slots, squad);
+  const starterIds = Object.values(slotAssignments).filter((id): id is string => !!id);
+  return {
+    clubId,
+    players: resolvePlayers(starterIds, playersById),
+    tactics: DEFAULT_AUTO_TACTICS,
+    slotPositionByPlayerId: slotPositionsByPlayer(slots, slotAssignments),
+  };
 }
 
 function updateStandingEntry(entry: StandingEntry, goalsFor: number, goalsAgainst: number): StandingEntry {

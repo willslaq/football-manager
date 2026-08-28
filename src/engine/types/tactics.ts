@@ -57,4 +57,13 @@ export interface Lineup {
   captain: PlayerId;
   penaltyTaker: PlayerId;
   freeKickTaker: PlayerId;
+  /**
+   * Mapeamento exato vaga→jogador (ex.: `{ "def-0": "flamengo-3" }`), na
+   * formação em `formation`. Fonte da verdade pra reconstruir a escalação
+   * ao remontar a tela (troca de aba) sem re-heurísticas — `starters` sozinho
+   * não basta pra saber quem estava em qual vaga exata. Ausente em saves
+   * antigos e no lineup sugerido inicial; nesses casos a tela reconstrói via
+   * heurística (`assignToSlots`), como sempre fez.
+   */
+  slotAssignments?: Record<string, PlayerId | null>;
 }

@@ -1,21 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 import { FORMATIONS, TACTIC_STYLE_LABELS, TACTIC_STYLES } from '../../engine/types';
-import type { Formation, Player, Position, TacticStyle } from '../../engine/types';
+import type { Formation, Player, TacticStyle } from '../../engine/types';
 import { formationStyleCoherence } from '../../engine';
+import { assignToSlots, autoAssign, buildSlots } from '../../engine/simulation/formation';
 import { useCareerStore } from '../../store/careerStore';
-import { resolveSquad } from '../utils';
+import { POSITION_FILTERS, POSITION_GROUP, resolveSquad, type PlayerListFilter } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
 import { Button, Card, TextField } from '../components';
 import './Lineup.css';
-
-interface Slot {
-  id: string;
-  sectorLabel: string;
-  preferred: Position[];
-  /** Posição exata que essa vaga representa na formação, pra validar encaixe. */
-  canonical: Position;
-}
 
 /** Ordem de cima (ataque) para baixo (goleiro), como visto olhando pro campo. */
 const RENDER_ORDER = ['att', 'amid', 'mid', 'dmid', 'def', 'gk'];
@@ -23,182 +16,25 @@ const RENDER_ORDER = ['att', 'amid', 'mid', 'dmid', 'def', 'gk'];
 /** Mesmo limiar usado em match.ts (COHERENCE_NOTE_LOW_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
 const COHERENCE_WARNING_THRESHOLD = 0.95;
 
-/** Linha de defesa: 3 zagueiros puros, 4 com laterais, 5 com alas avançados. */
-function defCanonical(count: number): Position[] {
-  if (count === 4) return ['LE', 'ZAG', 'ZAG', 'LD'];
-  if (count === 5) return ['ALE', 'ZAG', 'ZAG', 'ZAG', 'ALD'];
-  return Array.from({ length: count }, () => 'ZAG' as Position);
-}
+type SidebarSortField = 'name' | 'position' | 'strength';
+type SortDirection = 'asc' | 'desc';
 
-/**
- * Linha única de meio-campo (sem split volante/ofensivo). Com 5 jogadores,
- * o formato depende da defesa: time de 3 zagueiros usa alas (3-5-2), time
- * de 4 usa pontas tradicionais (4-5-1).
- */
-function midCanonical(count: number, def: number): Position[] {
-  if (count === 2) return ['VOL', 'VOL'];
-  if (count === 3) return ['VOL', 'MC', 'MC'];
-  if (count === 4) return ['ME', 'VOL', 'MC', 'MD'];
-  if (count === 5) return def === 3 ? ['ALE', 'VOL', 'MC', 'MC', 'ALD'] : ['ME', 'VOL', 'MC', 'MC', 'MD'];
-  return Array.from({ length: count }, () => 'MC' as Position);
-}
+/** Mesmo padrão de colunas ordenáveis da tela de Elenco, restrito às colunas visíveis na barra lateral. */
+const SIDEBAR_COLUMNS: { field: SidebarSortField; label: string; defaultDirection: SortDirection }[] = [
+  { field: 'name', label: 'Nome', defaultDirection: 'asc' },
+  { field: 'position', label: 'Pos', defaultDirection: 'asc' },
+  { field: 'strength', label: 'For', defaultDirection: 'desc' },
+];
 
-/** Trinca ofensiva atrás do centroavante (ex.: 4-2-3-1). */
-function amidCanonical(count: number): Position[] {
-  if (count === 3) return ['ME', 'MEA', 'MD'];
-  return Array.from({ length: count }, () => 'MEA' as Position);
-}
-
-function attCanonical(count: number): Position[] {
-  if (count === 1) return ['CA'];
-  if (count === 2) return ['SA', 'CA'];
-  if (count === 3) return ['PE', 'CA', 'PD'];
-  return Array.from({ length: count }, () => 'CA' as Position);
-}
-
-/** Vagas fixas da formação — sempre as mesmas 11, ocupadas ou não. */
-function buildSlots(formation: Formation): Slot[] {
-  const parts = formation.split('-').map(Number);
-  const def = parts[0];
-  const att = parts[parts.length - 1];
-  const midParts = parts.slice(1, -1);
-
-  const sectors: { key: string; label: string; count: number; preferred: Position[]; canonical: Position[] }[] = [
-    { key: 'gk', label: 'Goleiro', count: 1, preferred: ['GOL'], canonical: ['GOL'] },
-    {
-      key: 'def',
-      label: 'Zagueiro/Lateral',
-      count: def,
-      preferred: ['ZAG', 'LD', 'LE', 'ALD', 'ALE'],
-      canonical: defCanonical(def),
-    },
-  ];
-
-  if (midParts.length === 2) {
-    sectors.push({
-      key: 'dmid',
-      label: 'Volante',
-      count: midParts[0],
-      preferred: ['VOL', 'MC'],
-      canonical: midCanonical(midParts[0], def),
-    });
-    sectors.push({
-      key: 'amid',
-      label: 'Meia-ofensivo',
-      count: midParts[1],
-      preferred: ['MEA', 'MC', 'MD', 'ME'],
-      canonical: amidCanonical(midParts[1]),
-    });
-  } else {
-    sectors.push({
-      key: 'mid',
-      label: 'Meio-campo',
-      count: midParts[0] ?? 0,
-      preferred: ['VOL', 'MC', 'MD', 'ME', 'MEA'],
-      canonical: midCanonical(midParts[0] ?? 0, def),
-    });
+function compareSidebar(field: SidebarSortField, a: Player, b: Player): number {
+  switch (field) {
+    case 'name':
+      return a.name.localeCompare(b.name, 'pt-BR');
+    case 'position':
+      return a.position.localeCompare(b.position);
+    case 'strength':
+      return a.strength - b.strength;
   }
-
-  sectors.push({
-    key: 'att',
-    label: 'Atacante',
-    count: att,
-    preferred: ['CA', 'SA', 'PD', 'PE'],
-    canonical: attCanonical(att),
-  });
-
-  return RENDER_ORDER.flatMap((key) => {
-    const sector = sectors.find((s) => s.key === key);
-    if (!sector) return [];
-    return Array.from({ length: sector.count }, (_, i) => ({
-      id: `${sector.key}-${i}`,
-      sectorLabel: sector.label,
-      preferred: sector.preferred,
-      canonical: sector.canonical[i] ?? sector.preferred[0],
-    }));
-  });
-}
-
-/**
- * Encaixe inicial/reencaixe ao trocar de formação: de trás pra frente (gol →
- * defesa → meio → ataque), cada setor pega, por força, quem já joga ali;
- * quem sobra (a formação tem menos vagas naquele setor do que jogadores
- * daquele tipo) avança pro setor seguinte, mais ofensivo.
- */
-function assignToSlots(slots: Slot[], starters: Player[]): Record<string, string | null> {
-  const assignments: Record<string, string | null> = {};
-  for (const slot of slots) assignments[slot.id] = null;
-
-  const bySectorOrder = ['gk', 'def', 'dmid', 'mid', 'amid', 'att'];
-  const slotsBySector = bySectorOrder
-    .map((key) => slots.filter((s) => s.id.startsWith(`${key}-`)))
-    .filter((group) => group.length > 0);
-
-  let pool = [...starters];
-  slotsBySector.forEach((group, index) => {
-    const preferred = group[0].preferred;
-    const isLast = index === slotsBySector.length - 1;
-    const ownMatches = pool.filter((p) => preferred.includes(p.position));
-    const rest = pool.filter((p) => !preferred.includes(p.position));
-
-    if (isLast) {
-      const combined = [...ownMatches, ...rest];
-      group.forEach((slot, i) => {
-        assignments[slot.id] = combined[i]?.id ?? null;
-      });
-      pool = [];
-    } else {
-      const taken = ownMatches.slice(0, group.length);
-      const borrowed = rest.slice(0, group.length - taken.length);
-      const combined = [...taken, ...borrowed];
-      group.forEach((slot, i) => {
-        assignments[slot.id] = combined[i]?.id ?? null;
-      });
-      pool = [...ownMatches.slice(taken.length), ...rest.slice(borrowed.length)];
-    }
-  });
-
-  return assignments;
-}
-
-/**
- * Auto-escalação: pra cada vaga, escolhe o jogador disponível com maior
- * overall efetivo naquela posição exata (natural > parecida > ruim).
- * Guloso por par (vaga, jogador) de maior score global, repetido até
- * preencher as 11 vagas — assim o goleiro nato sempre fica com o gol
- * (jogador de linha ali cairia muito no score) e as demais vagas ficam
- * com quem realmente rende mais ali, não só com quem tem maior força bruta.
- */
-function autoAssign(slots: Slot[], squad: Player[]): Record<string, string | null> {
-  const assignments: Record<string, string | null> = {};
-  for (const slot of slots) assignments[slot.id] = null;
-
-  const remainingSlots = [...slots];
-  const remainingPlayers = [...squad];
-
-  while (remainingSlots.length > 0 && remainingPlayers.length > 0) {
-    let bestSlotIndex = -1;
-    let bestPlayerIndex = -1;
-    let bestScore = -Infinity;
-
-    remainingSlots.forEach((slot, si) => {
-      remainingPlayers.forEach((player, pi) => {
-        const score = effectiveOverall(player.strength, positionFit(player.position, slot.canonical));
-        if (score > bestScore) {
-          bestScore = score;
-          bestSlotIndex = si;
-          bestPlayerIndex = pi;
-        }
-      });
-    });
-
-    if (bestSlotIndex === -1) break;
-    assignments[remainingSlots[bestSlotIndex].id] = remainingPlayers[bestPlayerIndex].id;
-    remainingSlots.splice(bestSlotIndex, 1);
-    remainingPlayers.splice(bestPlayerIndex, 1);
-  }
-
-  return assignments;
 }
 
 export function Lineup() {
@@ -211,6 +47,11 @@ export function Lineup() {
   const saveCurrentCareer = useCareerStore((s) => s.saveCurrentCareer);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
   const [nameFilter, setNameFilter] = useState('');
+  const [positionFilter, setPositionFilter] = useState<PlayerListFilter>('ALL');
+  const [sidebarSort, setSidebarSort] = useState<{ field: SidebarSortField; direction: SortDirection }>({
+    field: 'strength',
+    direction: 'desc',
+  });
 
   const squad = useMemo(
     () => (career ? resolveSquad(career, career.playerClubId).sort((a, b) => b.strength - a.strength) : []),
@@ -219,13 +60,43 @@ export function Lineup() {
   const playersById = useMemo(() => new Map(squad.map((p) => [p.id, p])), [squad]);
   const visibleSquad = useMemo(() => {
     const query = nameFilter.trim().toLowerCase();
-    if (!query) return squad;
-    return squad.filter((p) => p.name.toLowerCase().includes(query));
-  }, [squad, nameFilter]);
+    const byPosition =
+      positionFilter === 'ALL' ? squad : squad.filter((p) => POSITION_GROUP[p.position] === positionFilter);
+    const byName = query ? byPosition.filter((p) => p.name.toLowerCase().includes(query)) : byPosition;
+    const sorted = [...byName].sort((a, b) => compareSidebar(sidebarSort.field, a, b));
+    if (sidebarSort.direction === 'desc') sorted.reverse();
+    return sorted;
+  }, [squad, nameFilter, positionFilter, sidebarSort]);
+
+  function toggleSidebarSort(field: SidebarSortField) {
+    setSidebarSort((current) => {
+      if (current.field !== field) {
+        const column = SIDEBAR_COLUMNS.find((c) => c.field === field)!;
+        return { field, direction: column.defaultDirection };
+      }
+      return { field, direction: current.direction === 'asc' ? 'desc' : 'asc' };
+    });
+  }
 
   const [assignments, setAssignments] = useState<Record<string, string | null>>(() => {
+    const slots = buildSlots(tactics.formation);
+    // Fonte da verdade: mapeamento exato vaga→jogador salvo da última vez. Só
+    // cai pra heurística (assignToSlots) se não existir (save antigo/lineup
+    // sugerido inicial) ou se a formação salva for outra (vagas não batem) —
+    // sem isso, trocar de aba e voltar reconstruía a escalação por
+    // aproximação e podia embaralhar quem estava em qual vaga.
+    if (lineup?.slotAssignments && lineup.formation === tactics.formation) {
+      const validSlotIds = new Set(slots.map((s) => s.id));
+      const restored: Record<string, string | null> = {};
+      for (const slot of slots) {
+        const playerId = lineup.slotAssignments[slot.id];
+        restored[slot.id] = playerId && playersById.has(playerId) ? playerId : null;
+      }
+      const allSlotsKnown = Object.keys(lineup.slotAssignments).every((id) => validSlotIds.has(id));
+      if (allSlotsKnown) return restored;
+    }
     const startersNow = (lineup?.starters ?? []).map((id) => playersById.get(id)).filter((p): p is Player => !!p);
-    return assignToSlots(buildSlots(tactics.formation), startersNow);
+    return assignToSlots(slots, startersNow);
   });
   const [dragOverSlot, setDragOverSlot] = useState<string | null>(null);
   const skipNextFormationReshape = useRef(true);
@@ -259,6 +130,7 @@ export function Lineup() {
       captain: ids[0] ?? '',
       penaltyTaker: bestFinisher?.id ?? ids[0] ?? '',
       freeKickTaker: bestFinisher?.id ?? ids[0] ?? '',
+      slotAssignments: assignments,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignments]);
@@ -392,6 +264,19 @@ export function Lineup() {
         <div className="lineup__sidebar">
           <span className="eyebrow">Elenco disponível · arraste pro campo</span>
 
+          <div className="lineup__filters">
+            {POSITION_FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`lineup__filter${positionFilter === f.id ? ' lineup__filter--active' : ''}`}
+                onClick={() => setPositionFilter(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
           <TextField
             type="text"
             className="lineup__search"
@@ -403,9 +288,19 @@ export function Lineup() {
           <Card className="lineup__card">
             <div className="lineup__row lineup__row--head">
               <span />
-              <span>Nome</span>
-              <span>Pos</span>
-              <span className="numeric">For</span>
+              {SIDEBAR_COLUMNS.map((col) => (
+                <button
+                  key={col.field}
+                  type="button"
+                  className={`lineup__sort${sidebarSort.field === col.field ? ' lineup__sort--active' : ''}`}
+                  onClick={() => toggleSidebarSort(col.field)}
+                >
+                  {col.label}
+                  {sidebarSort.field === col.field && (
+                    <span className="lineup__sort-arrow">{sidebarSort.direction === 'asc' ? '▲' : '▼'}</span>
+                  )}
+                </button>
+              ))}
             </div>
             <div className="lineup__row-scroll">
               {visibleSquad.length === 0 && <p className="lineup__search-empty">Nenhum jogador encontrado.</p>}
@@ -444,9 +339,9 @@ export function Lineup() {
                 <div className="pitch__row" key={sectorKey}>
                   {rowSlots.map((slot) => {
                     const player = assignments[slot.id] ? playersById.get(assignments[slot.id]!) : undefined;
-                    const fit = player ? positionFit(player.position, slot.canonical) : null;
-                    const adjustedOverall = player && fit ? effectiveOverall(player.strength, fit) : null;
-                    const outOfPosition = fit !== null && fit !== 'natural';
+                    const fit = player ? positionFit(player, slot.canonical) : null;
+                    const adjustedOverall = player ? effectiveOverall(player, slot.canonical) : null;
+                    const outOfPosition = fit !== null && fit !== 'primary' && fit !== 'secondary';
                     const fitTitle = !player
                       ? undefined
                       : fit === 'similar'

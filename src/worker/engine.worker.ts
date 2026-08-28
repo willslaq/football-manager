@@ -173,6 +173,10 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
       case 'setCareer': {
         // Saves de antes do modo tático (settings.tacticalIntensity) não têm o campo — completa com o padrão.
         // Saves de antes das defesas do goleiro (seasonStats.saves) idem — completa com 0.
+        // Saves de antes do motor de faltas não têm `aggression` nos atributos do jogador — sem isso,
+        // todo cálculo de falta (simulation/fouls.ts) vira NaN silenciosamente (chance(rng, NaN) é
+        // sempre falso) e faltas/cartões somem pro resto da carreira sem erro nenhum. Completa com 50
+        // (neutro — mesmo "jogador médio" usado pra calibrar o motor).
         const incoming = request.payload.state;
         const normalized: CareerState = {
           ...incoming,
@@ -181,6 +185,10 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
             ...incoming.world,
             players: incoming.world.players.map((player) => ({
               ...player,
+              attributes:
+                typeof player.attributes.aggression === 'number'
+                  ? player.attributes
+                  : { ...player.attributes, aggression: 50 },
               seasonStats: { ...player.seasonStats, saves: player.seasonStats.saves ?? 0 },
             })),
           },

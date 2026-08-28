@@ -13,6 +13,7 @@ export const ATTRIBUTE_KEYS: AttributeKey[] = [
   'tackling',
   'positioning',
   'reflexes',
+  'aggression',
 ];
 
 /**
@@ -32,6 +33,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.1,
     positioning: 0.9,
     reflexes: 1.0,
+    aggression: 0.1,
   },
   ZAG: {
     finishing: 0.1,
@@ -43,6 +45,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.9,
     positioning: 0.7,
     reflexes: 0.1,
+    aggression: 0.8,
   },
   LD: {
     finishing: 0.2,
@@ -54,6 +57,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.7,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.6,
   },
   LE: {
     finishing: 0.2,
@@ -65,6 +69,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.7,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.6,
   },
   ALD: {
     finishing: 0.3,
@@ -76,6 +81,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.5,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.5,
   },
   ALE: {
     finishing: 0.3,
@@ -87,6 +93,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.5,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.5,
   },
   VOL: {
     finishing: 0.1,
@@ -98,6 +105,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.9,
     positioning: 0.9,
     reflexes: 0.1,
+    aggression: 0.9,
   },
   MC: {
     finishing: 0.2,
@@ -109,6 +117,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.6,
     positioning: 0.8,
     reflexes: 0.1,
+    aggression: 0.5,
   },
   MD: {
     finishing: 0.3,
@@ -120,6 +129,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.4,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.4,
   },
   ME: {
     finishing: 0.3,
@@ -131,6 +141,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.4,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.4,
   },
   MEA: {
     finishing: 0.6,
@@ -142,6 +153,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.2,
     positioning: 0.7,
     reflexes: 0.1,
+    aggression: 0.3,
   },
   PD: {
     finishing: 0.6,
@@ -153,6 +165,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.2,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.3,
   },
   PE: {
     finishing: 0.6,
@@ -164,6 +177,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.2,
     positioning: 0.5,
     reflexes: 0.1,
+    aggression: 0.3,
   },
   SA: {
     finishing: 0.9,
@@ -175,6 +189,7 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.1,
     positioning: 0.7,
     reflexes: 0.1,
+    aggression: 0.4,
   },
   CA: {
     finishing: 1.0,
@@ -186,5 +201,6 @@ export const POSITION_ATTRIBUTE_WEIGHTS: Record<Position, PlayerAttributes> = {
     tackling: 0.1,
     positioning: 0.9,
     reflexes: 0.1,
+    aggression: 0.5,
   },
 };

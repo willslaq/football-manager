@@ -22,6 +22,8 @@ export interface MatchEvent {
   playerId: PlayerId;
   /** Só em eventos 'shot_saved': o goleiro adversário que fez a defesa. */
   goalkeeperId?: PlayerId;
+  /** Em eventos 'goal'/'shot_saved'/'shot_missed' nascidos de uma falta: qual bola parada gerou a cobrança. */
+  setPiece?: 'penalty' | 'free_kick';
 }
 
 export interface TeamStat {
@@ -34,6 +36,7 @@ export interface MatchStats {
   possession: TeamStat;
   shots: TeamStat;
   shotsOnTarget: TeamStat;
+  fouls: TeamStat;
 }
 
 /** O "porquê" do resultado — diferencial do produto (SRS §49). */
@@ -87,4 +90,14 @@ export type EngineTraceEntry =
       minute: number;
       /** Fração 0..1 (não percentual) da posse do mandante naquele minuto. */
       possessionHome: number;
+    }
+  | {
+      kind: 'foul';
+      minute: number;
+      /** Time que cometeu a falta. */
+      teamId: ClubId;
+      foulerId?: PlayerId;
+      victimId?: PlayerId;
+      zone: 'own_box' | 'danger_zone' | 'midfield';
+      card: 'none' | 'yellow' | 'second_yellow' | 'red';
     };

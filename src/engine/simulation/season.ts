@@ -43,6 +43,8 @@ function buildTeamInput(
       players: resolvePlayers(lineup.starters, playersById),
       tactics: input.playerTactics,
       slotPositionByPlayerId,
+      penaltyTakerId: lineup.penaltyTaker,
+      freeKickTakerId: lineup.freeKickTaker,
     };
   }
 
@@ -94,11 +96,15 @@ function updatePlayerStats(
   starterIds: Set<string>,
   goalsByPlayer: Map<string, number>,
   savesByGoalkeeper: Map<string, number>,
+  yellowCardsByPlayer: Map<string, number>,
+  redCardsByPlayer: Map<string, number>,
 ): Player[] {
   return players.map((player) => {
     if (!starterIds.has(player.id)) return player;
     const goals = goalsByPlayer.get(player.id) ?? 0;
     const saves = savesByGoalkeeper.get(player.id) ?? 0;
+    const yellowCards = yellowCardsByPlayer.get(player.id) ?? 0;
+    const redCards = redCardsByPlayer.get(player.id) ?? 0;
     return {
       ...player,
       seasonStats: {
@@ -106,6 +112,8 @@ function updatePlayerStats(
         appearances: player.seasonStats.appearances + 1,
         goals: player.seasonStats.goals + goals,
         saves: player.seasonStats.saves + saves,
+        yellowCards: player.seasonStats.yellowCards + yellowCards,
+        redCards: player.seasonStats.redCards + redCards,
       },
     };
   });
@@ -139,6 +147,8 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
   const starterIds = new Set<string>();
   const goalsByPlayer = new Map<string, number>();
   const savesByGoalkeeper = new Map<string, number>();
+  const yellowCardsByPlayer = new Map<string, number>();
+  const redCardsByPlayer = new Map<string, number>();
   let standings = competition.standings;
   const playedRound: Fixture[] = [];
 
@@ -165,6 +175,10 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
         goalsByPlayer.set(event.playerId, (goalsByPlayer.get(event.playerId) ?? 0) + 1);
       } else if (event.type === 'shot_saved' && event.goalkeeperId) {
         savesByGoalkeeper.set(event.goalkeeperId, (savesByGoalkeeper.get(event.goalkeeperId) ?? 0) + 1);
+      } else if (event.type === 'yellow_card') {
+        yellowCardsByPlayer.set(event.playerId, (yellowCardsByPlayer.get(event.playerId) ?? 0) + 1);
+      } else if (event.type === 'red_card') {
+        redCardsByPlayer.set(event.playerId, (redCardsByPlayer.get(event.playerId) ?? 0) + 1);
       }
     }
 
@@ -186,7 +200,14 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
     ...state,
     world: {
       ...state.world,
-      players: updatePlayerStats(state.world.players, starterIds, goalsByPlayer, savesByGoalkeeper),
+      players: updatePlayerStats(
+        state.world.players,
+        starterIds,
+        goalsByPlayer,
+        savesByGoalkeeper,
+        yellowCardsByPlayer,
+        redCardsByPlayer,
+      ),
     },
     season: {
       ...state.season,

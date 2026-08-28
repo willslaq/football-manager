@@ -5,9 +5,17 @@ import type { Player, PlayerId, Position } from '../types/player';
 import { TACTIC_STYLE_LABELS, type TacticalIntensity, type Tactics } from '../types/tactics';
 import {
   BASE_CHANCES_PER_TEAM,
+  BASE_FOULS_PER_TEAM,
+  BASE_FREE_KICK_CONVERSION,
   BASE_GOAL_PROBABILITY,
+  BASE_PENALTY_CONVERSION,
+  FOUL_PROBABILITY_CAP,
+  MAX_FREE_KICK_CONVERSION,
   MAX_GOAL_PROBABILITY,
+  MAX_PENALTY_CONVERSION,
+  MIN_FREE_KICK_CONVERSION,
   MIN_GOAL_PROBABILITY,
+  MIN_PENALTY_CONVERSION,
   ON_TARGET_MISS_PROBABILITY,
   POSSESSION_CHANCE_PROBABILITY_CAP,
   POSSESSION_HOME_BOOST,
@@ -17,9 +25,19 @@ import {
   POSSESSION_WALK_NOISE,
   POSSESSION_WALK_PULL_RATE,
   RATIO_COMPRESSION,
+  RED_CARD_SECTOR_PENALTY,
   type StyleModifiers,
 } from './config';
-import { computeSectorStrengths, type SectorStrengths } from './strength';
+import {
+  type CardOutcome,
+  pickFouledPlayer,
+  pickFouler,
+  rollCardSeverity,
+  rollFoulZone,
+  styleFoulModifier,
+  teamFoulProfile,
+} from './fouls';
+import { computeSectorStrengths, positionSector, type SectorStrengths } from './strength';
 import {
   applyFormationShape,
   effectiveStyleModifiers,
@@ -38,6 +56,36 @@ export interface MatchTeamInput {
   tactics: Tactics;
   /** Vaga exata (LD, ZAG, PE...) de cada titular na formação — ver computeSectorStrengths. */
   slotPositionByPlayerId?: Record<PlayerId, Position>;
+  /** Cobrador designado de pênalti/falta direta (ver Lineup). Sem escalação manual (CPU), cai no fallback por finalização. */
+  penaltyTakerId?: PlayerId;
+  freeKickTakerId?: PlayerId;
+}
+
+/**
+ * Estado mutável de um time durante o loop minuto a minuto: quem ainda está em campo,
+ * a força de setor corrente e as taxas por minuto (chance/falta) derivadas dela — tudo
+ * recomputado após uma expulsão (ver `sendOff`), já que o resto do módulo trata força e
+ * taxas como fixas pra partida inteira.
+ */
+interface TeamMatchState {
+  clubId: ClubId;
+  tactics: Tactics;
+  isHome: boolean;
+  /** Titulares ainda em campo (encolhe a cada expulsão). */
+  players: Player[];
+  slotPositionByPlayerId?: Record<PlayerId, Position>;
+  goalkeeper?: Player;
+  penaltyTakerId?: PlayerId;
+  freeKickTakerId?: PlayerId;
+  strength: SectorStrengths;
+  minuteRate: number;
+  foulMinuteRate: number;
+  /** Jogadores já advertidos nesta partida (pra detectar segundo amarelo). */
+  cardedPlayers: Map<PlayerId, 'yellow'>;
+  goals: number;
+  shots: number;
+  shotsOnTarget: number;
+  fouls: number;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -326,8 +374,6 @@ export function simulateMatch(
     oppStyleMod: homeStyleMod,
     possession: 1 - possessionTargetHome,
   });
-  const homeMinuteRate = homeExpectedChances / MATCH_MINUTES;
-  const awayMinuteRate = awayExpectedChances / MATCH_MINUTES;
 
   onChance?.({
     kind: 'setup',
@@ -340,12 +386,184 @@ export function simulateMatch(
 
   const events: MatchEvent[] = [];
   const goalsByPlayer = new Map<string, number>();
-  let homeGoals = 0;
-  let awayGoals = 0;
-  let homeShotsOnTarget = 0;
-  let awayShotsOnTarget = 0;
-  let homeShots = 0;
-  let awayShots = 0;
+
+  // Estado mutável por time (jogadores em campo, força de setor, taxas por minuto) — encolhe e
+  // se recalcula a cada expulsão (ver sendOff/recomputeRates logo abaixo). home/awayStrength
+  // acima ficam intactos como o "retrato" pré-jogo, usado na explicação final do resultado.
+  const homeState: TeamMatchState = {
+    clubId: home.clubId,
+    tactics: home.tactics,
+    isHome: true,
+    players: [...home.players],
+    slotPositionByPlayerId: home.slotPositionByPlayerId,
+    goalkeeper: homeGoalkeeper,
+    penaltyTakerId: home.penaltyTakerId,
+    freeKickTakerId: home.freeKickTakerId,
+    strength: homeStrength,
+    minuteRate: homeExpectedChances / MATCH_MINUTES,
+    foulMinuteRate:
+      (BASE_FOULS_PER_TEAM * teamFoulProfile(home.players, home.slotPositionByPlayerId) * styleFoulModifier(home.tactics.style)) /
+      MATCH_MINUTES,
+    cardedPlayers: new Map(),
+    goals: 0,
+    shots: 0,
+    shotsOnTarget: 0,
+    fouls: 0,
+  };
+  const awayState: TeamMatchState = {
+    clubId: away.clubId,
+    tactics: away.tactics,
+    isHome: false,
+    players: [...away.players],
+    slotPositionByPlayerId: away.slotPositionByPlayerId,
+    goalkeeper: awayGoalkeeper,
+    penaltyTakerId: away.penaltyTakerId,
+    freeKickTakerId: away.freeKickTakerId,
+    strength: awayStrength,
+    minuteRate: awayExpectedChances / MATCH_MINUTES,
+    foulMinuteRate:
+      (BASE_FOULS_PER_TEAM * teamFoulProfile(away.players, away.slotPositionByPlayerId) * styleFoulModifier(away.tactics.style)) /
+      MATCH_MINUTES,
+    cardedPlayers: new Map(),
+    goals: 0,
+    shots: 0,
+    shotsOnTarget: 0,
+    fouls: 0,
+  };
+
+  /** Recomputa as taxas por minuto (chance e falta) dos dois times a partir da força/elenco corrente — chamado no setup e de novo a cada expulsão, já que a força de um lado também muda a taxa de chance do outro (ataque vs. defesa). */
+  function recomputeRates(): void {
+    const homeExpected = expectedChances({
+      attack: homeState.strength.attack,
+      defense: awayState.strength.defense,
+      ownStyleMod: homeStyleMod,
+      oppStyleMod: awayStyleMod,
+      possession: possessionTargetHome,
+    });
+    const awayExpected = expectedChances({
+      attack: awayState.strength.attack,
+      defense: homeState.strength.defense,
+      ownStyleMod: awayStyleMod,
+      oppStyleMod: homeStyleMod,
+      possession: 1 - possessionTargetHome,
+    });
+    homeState.minuteRate = homeExpected / MATCH_MINUTES;
+    awayState.minuteRate = awayExpected / MATCH_MINUTES;
+    homeState.foulMinuteRate =
+      (BASE_FOULS_PER_TEAM * teamFoulProfile(homeState.players, homeState.slotPositionByPlayerId) * styleFoulModifier(homeState.tactics.style)) /
+      MATCH_MINUTES;
+    awayState.foulMinuteRate =
+      (BASE_FOULS_PER_TEAM * teamFoulProfile(awayState.players, awayState.slotPositionByPlayerId) * styleFoulModifier(awayState.tactics.style)) /
+      MATCH_MINUTES;
+  }
+
+  /**
+   * Expulsa um jogador: tira do time em campo, recalcula a força de setor (menos um corpo, e
+   * ainda uma penalidade de solidez no setor dele — RED_CARD_SECTOR_PENALTY, mesmo raciocínio de
+   * SHAPE_WEIGHT em tactics.ts) e propaga o efeito nas taxas por minuto dos dois lados pro resto
+   * da partida. Goleiro expulso é caso especial fora do escopo v1 (ver RED_CARD_SECTOR_PENALTY).
+   */
+  function sendOff(state: TeamMatchState, player: Player): void {
+    state.players = state.players.filter((p) => p.id !== player.id);
+    const slot = state.slotPositionByPlayerId?.[player.id] ?? player.position;
+    const sector = positionSector(slot);
+    const recomputed = applyFormationShape(
+      computeSectorStrengths(state.players, state.isHome, state.slotPositionByPlayerId),
+      state.tactics.formation,
+      tacticalIntensity,
+    );
+    if (sector !== 'goalkeeper') {
+      recomputed[sector] *= RED_CARD_SECTOR_PENALTY[sector];
+    }
+    state.strength = recomputed;
+    recomputeRates();
+  }
+
+  /** Cobrança de pênalti ou falta direta gerada por uma falta na área/zona de perigo — mesmo formato de evento de um chute normal, só marcando `setPiece`. */
+  function resolveSetPiece(
+    minute: number,
+    attackingState: TeamMatchState,
+    defendingState: TeamMatchState,
+    kind: 'penalty' | 'free_kick',
+  ): void {
+    const takerId = kind === 'penalty' ? attackingState.penaltyTakerId : attackingState.freeKickTakerId;
+    const explicitTaker = takerId ? attackingState.players.find((p) => p.id === takerId) : undefined;
+    const taker = explicitTaker ?? pickShooter(rng, attackingState.players);
+    if (!taker) return;
+
+    const goalkeeper = defendingState.goalkeeper;
+    const takerSkill =
+      kind === 'penalty' ? taker.attributes.finishing : (taker.attributes.finishing + taker.attributes.passing) / 2;
+    const goalkeeperSkill = goalkeeper?.attributes.reflexes ?? 50;
+    const base = kind === 'penalty' ? BASE_PENALTY_CONVERSION : BASE_FREE_KICK_CONVERSION;
+    const min = kind === 'penalty' ? MIN_PENALTY_CONVERSION : MIN_FREE_KICK_CONVERSION;
+    const max = kind === 'penalty' ? MAX_PENALTY_CONVERSION : MAX_FREE_KICK_CONVERSION;
+    const skillScale = kind === 'penalty' ? 0.003 : 0.0015;
+    const probability = clamp(base + (takerSkill - goalkeeperSkill) * skillScale, min, max);
+
+    const isGoal = chance(rng, probability);
+    const isOnTarget = isGoal || chance(rng, kind === 'penalty' ? 0.7 : 0.35);
+
+    attackingState.shots++;
+    if (isOnTarget) attackingState.shotsOnTarget++;
+
+    if (isGoal) {
+      attackingState.goals++;
+      goalsByPlayer.set(taker.id, (goalsByPlayer.get(taker.id) ?? 0) + 1);
+      events.push({ minute, type: 'goal', teamId: attackingState.clubId, playerId: taker.id, setPiece: kind });
+    } else {
+      events.push({
+        minute,
+        type: isOnTarget ? 'shot_saved' : 'shot_missed',
+        teamId: attackingState.clubId,
+        playerId: taker.id,
+        goalkeeperId: isOnTarget ? goalkeeper?.id : undefined,
+        setPiece: kind,
+      });
+    }
+  }
+
+  /**
+   * Resolve uma falta cometida por `foulingState` contra `fouledState`: sorteia quem comete,
+   * onde no campo e a severidade do cartão (incluindo segundo amarelo, que vira expulsão), e
+   * dispara pênalti/falta direta quando a zona pede. `foulingState`/`fouledState` são o time que
+   * defende (comete) e o que ataca (sofre) naquele lance — não necessariamente home/away nessa ordem.
+   */
+  function resolveFoul(minute: number, foulingState: TeamMatchState, fouledState: TeamMatchState): void {
+    const fouler = pickFouler(rng, foulingState.players, foulingState.slotPositionByPlayerId, foulingState.cardedPlayers);
+    if (!fouler) return;
+    foulingState.fouls++;
+
+    const foulerSlot = foulingState.slotPositionByPlayerId?.[fouler.id] ?? fouler.position;
+    const zone = rollFoulZone(rng, foulerSlot);
+    const victim = pickFouledPlayer(rng, fouledState.players, fouledState.slotPositionByPlayerId);
+    const severity = rollCardSeverity(rng, fouler, zone);
+
+    let card: CardOutcome | 'second_yellow' = severity;
+    if (severity === 'yellow' && foulingState.cardedPlayers.get(fouler.id) === 'yellow') {
+      card = 'second_yellow';
+    }
+
+    onChance?.({ kind: 'foul', minute, teamId: foulingState.clubId, foulerId: fouler.id, victimId: victim?.id, zone, card });
+
+    if (card === 'yellow') {
+      foulingState.cardedPlayers.set(fouler.id, 'yellow');
+      events.push({ minute, type: 'yellow_card', teamId: foulingState.clubId, playerId: fouler.id });
+    } else if (card === 'second_yellow') {
+      events.push({ minute, type: 'yellow_card', teamId: foulingState.clubId, playerId: fouler.id });
+      events.push({ minute, type: 'red_card', teamId: foulingState.clubId, playerId: fouler.id });
+      sendOff(foulingState, fouler);
+    } else if (card === 'red') {
+      events.push({ minute, type: 'red_card', teamId: foulingState.clubId, playerId: fouler.id });
+      sendOff(foulingState, fouler);
+    }
+
+    if (zone === 'own_box') {
+      resolveSetPiece(minute, fouledState, foulingState, 'penalty');
+    } else if (zone === 'danger_zone') {
+      resolveSetPiece(minute, fouledState, foulingState, 'free_kick');
+    }
+  }
 
   // Passeio aleatório da posse, minuto a minuto: converge pro alvo tático (ajustado pelo placar
   // corrente) com ruído, e cada minuto sorteia (Bernoulli) se aquele time cria uma chance ali —
@@ -354,7 +572,7 @@ export function simulateMatch(
   let possessionSum = 0;
 
   for (let minute = 1; minute <= MATCH_MINUTES; minute++) {
-    const drift = scorelineDrift(homeGoals, awayGoals, minute);
+    const drift = scorelineDrift(homeState.goals, awayState.goals, minute);
     const minuteTarget = clamp(possessionTargetHome + drift, POSSESSION_MINUTE_CLAMP[0], POSSESSION_MINUTE_CLAMP[1]);
     currentPossessionHome = clamp(
       currentPossessionHome + (minuteTarget - currentPossessionHome) * POSSESSION_WALK_PULL_RATE + (rng() - 0.5) * POSSESSION_WALK_NOISE,
@@ -365,29 +583,29 @@ export function simulateMatch(
     onChance?.({ kind: 'possession', minute, possessionHome: currentPossessionHome });
 
     const homeChanceProbability = clamp(
-      homeMinuteRate * (currentPossessionHome / possessionTargetHome),
+      homeState.minuteRate * (currentPossessionHome / possessionTargetHome),
       0,
       POSSESSION_CHANCE_PROBABILITY_CAP,
     );
     if (chance(rng, homeChanceProbability)) {
-      homeShots++;
-      const resolved = resolveChanceOutcome(rng, homeStrength.attack, awayStrength.defense, homeStyleMod, home.players);
+      homeState.shots++;
+      const resolved = resolveChanceOutcome(rng, homeState.strength.attack, awayState.strength.defense, homeStyleMod, homeState.players);
       onChance?.({
         kind: 'chance',
         minute,
         teamId: home.clubId,
         shooterId: resolved.shooter?.id,
-        attackStrength: homeStrength.attack,
-        defenseStrength: awayStrength.defense,
+        attackStrength: homeState.strength.attack,
+        defenseStrength: awayState.strength.defense,
         quality: resolved.quality,
         goalProbability: resolved.goalProbability,
         isOnTarget: resolved.isOnTarget,
         isGoal: resolved.isGoal,
       });
-      if (resolved.isOnTarget) homeShotsOnTarget++;
+      if (resolved.isOnTarget) homeState.shotsOnTarget++;
       if (resolved.shooter) {
         if (resolved.isGoal) {
-          homeGoals++;
+          homeState.goals++;
           goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
           events.push({ minute, type: 'goal', teamId: home.clubId, playerId: resolved.shooter.id });
         } else {
@@ -396,36 +614,36 @@ export function simulateMatch(
             type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
             teamId: home.clubId,
             playerId: resolved.shooter.id,
-            goalkeeperId: resolved.isOnTarget ? awayGoalkeeper?.id : undefined,
+            goalkeeperId: resolved.isOnTarget ? awayState.goalkeeper?.id : undefined,
           });
         }
       }
     }
 
     const awayChanceProbability = clamp(
-      awayMinuteRate * ((1 - currentPossessionHome) / (1 - possessionTargetHome)),
+      awayState.minuteRate * ((1 - currentPossessionHome) / (1 - possessionTargetHome)),
       0,
       POSSESSION_CHANCE_PROBABILITY_CAP,
     );
     if (chance(rng, awayChanceProbability)) {
-      awayShots++;
-      const resolved = resolveChanceOutcome(rng, awayStrength.attack, homeStrength.defense, awayStyleMod, away.players);
+      awayState.shots++;
+      const resolved = resolveChanceOutcome(rng, awayState.strength.attack, homeState.strength.defense, awayStyleMod, awayState.players);
       onChance?.({
         kind: 'chance',
         minute,
         teamId: away.clubId,
         shooterId: resolved.shooter?.id,
-        attackStrength: awayStrength.attack,
-        defenseStrength: homeStrength.defense,
+        attackStrength: awayState.strength.attack,
+        defenseStrength: homeState.strength.defense,
         quality: resolved.quality,
         goalProbability: resolved.goalProbability,
         isOnTarget: resolved.isOnTarget,
         isGoal: resolved.isGoal,
       });
-      if (resolved.isOnTarget) awayShotsOnTarget++;
+      if (resolved.isOnTarget) awayState.shotsOnTarget++;
       if (resolved.shooter) {
         if (resolved.isGoal) {
-          awayGoals++;
+          awayState.goals++;
           goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
           events.push({ minute, type: 'goal', teamId: away.clubId, playerId: resolved.shooter.id });
         } else {
@@ -434,10 +652,31 @@ export function simulateMatch(
             type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
             teamId: away.clubId,
             playerId: resolved.shooter.id,
-            goalkeeperId: resolved.isOnTarget ? homeGoalkeeper?.id : undefined,
+            goalkeeperId: resolved.isOnTarget ? homeState.goalkeeper?.id : undefined,
           });
         }
       }
+    }
+
+    // Faltas: quem defende naquele instante é quem comete — o mandante defende quando o
+    // visitante tem mais bola no minuto (e vice-versa), por isso a mesma normalização por
+    // posse usada acima pro lado que ataca, só que invertida.
+    const homeFoulProbability = clamp(
+      homeState.foulMinuteRate * ((1 - currentPossessionHome) / (1 - possessionTargetHome)),
+      0,
+      FOUL_PROBABILITY_CAP,
+    );
+    if (chance(rng, homeFoulProbability)) {
+      resolveFoul(minute, homeState, awayState);
+    }
+
+    const awayFoulProbability = clamp(
+      awayState.foulMinuteRate * (currentPossessionHome / possessionTargetHome),
+      0,
+      FOUL_PROBABILITY_CAP,
+    );
+    if (chance(rng, awayFoulProbability)) {
+      resolveFoul(minute, awayState, homeState);
     }
   }
 
@@ -445,7 +684,7 @@ export function simulateMatch(
 
   events.sort((a, b) => a.minute - b.minute);
 
-  const manOfTheMatch = pickManOfTheMatch(home, away, goalsByPlayer, homeGoals, awayGoals);
+  const manOfTheMatch = pickManOfTheMatch(home, away, goalsByPlayer, homeState.goals, awayState.goals);
 
   const explanation = buildExplanation(
     homeStrength,
@@ -453,21 +692,33 @@ export function simulateMatch(
     possessionHome,
     home,
     away,
-    homeGoals,
-    awayGoals,
+    homeState.goals,
+    awayState.goals,
     tacticalIntensity,
   );
+
+  const homeRedCards = events.filter((e) => e.type === 'red_card' && e.teamId === home.clubId).length;
+  const awayRedCards = events.filter((e) => e.type === 'red_card' && e.teamId === away.clubId).length;
+  if (homeRedCards !== awayRedCards) {
+    const disadvantaged = homeRedCards > awayRedCards ? 'mandante' : 'visitante';
+    explanation.push({
+      factor: 'red_card',
+      impact: homeRedCards > awayRedCards ? -0.25 : 0.25,
+      note: `O ${disadvantaged} teve um jogador expulso e passou parte da partida em desvantagem numérica.`,
+    });
+  }
 
   return {
     homeTeamId: home.clubId,
     awayTeamId: away.clubId,
-    homeGoals,
-    awayGoals,
+    homeGoals: homeState.goals,
+    awayGoals: awayState.goals,
     events,
     stats: {
       possession: { home: Math.round(possessionHome * 100), away: Math.round((1 - possessionHome) * 100) },
-      shots: { home: homeShots, away: awayShots },
-      shotsOnTarget: { home: homeShotsOnTarget, away: awayShotsOnTarget },
+      shots: { home: homeState.shots, away: awayState.shots },
+      shotsOnTarget: { home: homeState.shotsOnTarget, away: awayState.shotsOnTarget },
+      fouls: { home: homeState.fouls, away: awayState.fouls },
     },
     manOfTheMatch: manOfTheMatch.id,
     explanation,

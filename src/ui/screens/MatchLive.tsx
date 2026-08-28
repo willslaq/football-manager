@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import type { EngineTraceEntry, MatchEvent, MatchEventType } from '../../engine/types';
+import type { EngineTraceEntry } from '../../engine/types';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card } from '../components';
+import { Button, Card, MatchEventFeed } from '../components';
 import './MatchLive.css';
 
 function IconPlay() {
@@ -46,12 +46,6 @@ function IconTerminal() {
   );
 }
 
-const FEED_META: Partial<Record<MatchEventType, { label: string; tone: 'pitch' | 'floodlight' | 'neutral'; verb: string; suffix: string }>> = {
-  goal: { label: 'GOL', tone: 'pitch', verb: 'Gol de', suffix: '' },
-  shot_saved: { label: 'DEFESA', tone: 'floodlight', verb: 'Chute de', suffix: ', defendido pelo goleiro' },
-  shot_missed: { label: 'PRA FORA', tone: 'neutral', verb: 'Chute de', suffix: ', pra fora' },
-};
-
 function fmt(n: number, digits = 1): string {
   return n.toFixed(digits);
 }
@@ -74,24 +68,15 @@ function formatTraceEntry(
   if (entry.kind === 'possession') {
     return `#${i} [${entry.minute}'] posse=${fmt(entry.possessionHome * 100, 0)}%`;
   }
+  if (entry.kind === 'foul') {
+    const fouler = entry.foulerId ? playerName(entry.foulerId) : '?';
+    const victim = entry.victimId ? playerName(entry.victimId) : '?';
+    const cardLabel = entry.card === 'none' ? 'sem cartão' : entry.card === 'second_yellow' ? '2º amarelo → vermelho' : entry.card;
+    return `#${i} [${entry.minute}'] FALTA ${clubName(entry.teamId)} · ${fouler} em ${victim} · zona=${entry.zone} → ${cardLabel}`;
+  }
   const outcome = entry.isGoal ? 'GOL' : entry.isOnTarget ? 'no alvo (defendido)' : 'fora';
   const shooter = entry.shooterId ? playerName(entry.shooterId) : '?';
   return `#${i} [${entry.minute}'] ${clubName(entry.teamId)} · ${shooter}  atk=${fmt(entry.attackStrength)} vs def=${fmt(entry.defenseStrength)} → quality=${fmt(entry.quality, 3)} → prob=${fmt(entry.goalProbability * 100, 0)}% → ${outcome}`;
-}
-
-function FeedItem({ event, teamName, playerName }: { event: MatchEvent; teamName?: string; playerName: string }) {
-  const meta = FEED_META[event.type];
-  if (!meta) return null;
-  return (
-    <li className="ml-feed__item">
-      <span className="ml-feed__minute numeric">{event.minute}&apos;</span>
-      <Badge tone={meta.tone}>{meta.label}</Badge>
-      <span className="ml-feed__text">
-        {meta.verb} {playerName}
-        {meta.suffix} ({teamName})
-      </span>
-    </li>
-  );
 }
 
 export function MatchLive() {
@@ -220,26 +205,17 @@ export function MatchLive() {
 
         <Card className="ml-feed">
           <span className="eyebrow">Lance a lance</span>
-          {liveMatch.events.length === 0 ? (
-            <p className="ml-feed__empty">Partida em andamento…</p>
-          ) : (
-            <ul className="ml-feed__list">
-              {liveMatch.events
-                .map((event, i) => ({ event, i }))
-                // Chave é o índice na ordem cronológica (estável conforme a lista só cresce), não na
-                // exibida — senão o React reconcilia por posição visual e o item novo (topo) reaproveita
-                // o nó DOM do item anterior em vez de montar um novo, e a animação de entrada nunca dispara nele.
-                .reverse()
-                .map(({ event, i }) => (
-                  <FeedItem
-                    key={i}
-                    event={event}
-                    teamName={event.teamId === liveMatch.homeTeamId ? home?.name : away?.name}
-                    playerName={playerName(event.playerId)}
-                  />
-                ))}
-            </ul>
-          )}
+          <MatchEventFeed
+            events={liveMatch.events}
+            homeTeamId={liveMatch.homeTeamId}
+            homeTeamName={home?.name}
+            awayTeamName={away?.name}
+            homeCrestSrc={home && CLUB_CRESTS[home.id]}
+            awayCrestSrc={away && CLUB_CRESTS[away.id]}
+            playerName={playerName}
+            order="desc"
+            emptyMessage="Partida em andamento…"
+          />
         </Card>
 
         {!isFullTime && (

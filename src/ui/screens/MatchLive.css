@@ -219,59 +219,7 @@
   min-height: 6rem;
 }
 
-.ml-feed__empty {
-  font-size: var(--text-sm);
-  color: var(--mist);
-}
-
-.ml-feed__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.ml-feed__item {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 220ms var(--ease-out),
-    transform 220ms var(--ease-out);
-
-  @starting-style {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ml-feed__item {
-    transition: opacity 150ms ease;
-
-    @starting-style {
-      transform: none;
-    }
-  }
-}
-
-.ml-feed__minute {
-  flex-shrink: 0;
-  width: 2.2rem;
-  color: var(--mist);
-  font-weight: 700;
-}
-
-.ml-feed__text {
-  font-size: var(--text-sm);
-  color: var(--chalk);
-  line-height: 1.5;
-}
+/* Conteúdo do feed em si (lista de eventos, ícones, escudo) vive em components/MatchEventFeed. */
 
 /* Controles de reprodução */
 

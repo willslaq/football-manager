@@ -41,6 +41,8 @@ export interface PlayerAttributes {
   tackling: number;
   positioning: number;
   reflexes: number;
+  /** Combatividade/intensidade de marcação — motor de faltas (mais alta = comete mais faltas). */
+  aggression: number;
 }
 
 export interface PlayerSeasonStats {

@@ -151,6 +151,55 @@
   color: var(--chalk);
 }
 
+/* Detalhes da partida (lance a lance, expansível) */
+
+.mr-details {
+  padding: 0;
+  overflow: hidden;
+}
+
+.mr-details__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--chalk);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.mr-details__chevron {
+  flex-shrink: 0;
+  color: var(--mist);
+  transition: transform 200ms var(--ease-out);
+}
+
+.mr-details__chevron--open {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mr-details__chevron {
+    transition: none;
+  }
+}
+
+.mr-details__body {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--line);
+
+  opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
 /* Estatísticas */
 
 .mr-stats {

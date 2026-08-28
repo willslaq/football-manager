@@ -41,6 +41,7 @@ function mapRealAttributes(a: RawFifaAttributes): PlayerAttributes {
     tackling: avg(a.standingtackle, a.slidingtackle),
     positioning: avg(a.positioning, a.reactions, a.composure),
     reflexes: avg(a.gkreflexes, a.gkdiving, a.gkhandling, a.gkpositioning, a.gkkicking),
+    aggression: avg(a.aggression),
   };
 }
 

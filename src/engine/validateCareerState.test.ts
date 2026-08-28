@@ -23,6 +23,7 @@ function makePlayer(id: string, name: string, position: Player['position']): Pla
       tackling: 57,
       positioning: 60,
       reflexes: 50,
+      aggression: 55,
     },
     condition: 100,
     morale: 70,

@@ -1,9 +1,24 @@
+import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card } from '../components';
+import { Badge, Button, Card, MatchEventFeed } from '../components';
 import type { Screen } from '../../App';
 import './MatchResult.css';
+
+function IconChevronDown({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      aria-hidden="true"
+      className={open ? 'mr-details__chevron mr-details__chevron--open' : 'mr-details__chevron'}
+    >
+      <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </svg>
+  );
+}
 
 function StatRow({ label, home, away }: { label: string; home: number; away: number }) {
   const total = home + away || 1;
@@ -32,6 +47,7 @@ function reasonBadge(impact: number): { label: string; tone: 'pitch' | 'floodlig
 export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const career = useCareerStore((s) => s.career);
   const lastMatch = useCareerStore((s) => s.lastMatch);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   if (!career || !lastMatch) return null;
 
@@ -60,6 +76,8 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
 
   const motm = playersById.get(lastMatch.manOfTheMatch);
   const motmClub = home?.squad.includes(lastMatch.manOfTheMatch) ? home : away?.squad.includes(lastMatch.manOfTheMatch) ? away : undefined;
+
+  const playerName = (id: string) => playersById.get(id)?.name ?? id;
 
   return (
     <main className="match-result">
@@ -124,10 +142,37 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
         </Card>
       )}
 
+      <Card className="mr-details">
+        <button
+          type="button"
+          className="mr-details__toggle"
+          onClick={() => setDetailsOpen((v) => !v)}
+          aria-expanded={detailsOpen}
+        >
+          <span>Mostrar detalhes da partida</span>
+          <IconChevronDown open={detailsOpen} />
+        </button>
+        {detailsOpen && (
+          <div className="mr-details__body">
+            <MatchEventFeed
+              events={lastMatch.events}
+              homeTeamId={lastMatch.homeTeamId}
+              homeTeamName={home?.name}
+              awayTeamName={away?.name}
+              homeCrestSrc={home && CLUB_CRESTS[home.id]}
+              awayCrestSrc={away && CLUB_CRESTS[away.id]}
+              playerName={playerName}
+              order="asc"
+            />
+          </div>
+        )}
+      </Card>
+
       <Card className="mr-stats">
         <StatRow label="Posse de bola" home={lastMatch.stats.possession.home} away={lastMatch.stats.possession.away} />
         <StatRow label="Finalizações" home={lastMatch.stats.shots.home} away={lastMatch.stats.shots.away} />
         <StatRow label="No alvo" home={lastMatch.stats.shotsOnTarget.home} away={lastMatch.stats.shotsOnTarget.away} />
+        <StatRow label="Faltas" home={lastMatch.stats.fouls.home} away={lastMatch.stats.fouls.away} />
       </Card>
 
       <Card className="mr-explanation">

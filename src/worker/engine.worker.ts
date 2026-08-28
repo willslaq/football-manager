@@ -172,10 +172,18 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
 
       case 'setCareer': {
         // Saves de antes do modo tático (settings.tacticalIntensity) não têm o campo — completa com o padrão.
+        // Saves de antes das defesas do goleiro (seasonStats.saves) idem — completa com 0.
         const incoming = request.payload.state;
         const normalized: CareerState = {
           ...incoming,
           settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
+          world: {
+            ...incoming.world,
+            players: incoming.world.players.map((player) => ({
+              ...player,
+              seasonStats: { ...player.seasonStats, saves: player.seasonStats.saves ?? 0 },
+            })),
+          },
         };
         const result = validateCareerState(normalized);
         if (!result.valid) {

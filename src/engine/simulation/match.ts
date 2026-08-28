@@ -153,7 +153,8 @@ function normalizeImpact(diff: number, scale: number): number {
 }
 
 const MATCHUP_NOTE_THRESHOLD = 0.05;
-const COHERENCE_NOTE_THRESHOLD = 0.95;
+const COHERENCE_NOTE_LOW_THRESHOLD = 0.95;
+const COHERENCE_NOTE_HIGH_THRESHOLD = 1.05;
 
 function buildExplanation(
   homeStrength: SectorStrengths,
@@ -239,15 +240,21 @@ function buildExplanation(
 
   const homeCoherence = formationStyleCoherence(home.tactics.formation, home.tactics.style, tacticalIntensity);
   const awayCoherence = formationStyleCoherence(away.tactics.formation, away.tactics.style, tacticalIntensity);
-  if (homeCoherence < COHERENCE_NOTE_THRESHOLD || awayCoherence < COHERENCE_NOTE_THRESHOLD) {
-    const [side, formation, style, coherence] =
-      homeCoherence <= awayCoherence
-        ? (['mandante', home.tactics.formation, home.tactics.style, homeCoherence] as const)
-        : (['visitante', away.tactics.formation, away.tactics.style, awayCoherence] as const);
+  const homeCoherenceEdge = Math.abs(homeCoherence - 1);
+  const awayCoherenceEdge = Math.abs(awayCoherence - 1);
+  const mostNotableFit =
+    homeCoherenceEdge >= awayCoherenceEdge
+      ? (['mandante', home.tactics.formation, home.tactics.style, homeCoherence] as const)
+      : (['visitante', away.tactics.formation, away.tactics.style, awayCoherence] as const);
+  const [side, formation, style, coherence] = mostNotableFit;
+  if (coherence <= COHERENCE_NOTE_LOW_THRESHOLD || coherence >= COHERENCE_NOTE_HIGH_THRESHOLD) {
+    const isGoodFit = coherence > 1;
     reasons.push({
-      factor: 'formation_style_mismatch',
-      impact: side === 'mandante' ? -(1 - coherence) : 1 - coherence,
-      note: `A formação ${formation} do ${side} não combina bem com o estilo ${TACTIC_STYLE_LABELS[style]}, tirando eficiência do ataque.`,
+      factor: 'formation_style_fit',
+      impact: side === 'mandante' ? coherence - 1 : 1 - coherence,
+      note: isGoodFit
+        ? `A formação ${formation} do ${side} combina muito bem com o estilo ${TACTIC_STYLE_LABELS[style]}, potencializando o ataque.`
+        : `A formação ${formation} do ${side} não combina bem com o estilo ${TACTIC_STYLE_LABELS[style]}, tirando eficiência do ataque.`,
     });
   }
 
@@ -277,6 +284,11 @@ export function simulateMatch(
   assertValidLineup(away);
 
   const rng = mulberry32(seed);
+
+  // Goleiro titular de cada time — fixo a partida inteira (sem modelo de substituição ainda),
+  // usado só pra creditar a defesa (shot_saved) ao goleiro certo.
+  const homeGoalkeeper = home.players.find((p) => p.position === 'GOL');
+  const awayGoalkeeper = away.players.find((p) => p.position === 'GOL');
 
   const homeStrength = applyFormationShape(
     computeSectorStrengths(home.players, true),
@@ -382,6 +394,7 @@ export function simulateMatch(
             type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
             teamId: home.clubId,
             playerId: resolved.shooter.id,
+            goalkeeperId: resolved.isOnTarget ? awayGoalkeeper?.id : undefined,
           });
         }
       }
@@ -419,6 +432,7 @@ export function simulateMatch(
             type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
             teamId: away.clubId,
             playerId: resolved.shooter.id,
+            goalkeeperId: resolved.isOnTarget ? homeGoalkeeper?.id : undefined,
           });
         }
       }

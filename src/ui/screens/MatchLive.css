@@ -239,10 +239,24 @@
   gap: var(--space-3);
 
   opacity: 1;
-  transition: opacity 300ms var(--ease-out);
+  transform: translateY(0);
+  transition:
+    opacity 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
 
   @starting-style {
     opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ml-feed__item {
+    transition: opacity 150ms ease;
+
+    @starting-style {
+      transform: none;
+    }
   }
 }
 

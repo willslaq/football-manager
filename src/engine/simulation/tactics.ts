@@ -3,8 +3,11 @@
 //    mesma qualidade média de elenco (ex.: 5 zagueiros seguram mais que 3, mesmo iguais);
 // 2) confronto de estilos — alguns pares têm vantagem real (contra-ataque explora time
 //    ofensivo; pressão sufoca posse de bola; jogo direto passa por cima da pressão);
-// 3) coerência formação×estilo — uma formação de 5 zagueiros jogando ofensivo é
-//    fisicamente possível (não bloqueamos), mas gera fricção tática real.
+// 3) coerência formação×estilo — cada par formação×estilo tem uma afinidade real vinda
+//    do futebol de verdade (ex.: 4-3-3 é a formação clássica de posse E de pressão alta;
+//    já 5-3-2 não serve pra nenhum dos dois). Tabela autorada, não uma fórmula de eixo
+//    único — um único eixo "quão ofensivo" não segura uma formação boa pra vários
+//    estilos diferentes ao mesmo tempo (ver nota em FORMATION_STYLE_FIT).
 // Tudo escalado por CareerState.settings.tacticalIntensity: 'subtle' ainda deixa a
 // qualidade dos jogadores dominar; 'strong' deixa a tática decidir jogos parelhos.
 
@@ -62,38 +65,77 @@ export function possessionBias(formation: Formation, style: TacticStyle, intensi
 // --- 2) Coerência formação × estilo ---
 
 /**
- * Intenção ofensiva "de bolso" da formação, de -1 (muito defensiva) a +1 (muito
- * ofensiva). Não dá pra derivar só da contagem zagueiro/meia/atacante: um 4-2-3-1 tem
- * só 1 centroavante de vaga, mas o trio por trás dele é puramente ofensivo; um 3-5-2/
- * 3-4-3 depende de quanto os alas sobem. Por isso é uma tabela, não uma fórmula.
+ * Afinidade real de cada par formação×estilo, vinda do futebol de verdade (EA FC,
+ * Football Manager e análise tática consultados pra calibrar): >1 = combinação
+ * consagrada, ganha um pequeno bônus de eficiência; <1 = fricção tática real. Só os
+ * pares com uma razão concreta ganham entrada aqui — o resto fica neutro (1.0). Mesmo
+ * espírito de STYLE_MATCHUPS: uma matriz 7x7 preenchida por completude finge precisão
+ * que não existe; um único eixo "quão ofensivo" (o modelo anterior) também não serve —
+ * o 4-3-3, por exemplo, é referência tanto em posse quanto em pressão alta e contra-
+ * ataque ao mesmo tempo, três estilos que um eixo único não consegue aproximar todos.
  */
-const FORMATION_INTENT: Record<Formation, number> = {
-  '5-3-2': -1,
-  '4-5-1': -0.6,
-  '3-5-2': 0,
-  '4-4-2': 0,
-  '4-2-3-1': 0.4,
-  '4-3-3': 0.6,
-  '3-4-3': 1,
+const FORMATION_STYLE_FIT: Partial<Record<Formation, Partial<Record<TacticStyle, number>>>> = {
+  '4-3-3': {
+    // Formação-referência de posse (Guardiola/tiki-taka) e de pressão alta (gegenpressing do Klopp).
+    possession: 1.08,
+    pressing: 1.08,
+    offensive: 1.05,
+    counter: 1.03,
+    // Sem um alvo de bola aérea/2º atacante pra jogo direto; não é formação pra recuar.
+    direct: 0.9,
+    defensive: 0.88,
+  },
+  '4-2-3-1': {
+    // Muitos triângulos de passe e um double pivot que protege a saída de bola.
+    possession: 1.06,
+    pressing: 1.04,
+    // Alas avançados deixam brecha nas costas quando o time perde a bola em transição.
+    counter: 0.92,
+  },
+  '4-4-2': {
+    // Clássica de contra-ataque e jogo direto — dois atacantes dão alvo pra bola longa.
+    counter: 1.06,
+    direct: 1.06,
+    // Faltam opções centrais de passe pra sustentar posse paciente.
+    possession: 0.9,
+  },
+  '5-3-2': {
+    defensive: 1.05,
+    counter: 1.05,
+    possession: 0.85,
+    pressing: 0.85,
+    offensive: 0.8,
+  },
+  '3-5-2': {
+    // Cinco no meio-campo dá números pra pressionar alto com sobra.
+    pressing: 1.06,
+  },
+  '3-4-3': {
+    // Linha de três zagueiros dá uma opção extra de passe na saída; alas avançados = time muito ofensivo.
+    possession: 1.05,
+    offensive: 1.08,
+    // Recuar expõe o back-3 (sem lateral de origem) contra qualquer ataque de verdade.
+    defensive: 0.85,
+  },
+  '4-5-1': {
+    // Linha de cinco no meio fecha os corredores de passe — ótima pra segurar resultado no contra-ataque.
+    defensive: 1.06,
+    counter: 1.05,
+    // Só um centroavante de vaga não sustenta postura ofensiva de verdade.
+    offensive: 0.85,
+  },
 };
 
-/** Mesma escala de -1..+1, derivada do volume de ataque que o estilo já define em STYLE_MODIFIERS. */
-function styleIntent(style: TacticStyle): number {
-  return (STYLE_MODIFIERS[style].attackVolume - 1) / 0.25;
-}
-
-const COHERENCE_WEIGHT = 0.15;
 const COHERENCE_FLOOR = 0.8;
+const COHERENCE_CEILING = 1.15;
 
 /**
- * Fricção quando formação e estilo puxam pra direções opostas (ex.: 5-3-2 ofensivo).
- * Nunca bloqueia a combinação — só reduz volume/qualidade de ataque do próprio time.
- * 1.0 = sem fricção; nunca passa de 1.0 (não existe "bônus" de coerência, só o piso).
+ * Fricção (ou pequeno bônus, pra pares consagrados) de formação×estilo. Nunca bloqueia
+ * a combinação — só ajusta volume/qualidade de ataque do próprio time. 1.0 = neutro.
  */
 export function formationStyleCoherence(formation: Formation, style: TacticStyle, intensity: TacticalIntensity): number {
-  const diff = Math.abs(FORMATION_INTENT[formation] - styleIntent(style));
-  const raw = Math.max(COHERENCE_FLOOR, 1 - COHERENCE_WEIGHT * diff);
-  return scaled(raw, intensity);
+  const raw = FORMATION_STYLE_FIT[formation]?.[style] ?? 1;
+  return Math.min(COHERENCE_CEILING, Math.max(COHERENCE_FLOOR, scaled(raw, intensity)));
 }
 
 // --- 3) Confronto de estilos ---

@@ -20,7 +20,7 @@ interface Slot {
 /** Ordem de cima (ataque) para baixo (goleiro), como visto olhando pro campo. */
 const RENDER_ORDER = ['att', 'amid', 'mid', 'dmid', 'def', 'gk'];
 
-/** Mesmo limiar usado em match.ts (COHERENCE_NOTE_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
+/** Mesmo limiar usado em match.ts (COHERENCE_NOTE_LOW_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
 const COHERENCE_WARNING_THRESHOLD = 0.95;
 
 /** Linha de defesa: 3 zagueiros puros, 4 com laterais, 5 com alas avançados. */

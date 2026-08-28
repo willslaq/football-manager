@@ -221,14 +221,20 @@ export function MatchLive() {
             <p className="ml-feed__empty">Partida em andamento…</p>
           ) : (
             <ul className="ml-feed__list">
-              {[...liveMatch.events].reverse().map((event, i) => (
-                <FeedItem
-                  key={i}
-                  event={event}
-                  teamName={event.teamId === liveMatch.homeTeamId ? home?.name : away?.name}
-                  playerName={playerName(event.playerId)}
-                />
-              ))}
+              {liveMatch.events
+                .map((event, i) => ({ event, i }))
+                // Chave é o índice na ordem cronológica (estável conforme a lista só cresce), não na
+                // exibida — senão o React reconcilia por posição visual e o item novo (topo) reaproveita
+                // o nó DOM do item anterior em vez de montar um novo, e a animação de entrada nunca dispara nele.
+                .reverse()
+                .map(({ event, i }) => (
+                  <FeedItem
+                    key={i}
+                    event={event}
+                    teamName={event.teamId === liveMatch.homeTeamId ? home?.name : away?.name}
+                    playerName={playerName(event.playerId)}
+                  />
+                ))}
             </ul>
           )}
         </Card>

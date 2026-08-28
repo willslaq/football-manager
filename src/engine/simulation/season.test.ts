@@ -50,7 +50,7 @@ describe('advanceRound', () => {
     expect(totalPlayedAfter - totalPlayedBefore).toBe(playedRound.length * 2);
   });
 
-  it('atualiza estatísticas de temporada dos jogadores que jogaram (aparições e gols)', () => {
+  it('atualiza estatísticas de temporada dos jogadores que jogaram (aparições, gols e defesas)', () => {
     const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
     const lineup = autoLineupFor(state, 'palmeiras');
     const next = advanceRound(state, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
@@ -67,6 +67,14 @@ describe('advanceRound', () => {
     );
     const totalPlayerGoals = next.world.players.reduce((sum, p) => sum + p.seasonStats.goals, 0);
     expect(totalPlayerGoals).toBe(totalGoalsInRound);
+
+    const totalShotsSavedInRound = next.season.competitions[0].fixtures[state.season.currentRound - 1].reduce(
+      (sum, f) => sum + (f.result?.events.filter((e) => e.type === 'shot_saved').length ?? 0),
+      0,
+    );
+    const totalPlayerSaves = next.world.players.reduce((sum, p) => sum + p.seasonStats.saves, 0);
+    expect(totalPlayerSaves).toBe(totalShotsSavedInRound);
+    expect(totalPlayerSaves).toBeGreaterThan(0);
   });
 
   it('rejeita avançar depois que a temporada terminou', () => {

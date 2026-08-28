@@ -49,6 +49,8 @@ export interface PlayerSeasonStats {
   assists: number;
   yellowCards: number;
   redCards: number;
+  /** Defesas feitas como goleiro (chutes no alvo evitados). */
+  saves: number;
 }
 
 export interface Player {

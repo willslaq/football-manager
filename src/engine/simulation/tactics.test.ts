@@ -40,13 +40,14 @@ describe('applyFormationShape', () => {
 });
 
 describe('formationStyleCoherence', () => {
-  it('nunca ultrapassa 1.0 (só fricção, nunca bônus)', () => {
-    expect(formationStyleCoherence('4-4-2', 'balanced', 'strong')).toBeLessThanOrEqual(1);
-    expect(formationStyleCoherence('3-4-3', 'offensive', 'strong')).toBeLessThanOrEqual(1);
+  it('pares sem afinidade tática conhecida ficam neutros (1.0), sem fricção nem bônus', () => {
+    expect(formationStyleCoherence('4-4-2', 'balanced', 'strong')).toBeCloseTo(1);
   });
 
-  it('formação e estilo bem alinhados (4-4-2 + equilibrado) não tem fricção', () => {
-    expect(formationStyleCoherence('4-4-2', 'balanced', 'strong')).toBeCloseTo(1);
+  it('pares consagrados (4-3-3 + posse) ganham um pequeno bônus, limitado ao teto', () => {
+    const coherence = formationStyleCoherence('4-3-3', 'possession', 'strong');
+    expect(coherence).toBeGreaterThan(1);
+    expect(coherence).toBeLessThanOrEqual(1.15);
   });
 
   it('5-3-2 (defensivo) + ofensivo gera fricção real', () => {
@@ -97,9 +98,9 @@ describe('styleMatchupModifier', () => {
 
 describe('effectiveStyleModifiers', () => {
   it('combina base + confronto + coerência multiplicativamente', () => {
+    // 4-4-2 + contra-ataque é um par consagrado (bônus de coerência) contra um adversário
+    // ofensivo (confronto de estilo favorável) — os dois fatores empurram na mesma direção.
     const mods = effectiveStyleModifiers('4-4-2', 'counter', 'offensive', 'strong');
-    // 4-4-2 é neutro em coerência com qualquer estilo (diff pequeno), então o ganho
-    // vem quase todo do confronto contra-ataque vs ofensivo.
     expect(mods.qualityMultiplier).toBeGreaterThan(1);
   });
 

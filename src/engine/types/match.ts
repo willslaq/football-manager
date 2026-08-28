@@ -20,6 +20,8 @@ export interface MatchEvent {
   type: MatchEventType;
   teamId: ClubId;
   playerId: PlayerId;
+  /** Só em eventos 'shot_saved': o goleiro adversário que fez a defesa. */
+  goalkeeperId?: PlayerId;
 }
 
 export interface TeamStat {

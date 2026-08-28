@@ -77,16 +77,19 @@ function updatePlayerStats(
   players: Player[],
   starterIds: Set<string>,
   goalsByPlayer: Map<string, number>,
+  savesByGoalkeeper: Map<string, number>,
 ): Player[] {
   return players.map((player) => {
     if (!starterIds.has(player.id)) return player;
     const goals = goalsByPlayer.get(player.id) ?? 0;
+    const saves = savesByGoalkeeper.get(player.id) ?? 0;
     return {
       ...player,
       seasonStats: {
         ...player.seasonStats,
         appearances: player.seasonStats.appearances + 1,
         goals: player.seasonStats.goals + goals,
+        saves: player.seasonStats.saves + saves,
       },
     };
   });
@@ -119,6 +122,7 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
 
   const starterIds = new Set<string>();
   const goalsByPlayer = new Map<string, number>();
+  const savesByGoalkeeper = new Map<string, number>();
   let standings = competition.standings;
   const playedRound: Fixture[] = [];
 
@@ -143,6 +147,8 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
     for (const event of result.events) {
       if (event.type === 'goal') {
         goalsByPlayer.set(event.playerId, (goalsByPlayer.get(event.playerId) ?? 0) + 1);
+      } else if (event.type === 'shot_saved' && event.goalkeeperId) {
+        savesByGoalkeeper.set(event.goalkeeperId, (savesByGoalkeeper.get(event.goalkeeperId) ?? 0) + 1);
       }
     }
 
@@ -164,7 +170,7 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
     ...state,
     world: {
       ...state.world,
-      players: updatePlayerStats(state.world.players, starterIds, goalsByPlayer),
+      players: updatePlayerStats(state.world.players, starterIds, goalsByPlayer, savesByGoalkeeper),
     },
     season: {
       ...state.season,

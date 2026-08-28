@@ -144,6 +144,71 @@
   text-align: center;
 }
 
+/* Posse de bola ao vivo */
+
+.ml-possession {
+  padding: var(--space-4);
+}
+
+.ml-possession__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ml-possession__value {
+  width: 2.5rem;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--chalk);
+}
+
+.ml-possession__value--away {
+  text-align: right;
+}
+
+.ml-possession__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ml-possession__label {
+  font-size: var(--text-xs);
+  color: var(--mist);
+  text-align: center;
+}
+
+.ml-possession__track {
+  display: flex;
+  height: 6px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--line);
+}
+
+.ml-possession__fill {
+  height: 100%;
+  transition: width 500ms var(--ease-out);
+}
+
+.ml-possession__fill--home {
+  background: var(--pitch);
+}
+
+.ml-possession__fill--away {
+  background: var(--floodlight);
+  margin-left: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ml-possession__fill {
+    transition: none;
+  }
+}
+
 /* Lance a lance */
 
 .ml-feed {

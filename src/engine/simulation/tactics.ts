@@ -10,7 +10,7 @@
 
 import type { Formation, TacticalIntensity, TacticStyle } from '../types/tactics';
 import { sectorSlotCounts } from './autoLineup';
-import { STYLE_MODIFIERS, type StyleModifiers } from './config';
+import { POSSESSION_MIDFIELD_SHAPE_WEIGHT, POSSESSION_STYLE_AFFINITY, STYLE_MODIFIERS, type StyleModifiers } from './config';
 import type { SectorStrengths } from './strength';
 
 const INTENSITY_SCALE: Record<TacticalIntensity, number> = {
@@ -41,6 +41,22 @@ export function applyFormationShape(
     midfield: strengths.midfield * scaled(1 + (slots.midfield - SECTOR_BASELINE.midfield) * SHAPE_WEIGHT.midfield, intensity),
     attack: strengths.attack * scaled(1 + (slots.attack - SECTOR_BASELINE.attack) * SHAPE_WEIGHT.attack, intensity),
   };
+}
+
+// --- 1b) Viés de posse por formação/estilo (não é volume/qualidade de chance, é a bola em si) ---
+
+/**
+ * Quanto a formação/estilo do time puxa a posse média da partida além do que a razão
+ * de força de meio-campo já explica — ex.: um time de posse com meio-campo lotado tenta
+ * ativamente segurar a bola; um time de contra-ataque abre mão dela de propósito, mesmo
+ * com elenco parecido. Some `possessionBias(home) - possessionBias(away)` ao alvo de
+ * posse (SectorStrengths.midfield ratio) antes do clamp final.
+ */
+export function possessionBias(formation: Formation, style: TacticStyle, intensity: TacticalIntensity): number {
+  const slots = sectorSlotCounts(formation);
+  const shapeBias = (slots.midfield - SECTOR_BASELINE.midfield) * POSSESSION_MIDFIELD_SHAPE_WEIGHT;
+  const styleBias = POSSESSION_STYLE_AFFINITY[style];
+  return scaled(1 + shapeBias + styleBias, intensity) - 1;
 }
 
 // --- 2) Coerência formação × estilo ---

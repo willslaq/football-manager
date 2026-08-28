@@ -79,4 +79,10 @@ export type EngineTraceEntry =
       goalProbability: number;
       isOnTarget: boolean;
       isGoal: boolean;
+    }
+  | {
+      kind: 'possession';
+      minute: number;
+      /** Fração 0..1 (não percentual) da posse do mandante naquele minuto. */
+      possessionHome: number;
     };

@@ -11,7 +11,7 @@ import {
   validateCareerState,
 } from '../engine';
 import type { CareerState, EngineTraceEntry, Lineup, Tactics } from '../engine/types';
-import { runLiveMatch, type ChanceTraceEntry, type LiveMatchController } from './liveMatch';
+import { runLiveMatch, type ChanceTraceEntry, type LiveMatchController, type PossessionTraceEntry } from './liveMatch';
 import type { ClubSummary, EngineRequest, EngineResponse } from './protocol';
 
 let career: CareerState | null = null;
@@ -130,14 +130,23 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry: setupEntry } });
         }
         const chanceTrace = engineTrace.filter((entry): entry is ChanceTraceEntry => entry.kind === 'chance');
+        const possessionTrace = engineTrace.filter((entry): entry is PossessionTraceEntry => entry.kind === 'possession');
 
-        const controller = runLiveMatch(playerMatch, chanceTrace, {
-          onEvent: (event, homeGoals, awayGoals) =>
-            respond({ type: 'liveMatchEvent', requestId: request.requestId, payload: { event, homeGoals, awayGoals } }),
-          onTrace: (entry) => respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry } }),
-          onTick: (minute, homeGoals, awayGoals) =>
-            respond({ type: 'liveMatchTick', requestId: request.requestId, payload: { minute, homeGoals, awayGoals } }),
-        });
+        const controller = runLiveMatch(
+          playerMatch,
+          { chances: chanceTrace, possession: possessionTrace },
+          {
+            onEvent: (event, homeGoals, awayGoals) =>
+              respond({ type: 'liveMatchEvent', requestId: request.requestId, payload: { event, homeGoals, awayGoals } }),
+            onTrace: (entry) => respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry } }),
+            onTick: (minute, homeGoals, awayGoals, possessionHome) =>
+              respond({
+                type: 'liveMatchTick',
+                requestId: request.requestId,
+                payload: { minute, homeGoals, awayGoals, possessionHome },
+              }),
+          },
+        );
         liveSessions.set(request.requestId, controller);
         controller.done.then(() => {
           liveSessions.delete(request.requestId);

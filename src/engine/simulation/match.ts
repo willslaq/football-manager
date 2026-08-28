@@ -1,4 +1,4 @@
-import { chance, mulberry32, roll, weighted } from '../rng';
+import { chance, mulberry32, weighted } from '../rng';
 import type { ClubId } from '../types/club';
 import type { EngineTraceEntry, MatchEvent, MatchResult, Reason } from '../types/match';
 import type { Player } from '../types/player';
@@ -9,11 +9,27 @@ import {
   MAX_GOAL_PROBABILITY,
   MIN_GOAL_PROBABILITY,
   ON_TARGET_MISS_PROBABILITY,
+  POSSESSION_CHANCE_PROBABILITY_CAP,
+  POSSESSION_HOME_BOOST,
+  POSSESSION_MINUTE_CLAMP,
+  POSSESSION_SCORELINE_PULL_PER_GOAL,
+  POSSESSION_TARGET_CLAMP,
+  POSSESSION_WALK_NOISE,
+  POSSESSION_WALK_PULL_RATE,
   RATIO_COMPRESSION,
   type StyleModifiers,
 } from './config';
 import { computeSectorStrengths, type SectorStrengths } from './strength';
-import { applyFormationShape, effectiveStyleModifiers, formationStyleCoherence, styleMatchupModifier } from './tactics';
+import {
+  applyFormationShape,
+  effectiveStyleModifiers,
+  formationStyleCoherence,
+  possessionBias,
+  styleMatchupModifier,
+} from './tactics';
+
+/** Duração da partida em minutos — o motor agora simula minuto a minuto (posse dinâmica). */
+const MATCH_MINUTES = 90;
 
 export interface MatchTeamInput {
   clubId: ClubId;
@@ -57,14 +73,7 @@ function expectedChances(params: ChanceParams): number {
   );
 }
 
-function rollChanceCount(rng: () => number, params: ChanceParams): number {
-  const expected = expectedChances(params);
-  const noisy = Math.round(expected) + roll(rng, -1, 1);
-  return Math.max(0, noisy);
-}
-
 interface ResolvedChance {
-  minute: number;
   isGoal: boolean;
   isOnTarget: boolean;
   shooter?: Player;
@@ -79,7 +88,8 @@ function pickShooter(rng: () => number, attackers: Player[]): Player | undefined
   return weighted(rng, weights);
 }
 
-function resolveChance(
+/** Resolve o desfecho de uma chance já decidida pelo loop minuto a minuto (o minuto vem de fora). */
+function resolveChanceOutcome(
   rng: () => number,
   attackStrength: number,
   defenseStrength: number,
@@ -94,9 +104,29 @@ function resolveChance(
   );
   const isGoal = chance(rng, goalProbability);
   const isOnTarget = isGoal || chance(rng, ON_TARGET_MISS_PROBABILITY);
-  const minute = roll(rng, 1, 90);
   const shooter = pickShooter(rng, attackers);
-  return { minute, isGoal, isOnTarget, shooter, quality, goalProbability };
+  return { isGoal, isOnTarget, shooter, quality, goalProbability };
+}
+
+/** Alvo de posse "de bolso" da partida inteira — passeio minuto a minuto converge pra isso. */
+function possessionTarget(
+  homeMidfield: number,
+  awayMidfield: number,
+  home: MatchTeamInput,
+  away: MatchTeamInput,
+  intensity: TacticalIntensity,
+): number {
+  const base = compressRatio(homeMidfield / (homeMidfield + awayMidfield || 1));
+  const bias =
+    possessionBias(home.tactics.formation, home.tactics.style, intensity) -
+    possessionBias(away.tactics.formation, away.tactics.style, intensity);
+  return clamp(base + bias + POSSESSION_HOME_BOOST, POSSESSION_TARGET_CLAMP[0], POSSESSION_TARGET_CLAMP[1]);
+}
+
+/** Quanto o placar corrente empurra a posse pro time atrás (cresce ao longo da partida). */
+function scorelineDrift(homeGoals: number, awayGoals: number, minute: number): number {
+  const goalDiff = clamp(awayGoals - homeGoals, -2, 2);
+  return goalDiff * POSSESSION_SCORELINE_PULL_PER_GOAL * (minute / MATCH_MINUTES);
 }
 
 function pickManOfTheMatch(
@@ -259,38 +289,39 @@ export function simulateMatch(
     tacticalIntensity,
   );
 
-  const possessionHome = clamp(
-    compressRatio(homeStrength.midfield / (homeStrength.midfield + awayStrength.midfield || 1)),
-    0.3,
-    0.7,
-  );
-  const possessionAway = 1 - possessionHome;
+  // Alvo tático da posse (formação + estilo + fator casa) — o passeio minuto a minuto converge pra isso,
+  // não é mais um número fixo pra partida inteira.
+  const possessionTargetHome = possessionTarget(homeStrength.midfield, awayStrength.midfield, home, away, tacticalIntensity);
 
   const homeStyleMod = effectiveStyleModifiers(home.tactics.formation, home.tactics.style, away.tactics.style, tacticalIntensity);
   const awayStyleMod = effectiveStyleModifiers(away.tactics.formation, away.tactics.style, home.tactics.style, tacticalIntensity);
 
-  const homeChanceCount = rollChanceCount(rng, {
+  // Volume total de chances esperado pra partida inteira (projeção pré-jogo) — usado só pra derivar a
+  // taxa por minuto abaixo; a contagem real emerge do loop minuto a minuto e pode variar bastante.
+  const homeExpectedChances = expectedChances({
     attack: homeStrength.attack,
     defense: awayStrength.defense,
     ownStyleMod: homeStyleMod,
     oppStyleMod: awayStyleMod,
-    possession: possessionHome,
+    possession: possessionTargetHome,
   });
-  const awayChanceCount = rollChanceCount(rng, {
+  const awayExpectedChances = expectedChances({
     attack: awayStrength.attack,
     defense: homeStrength.defense,
     ownStyleMod: awayStyleMod,
     oppStyleMod: homeStyleMod,
-    possession: possessionAway,
+    possession: 1 - possessionTargetHome,
   });
+  const homeMinuteRate = homeExpectedChances / MATCH_MINUTES;
+  const awayMinuteRate = awayExpectedChances / MATCH_MINUTES;
 
   onChance?.({
     kind: 'setup',
     home: { clubId: home.clubId, attack: homeStrength.attack, defense: homeStrength.defense, midfield: homeStrength.midfield },
     away: { clubId: away.clubId, attack: awayStrength.attack, defense: awayStrength.defense, midfield: awayStrength.midfield },
-    possessionHome,
-    homeChanceCount,
-    awayChanceCount,
+    possessionHome: possessionTargetHome,
+    homeChanceCount: Math.round(homeExpectedChances),
+    awayChanceCount: Math.round(awayExpectedChances),
   });
 
   const events: MatchEvent[] = [];
@@ -299,66 +330,102 @@ export function simulateMatch(
   let awayGoals = 0;
   let homeShotsOnTarget = 0;
   let awayShotsOnTarget = 0;
+  let homeShots = 0;
+  let awayShots = 0;
 
-  for (let i = 0; i < homeChanceCount; i++) {
-    const resolved = resolveChance(rng, homeStrength.attack, awayStrength.defense, homeStyleMod, home.players);
-    onChance?.({
-      kind: 'chance',
-      minute: resolved.minute,
-      teamId: home.clubId,
-      shooterId: resolved.shooter?.id,
-      attackStrength: homeStrength.attack,
-      defenseStrength: awayStrength.defense,
-      quality: resolved.quality,
-      goalProbability: resolved.goalProbability,
-      isOnTarget: resolved.isOnTarget,
-      isGoal: resolved.isGoal,
-    });
-    if (resolved.isOnTarget) homeShotsOnTarget++;
-    if (!resolved.shooter) continue;
-    if (resolved.isGoal) {
-      homeGoals++;
-      goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
-      events.push({ minute: resolved.minute, type: 'goal', teamId: home.clubId, playerId: resolved.shooter.id });
-    } else {
-      events.push({
-        minute: resolved.minute,
-        type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
+  // Passeio aleatório da posse, minuto a minuto: converge pro alvo tático (ajustado pelo placar
+  // corrente) com ruído, e cada minuto sorteia (Bernoulli) se aquele time cria uma chance ali —
+  // com probabilidade escalada pela posse do minuto, o ritmo de chances fica preso à posse ao vivo.
+  let currentPossessionHome = possessionTargetHome;
+  let possessionSum = 0;
+
+  for (let minute = 1; minute <= MATCH_MINUTES; minute++) {
+    const drift = scorelineDrift(homeGoals, awayGoals, minute);
+    const minuteTarget = clamp(possessionTargetHome + drift, POSSESSION_MINUTE_CLAMP[0], POSSESSION_MINUTE_CLAMP[1]);
+    currentPossessionHome = clamp(
+      currentPossessionHome + (minuteTarget - currentPossessionHome) * POSSESSION_WALK_PULL_RATE + (rng() - 0.5) * POSSESSION_WALK_NOISE,
+      POSSESSION_MINUTE_CLAMP[0],
+      POSSESSION_MINUTE_CLAMP[1],
+    );
+    possessionSum += currentPossessionHome;
+    onChance?.({ kind: 'possession', minute, possessionHome: currentPossessionHome });
+
+    const homeChanceProbability = clamp(
+      homeMinuteRate * (currentPossessionHome / possessionTargetHome),
+      0,
+      POSSESSION_CHANCE_PROBABILITY_CAP,
+    );
+    if (chance(rng, homeChanceProbability)) {
+      homeShots++;
+      const resolved = resolveChanceOutcome(rng, homeStrength.attack, awayStrength.defense, homeStyleMod, home.players);
+      onChance?.({
+        kind: 'chance',
+        minute,
         teamId: home.clubId,
-        playerId: resolved.shooter.id,
+        shooterId: resolved.shooter?.id,
+        attackStrength: homeStrength.attack,
+        defenseStrength: awayStrength.defense,
+        quality: resolved.quality,
+        goalProbability: resolved.goalProbability,
+        isOnTarget: resolved.isOnTarget,
+        isGoal: resolved.isGoal,
       });
+      if (resolved.isOnTarget) homeShotsOnTarget++;
+      if (resolved.shooter) {
+        if (resolved.isGoal) {
+          homeGoals++;
+          goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
+          events.push({ minute, type: 'goal', teamId: home.clubId, playerId: resolved.shooter.id });
+        } else {
+          events.push({
+            minute,
+            type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
+            teamId: home.clubId,
+            playerId: resolved.shooter.id,
+          });
+        }
+      }
+    }
+
+    const awayChanceProbability = clamp(
+      awayMinuteRate * ((1 - currentPossessionHome) / (1 - possessionTargetHome)),
+      0,
+      POSSESSION_CHANCE_PROBABILITY_CAP,
+    );
+    if (chance(rng, awayChanceProbability)) {
+      awayShots++;
+      const resolved = resolveChanceOutcome(rng, awayStrength.attack, homeStrength.defense, awayStyleMod, away.players);
+      onChance?.({
+        kind: 'chance',
+        minute,
+        teamId: away.clubId,
+        shooterId: resolved.shooter?.id,
+        attackStrength: awayStrength.attack,
+        defenseStrength: homeStrength.defense,
+        quality: resolved.quality,
+        goalProbability: resolved.goalProbability,
+        isOnTarget: resolved.isOnTarget,
+        isGoal: resolved.isGoal,
+      });
+      if (resolved.isOnTarget) awayShotsOnTarget++;
+      if (resolved.shooter) {
+        if (resolved.isGoal) {
+          awayGoals++;
+          goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
+          events.push({ minute, type: 'goal', teamId: away.clubId, playerId: resolved.shooter.id });
+        } else {
+          events.push({
+            minute,
+            type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
+            teamId: away.clubId,
+            playerId: resolved.shooter.id,
+          });
+        }
+      }
     }
   }
 
-  for (let i = 0; i < awayChanceCount; i++) {
-    const resolved = resolveChance(rng, awayStrength.attack, homeStrength.defense, awayStyleMod, away.players);
-    onChance?.({
-      kind: 'chance',
-      minute: resolved.minute,
-      teamId: away.clubId,
-      shooterId: resolved.shooter?.id,
-      attackStrength: awayStrength.attack,
-      defenseStrength: homeStrength.defense,
-      quality: resolved.quality,
-      goalProbability: resolved.goalProbability,
-      isOnTarget: resolved.isOnTarget,
-      isGoal: resolved.isGoal,
-    });
-    if (resolved.isOnTarget) awayShotsOnTarget++;
-    if (!resolved.shooter) continue;
-    if (resolved.isGoal) {
-      awayGoals++;
-      goalsByPlayer.set(resolved.shooter.id, (goalsByPlayer.get(resolved.shooter.id) ?? 0) + 1);
-      events.push({ minute: resolved.minute, type: 'goal', teamId: away.clubId, playerId: resolved.shooter.id });
-    } else {
-      events.push({
-        minute: resolved.minute,
-        type: resolved.isOnTarget ? 'shot_saved' : 'shot_missed',
-        teamId: away.clubId,
-        playerId: resolved.shooter.id,
-      });
-    }
-  }
+  const possessionHome = possessionSum / MATCH_MINUTES;
 
   events.sort((a, b) => a.minute - b.minute);
 
@@ -382,8 +449,8 @@ export function simulateMatch(
     awayGoals,
     events,
     stats: {
-      possession: { home: Math.round(possessionHome * 100), away: Math.round(possessionAway * 100) },
-      shots: { home: homeChanceCount, away: awayChanceCount },
+      possession: { home: Math.round(possessionHome * 100), away: Math.round((1 - possessionHome) * 100) },
+      shots: { home: homeShots, away: awayShots },
       shotsOnTarget: { home: homeShotsOnTarget, away: awayShotsOnTarget },
     },
     manOfTheMatch: manOfTheMatch.id,

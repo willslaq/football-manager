@@ -198,6 +198,23 @@ export function MatchLive() {
           </div>
         </Card>
 
+        <Card className="ml-possession">
+          <div className="ml-possession__row">
+            <span className="ml-possession__value numeric">{liveMatch.possessionHome}%</span>
+            <div className="ml-possession__body">
+              <span className="ml-possession__label">Posse de bola</span>
+              <div className="ml-possession__track">
+                <div className="ml-possession__fill ml-possession__fill--home" style={{ width: `${liveMatch.possessionHome}%` }} />
+                <div
+                  className="ml-possession__fill ml-possession__fill--away"
+                  style={{ width: `${100 - liveMatch.possessionHome}%` }}
+                />
+              </div>
+            </div>
+            <span className="ml-possession__value ml-possession__value--away numeric">{100 - liveMatch.possessionHome}%</span>
+          </div>
+        </Card>
+
         <Card className="ml-feed">
           <span className="eyebrow">Lance a lance</span>
           {liveMatch.events.length === 0 ? (

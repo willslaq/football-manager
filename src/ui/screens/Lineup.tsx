@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 import { FORMATIONS, TACTIC_STYLE_LABELS, TACTIC_STYLES } from '../../engine/types';
 import type { Formation, Player, Position, TacticStyle } from '../../engine/types';
+import { formationStyleCoherence } from '../../engine';
 import { useCareerStore } from '../../store/careerStore';
 import { resolveSquad } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
@@ -18,6 +19,9 @@ interface Slot {
 
 /** Ordem de cima (ataque) para baixo (goleiro), como visto olhando pro campo. */
 const RENDER_ORDER = ['att', 'amid', 'mid', 'dmid', 'def', 'gk'];
+
+/** Mesmo limiar usado em match.ts (COHERENCE_NOTE_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
+const COHERENCE_WARNING_THRESHOLD = 0.95;
 
 /** Linha de defesa: 3 zagueiros puros, 4 com laterais, 5 com alas avançados. */
 function defCanonical(count: number): Position[] {
@@ -255,6 +259,12 @@ export function Lineup() {
 
   if (!career || !lineup) return null;
 
+  const tacticCoherence = formationStyleCoherence(tactics.formation, tactics.style, career.settings.tacticalIntensity);
+  const tacticWarning =
+    tacticCoherence < COHERENCE_WARNING_THRESHOLD
+      ? `Formação ${tactics.formation} não combina bem com o estilo ${TACTIC_STYLE_LABELS[tactics.style]} — tira eficiência do ataque.`
+      : null;
+
   const assignedIds = new Set(Object.values(assignments).filter((id): id is string => !!id));
   const assignedPlayers = [...assignedIds].map((id) => playersById.get(id)).filter((p): p is Player => !!p);
   const hasGoalkeeper = assignedPlayers.some((p) => p.position === 'GOL');
@@ -353,6 +363,8 @@ export function Lineup() {
           Auto-escalação
         </Button>
       </div>
+
+      {tacticWarning && <p className="lineup__tactic-warning">{tacticWarning}</p>}
 
       <div className="lineup__status">
         <span className="numeric">{assignedIds.size}/11 escalados</span>

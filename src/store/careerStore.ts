@@ -27,6 +27,8 @@ export interface LiveMatchState {
   homeGoals: number;
   awayGoals: number;
   events: MatchEvent[];
+  /** Posse do mandante no minuto corrente, 0-100 — atualizada a cada liveMatchTick. */
+  possessionHome: number;
   /** Ritmo de reprodução: 1x = tempo padrão, 2x = duas vezes mais rápido. */
   speed: 1 | 2;
   paused: boolean;
@@ -116,6 +118,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
             homeGoals: 0,
             awayGoals: 0,
             events: [],
+            possessionHome: 50,
             speed: 1,
             paused: false,
           },
@@ -135,6 +138,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
                   minute: response.payload.minute,
                   homeGoals: response.payload.homeGoals,
                   awayGoals: response.payload.awayGoals,
+                  possessionHome: response.payload.possessionHome,
                 },
               }
             : {},

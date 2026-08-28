@@ -114,7 +114,8 @@ export interface LiveMatchStartedResponse {
 export interface LiveMatchTickResponse {
   type: 'liveMatchTick';
   requestId: string;
-  payload: { minute: number; homeGoals: number; awayGoals: number };
+  /** possessionHome: posse do mandante no minuto corrente, 0-100 (mesma convenção de MatchStats.possession). */
+  payload: { minute: number; homeGoals: number; awayGoals: number; possessionHome: number };
 }
 
 /** Um evento da partida (gol, chute defendido, chute pra fora) chegando em tempo real. */

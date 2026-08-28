@@ -203,6 +203,9 @@ export function Lineup() {
   const tactics = useCareerStore((s) => s.tactics);
   const setLineup = useCareerStore((s) => s.setLineup);
   const setTactics = useCareerStore((s) => s.setTactics);
+  const autoSaveEnabled = useCareerStore((s) => s.autoSaveEnabled);
+  const saveCurrentCareer = useCareerStore((s) => s.saveCurrentCareer);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
 
   const squad = useMemo(
     () => (career ? resolveSquad(career, career.playerClubId).sort((a, b) => b.strength - a.strength) : []),
@@ -301,6 +304,12 @@ export function Lineup() {
     setAssignments(autoAssign(slots, squad));
   }
 
+  async function handleSaveFormation() {
+    await saveCurrentCareer();
+    setSavedMessage('Formação salva.');
+    setTimeout(() => setSavedMessage(null), 2000);
+  }
+
   return (
     <div className="lineup">
       <div className="lineup__controls">
@@ -351,6 +360,14 @@ export function Lineup() {
         <span className={isValid ? 'lineup__status--valid' : 'lineup__status--invalid'}>
           {isValid ? 'Escalação válida' : 'Escalação incompleta'}
         </span>
+        {!autoSaveEnabled && (
+          <span className="lineup__save">
+            <Button type="button" size="sm" variant="secondary" onClick={handleSaveFormation}>
+              Salvar formação
+            </Button>
+            {savedMessage && <span className="lineup__save-message">{savedMessage}</span>}
+          </span>
+        )}
       </div>
 
       <div className="lineup__layout">

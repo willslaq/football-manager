@@ -60,8 +60,9 @@
   color-scheme: dark;
 }
 
+/* Preferência de sistema — só se aplica sem escolha manual (nenhum [data-theme] no <html>). */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme='dark']) {
     --ink: #f5f8f5;
     --surface: #ffffff;
     --surface-2: #eef2ee;
@@ -78,6 +79,29 @@
 
     color-scheme: light;
   }
+}
+
+/* Escolha manual do usuário (tela de Configurações) — sempre vence a preferência de sistema. */
+:root[data-theme='light'] {
+  --ink: #f5f8f5;
+  --surface: #ffffff;
+  --surface-2: #eef2ee;
+  --pitch: #1c9a4c;
+  --pitch-strong: #16803c;
+  --pitch-ink: #eafcf1;
+  --floodlight: #a86a0a;
+  --floodlight-ink: #fdf3e0;
+  --chalk: #101713;
+  --mist: #5b6b63;
+  --line: rgb(16 23 19 / 10%);
+  --danger: #c8412a;
+  --danger-ink: #fdece8;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 * {

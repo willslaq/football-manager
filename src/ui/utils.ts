@@ -58,3 +58,9 @@ export function sortStandingsForDisplay(standings: StandingEntry[]): StandingEnt
     return b.goalsFor - a.goalsFor;
   });
 }
+
+/** Posição de um clube na tabela (1 = líder), ou null se ele não estiver nela. */
+export function standingPosition(standings: StandingEntry[], clubId: ClubId): number | null {
+  const index = sortStandingsForDisplay(standings).findIndex((entry) => entry.clubId === clubId);
+  return index === -1 ? null : index + 1;
+}

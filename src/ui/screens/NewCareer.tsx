@@ -3,13 +3,14 @@ import type { TacticalIntensity } from '../../engine/types';
 import { useCareerStore } from '../../store/careerStore';
 import { Backdrop, Badge, Button, Card, CardButton, ProgressBar, TextField } from '../components';
 import { CLUB_CRESTS } from '../clubCrests';
+import { loadTacticalIntensityPreference, saveTacticalIntensityPreference } from '../tacticalIntensityPreference';
 import { TACTICAL_INTENSITY_COPY } from '../utils';
 import './NewCareer.css';
 
 export function NewCareer({ onBack }: { onBack: () => void }) {
   const [seed] = useState(() => Math.floor(Math.random() * 1_000_000_000));
   const [trainerName, setTrainerName] = useState('');
-  const [tacticalIntensity, setTacticalIntensity] = useState<TacticalIntensity>('subtle');
+  const [tacticalIntensity, setTacticalIntensity] = useState<TacticalIntensity>(loadTacticalIntensityPreference);
   const clubs = useCareerStore((s) => s.clubs);
   const loading = useCareerStore((s) => s.loading);
   const error = useCareerStore((s) => s.error);
@@ -53,7 +54,10 @@ export function NewCareer({ onBack }: { onBack: () => void }) {
               size="sm"
               variant={tacticalIntensity === option ? 'primary' : 'secondary'}
               aria-pressed={tacticalIntensity === option}
-              onClick={() => setTacticalIntensity(option)}
+              onClick={() => {
+                setTacticalIntensity(option);
+                saveTacticalIntensityPreference(option);
+              }}
             >
               {TACTICAL_INTENSITY_COPY[option].label}
             </Button>

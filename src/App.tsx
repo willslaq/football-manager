@@ -6,6 +6,7 @@ import { Home } from './ui/screens/Home';
 import { Squad } from './ui/screens/Squad';
 import { Lineup } from './ui/screens/Lineup';
 import { Table } from './ui/screens/Table';
+import { Settings } from './ui/screens/Settings';
 import { MatchLive } from './ui/screens/MatchLive';
 import { MatchResult } from './ui/screens/MatchResult';
 import { AppShell, type HubScreen } from './ui/components';
@@ -63,6 +64,7 @@ function App() {
       {screen === 'lineup' && <Lineup />}
       {screen === 'table' && <Table />}
       {screen === 'home' && <Home onNavigate={setScreen} />}
+      {screen === 'settings' && <Settings />}
     </AppShell>
   );
 }

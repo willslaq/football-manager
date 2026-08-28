@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { CareerState } from '../engine/types';
+import type { CareerState, Lineup, Tactics } from '../engine/types';
 
 export interface SavedCareer {
   id?: number;
@@ -8,6 +8,9 @@ export interface SavedCareer {
   createdAt: number;
   updatedAt: number;
   state: CareerState;
+  /** Escalação/tática do jogador no momento do save — fora do CareerState (não faz parte do motor). */
+  lineup: Lineup | null;
+  tactics: Tactics | null;
 }
 
 /** Metadados de um save, sem o CareerState completo — leve o suficiente para listar. */
@@ -36,13 +39,19 @@ class FootManagerDB extends Dexie {
 
 export const db = new FootManagerDB();
 
-export async function saveCareer(slotName: string, state: CareerState, existingId?: number): Promise<number> {
+export async function saveCareer(
+  slotName: string,
+  state: CareerState,
+  lineup: Lineup | null,
+  tactics: Tactics | null,
+  existingId?: number,
+): Promise<number> {
   const now = Date.now();
   if (existingId != null) {
-    await db.careers.update(existingId, { slotName, state, updatedAt: now });
+    await db.careers.update(existingId, { slotName, state, lineup, tactics, updatedAt: now });
     return existingId;
   }
-  return db.careers.add({ slotName, state, createdAt: now, updatedAt: now });
+  return db.careers.add({ slotName, state, lineup, tactics, createdAt: now, updatedAt: now });
 }
 
 export async function listCareerSummaries(): Promise<SavedCareerSummary[]> {

@@ -49,6 +49,15 @@
   max-width: 100%;
 }
 
+.matchup__name-position {
+  font-family: var(--font-body);
+  font-size: 0.6em;
+  font-weight: 700;
+  color: var(--mist);
+  vertical-align: super;
+  margin-left: 0.3em;
+}
+
 .matchup__vs {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
@@ -114,14 +123,4 @@
 .save-controls__message {
   font-size: var(--text-sm);
   color: var(--pitch);
-}
-
-.tactical-intensity {
-  display: flex;
-  flex-direction: column;
-}
-
-.tactical-intensity__hint {
-  font-size: var(--text-sm);
-  color: var(--mist);
 }

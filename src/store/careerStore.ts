@@ -11,8 +11,13 @@ import type {
 } from '../engine/types';
 import { deleteCareer, listCareerSummaries, loadCareerRecord, saveCareer, type SavedCareerSummary } from '../persistence/db';
 import { exportCareerToJSON, importCareerFromJSON } from '../persistence/serialize';
+import { defaultSlotName } from '../persistence/slotName';
+import { loadAutoSavePreference, saveAutoSavePreference } from '../ui/autoSavePreference';
 import EngineWorker from '../worker/engine.worker?worker';
 import type { ClubSummary, EngineRequest, EngineResponse } from '../worker/protocol';
+
+/** Tempo de debounce do autosave após uma mudança de escalação/tática — evita gravar a cada clique. */
+const AUTO_SAVE_DEBOUNCE_MS = 1000;
 
 /** Estado da partida do jogador sendo transmitida ao vivo, minuto a minuto. */
 export interface LiveMatchState {
@@ -41,6 +46,8 @@ interface CareerStore {
 
   saves: SavedCareerSummary[];
   activeSaveId: number | null;
+  /** Se ativo, toda mudança de escalação/tática é salva automaticamente (com debounce). */
+  autoSaveEnabled: boolean;
 
   listClubs: (seed: number) => void;
   startCareer: (seed: number, trainerName: string, clubId: string, tacticalIntensity?: TacticalIntensity) => void;
@@ -51,9 +58,11 @@ interface CareerStore {
   toggleLiveMatchPause: () => void;
   setLineup: (lineup: Lineup) => void;
   setTactics: (tactics: Tactics) => void;
+  setAutoSaveEnabled: (enabled: boolean) => void;
 
   refreshSaves: () => Promise<void>;
-  saveCurrentCareer: (slotName: string) => Promise<void>;
+  /** Salva a carreira atual. Sem slotName, reaproveita o nome do save ativo (ou um padrão). */
+  saveCurrentCareer: (slotName?: string) => Promise<void>;
   loadSave: (id: number) => Promise<void>;
   deleteSave: (id: number) => Promise<void>;
   exportCurrentCareer: () => string | null;
@@ -64,6 +73,19 @@ export const useCareerStore = create<CareerStore>((set, get) => {
   const worker = new EngineWorker();
   /** requestId da partida ao vivo em andamento (se houver) — usado só pra pedir o skip. */
   let liveMatchRequestId: string | null = null;
+  /** Escalação/tática de um save carregado, aguardando a resposta 'careerState' do worker pra
+   *  sobrescrever a sugestão padrão que o motor calcula (ver setCareer no worker). */
+  let pendingLoadedSelection: { lineup: Lineup; tactics: Tactics } | null = null;
+  let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function scheduleAutoSave(): void {
+    if (!get().autoSaveEnabled || !get().career) return;
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+      autoSaveTimer = null;
+      void get().saveCurrentCareer();
+    }, AUTO_SAVE_DEBOUNCE_MS);
+  }
 
   worker.onmessage = (event: MessageEvent<EngineResponse>) => {
     const response = event.data;
@@ -71,17 +93,20 @@ export const useCareerStore = create<CareerStore>((set, get) => {
       case 'clubsList':
         set({ clubs: response.payload.clubs, loading: false, error: null });
         break;
-      case 'careerState':
+      case 'careerState': {
+        const loaded = pendingLoadedSelection;
+        pendingLoadedSelection = null;
         set({
           career: response.payload.state,
-          lineup: response.payload.suggestedLineup,
-          tactics: response.payload.suggestedTactics,
+          lineup: loaded?.lineup ?? response.payload.suggestedLineup,
+          tactics: loaded?.tactics ?? response.payload.suggestedTactics,
           lastMatch: null,
           liveMatch: null,
           loading: false,
           error: null,
         });
         break;
+      }
       case 'liveMatchStarted':
         set({
           liveMatch: {
@@ -167,6 +192,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
 
     saves: [],
     activeSaveId: null,
+    autoSaveEnabled: loadAutoSavePreference(),
 
     listClubs: (seed) => {
       set({ loading: true, error: null });
@@ -219,8 +245,19 @@ export const useCareerStore = create<CareerStore>((set, get) => {
       });
     },
 
-    setLineup: (lineup) => set({ lineup }),
-    setTactics: (tactics) => set({ tactics }),
+    setLineup: (lineup) => {
+      set({ lineup });
+      scheduleAutoSave();
+    },
+    setTactics: (tactics) => {
+      set({ tactics });
+      scheduleAutoSave();
+    },
+    setAutoSaveEnabled: (enabled) => {
+      set({ autoSaveEnabled: enabled });
+      saveAutoSavePreference(enabled);
+      if (enabled) scheduleAutoSave();
+    },
 
     refreshSaves: async () => {
       const saves = await listCareerSummaries();
@@ -228,9 +265,11 @@ export const useCareerStore = create<CareerStore>((set, get) => {
     },
 
     saveCurrentCareer: async (slotName) => {
-      const { career, activeSaveId } = get();
+      const { career, activeSaveId, saves, lineup, tactics } = get();
       if (!career) return;
-      const id = await saveCareer(slotName, career, activeSaveId ?? undefined);
+      const resolvedName =
+        slotName?.trim() || saves.find((s) => s.id === activeSaveId)?.slotName || defaultSlotName(career);
+      const id = await saveCareer(resolvedName, career, lineup, tactics, activeSaveId ?? undefined);
       set({ activeSaveId: id });
       await get().refreshSaves();
     },
@@ -241,6 +280,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
         set({ error: `Save não encontrado (${id})` });
         return;
       }
+      pendingLoadedSelection = record.lineup && record.tactics ? { lineup: record.lineup, tactics: record.tactics } : null;
       set({ activeSaveId: id, loading: true, error: null });
       send({ type: 'setCareer', requestId: crypto.randomUUID(), payload: { state: record.state } });
     },

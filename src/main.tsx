@@ -7,6 +7,9 @@ import '@fontsource/manrope/700.css';
 import '@fontsource/manrope/800.css';
 import './ui/theme.css';
 import App from './App.tsx';
+import { applyThemePreference, loadThemePreference } from './ui/themePreference';
+
+applyThemePreference(loadThemePreference());
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

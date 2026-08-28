@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
 import './AppShell.css';
 
-export type HubScreen = 'home' | 'squad' | 'lineup' | 'table';
+export type HubScreen = 'home' | 'squad' | 'lineup' | 'table' | 'settings';
 
 const TABS: { id: HubScreen; label: string }[] = [
   { id: 'home', label: 'Início' },
   { id: 'squad', label: 'Elenco' },
   { id: 'lineup', label: 'Escalação' },
   { id: 'table', label: 'Tabela' },
+  { id: 'settings', label: 'Configurações' },
 ];
 
 interface AppShellProps {

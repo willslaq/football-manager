@@ -61,6 +61,17 @@
   color: var(--floodlight);
 }
 
+.lineup__save {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.lineup__save-message {
+  color: var(--pitch);
+}
+
 /* Campo */
 
 .pitch {

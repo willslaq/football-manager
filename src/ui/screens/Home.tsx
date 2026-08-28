@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import type { Lineup, TacticalIntensity } from '../../engine/types';
-import { findClub, sortStandingsForDisplay, TACTICAL_INTENSITY_COPY } from '../utils';
+import type { Lineup } from '../../engine/types';
+import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
+import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Badge, Button, Card, TextField } from '../components';
 import type { Screen } from '../../App';
@@ -70,31 +71,6 @@ function SaveExportControls({ defaultSlotName }: { defaultSlotName: string }) {
   );
 }
 
-function TacticalIntensityControl({ current }: { current: TacticalIntensity }) {
-  const setTacticalIntensity = useCareerStore((s) => s.setTacticalIntensity);
-
-  return (
-    <Card className="tactical-intensity">
-      <span className="field__label">Simulação tática</span>
-      <div className="intensity-toggle">
-        {(Object.keys(TACTICAL_INTENSITY_COPY) as TacticalIntensity[]).map((option) => (
-          <Button
-            key={option}
-            type="button"
-            size="sm"
-            variant={current === option ? 'primary' : 'secondary'}
-            aria-pressed={current === option}
-            onClick={() => setTacticalIntensity(option)}
-          >
-            {TACTICAL_INTENSITY_COPY[option].label}
-          </Button>
-        ))}
-      </div>
-      <p className="tactical-intensity__hint">{TACTICAL_INTENSITY_COPY[current].hint}</p>
-    </Card>
-  );
-}
-
 export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const career = useCareerStore((s) => s.career);
   const lineup = useCareerStore((s) => s.lineup);
@@ -108,7 +84,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const competition = career.season.competitions[0];
   const squadPositionById = new Map(career.world.players.map((p) => [p.id, p.position]));
   const lineupCheck = isLineupValid(lineup, squadPositionById);
-  const slotName = `${playerClub?.name ?? career.playerClubId} - ${career.trainer.name}`;
+  const slotName = defaultSlotName(career);
 
   if (career.season.state === 'finished') {
     const table = sortStandingsForDisplay(competition.standings);
@@ -130,7 +106,6 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
             Ver tabela final
           </Button>
         </Card>
-        <TacticalIntensityControl current={career.settings.tacticalIntensity} />
         <SaveExportControls defaultSlotName={slotName} />
       </div>
     );
@@ -144,6 +119,8 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
 
   const homeTeam = isHome ? playerClub : opponent;
   const awayTeam = isHome ? opponent : playerClub;
+  const homePosition = homeTeam ? standingPosition(competition.standings, homeTeam.id) : null;
+  const awayPosition = awayTeam ? standingPosition(competition.standings, awayTeam.id) : null;
 
   return (
     <div className="home">
@@ -160,6 +137,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
               )}
               <p className="matchup__name" title={homeTeam.name}>
                 {homeTeam.name}
+                {homePosition && <span className="matchup__name-position numeric">{homePosition}º</span>}
               </p>
               <Badge tone={isHome ? 'pitch' : 'neutral'}>Mandante</Badge>
             </div>
@@ -172,6 +150,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
               )}
               <p className="matchup__name" title={awayTeam.name}>
                 {awayTeam.name}
+                {awayPosition && <span className="matchup__name-position numeric">{awayPosition}º</span>}
               </p>
               <Badge tone={!isHome ? 'pitch' : 'neutral'}>Visitante</Badge>
             </div>
@@ -193,7 +172,6 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
         </Card>
       )}
 
-      <TacticalIntensityControl current={career.settings.tacticalIntensity} />
       <SaveExportControls defaultSlotName={slotName} />
     </div>
   );

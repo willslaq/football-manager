@@ -5,6 +5,7 @@ import type {
   CareerState,
   ClubId,
   EngineTraceEntry,
+  Fixture,
   Lineup,
   MatchEvent,
   MatchResult,
@@ -47,6 +48,13 @@ export interface AdvanceRoundRequest {
   payload: { playerLineup: Lineup; playerTactics: Tactics };
 }
 
+/** Pede pro motor encerrar a temporada atual (precisa estar 'finished') e começar a seguinte. */
+export interface StartNewSeasonRequest {
+  type: 'startNewSeason';
+  requestId: string;
+  payload: Record<string, never>;
+}
+
 /** Adota um CareerState vindo de fora (carregado do Dexie ou importado de um JSON) como carreira ativa. */
 export interface SetCareerRequest {
   type: 'setCareer';
@@ -79,6 +87,7 @@ export type EngineRequest =
   | ListClubsRequest
   | StartCareerRequest
   | AdvanceRoundRequest
+  | StartNewSeasonRequest
   | SetCareerRequest
   | SkipLiveMatchRequest
   | SetLiveMatchSpeedRequest
@@ -107,7 +116,23 @@ export interface RoundResultResponse {
 export interface LiveMatchStartedResponse {
   type: 'liveMatchStarted';
   requestId: string;
-  payload: { homeTeamId: ClubId; awayTeamId: ClubId };
+  payload: {
+    homeTeamId: ClubId;
+    awayTeamId: ClubId;
+    /**
+     * Os demais confrontos da rodada (já simulados internamente, mas enviados sem `result`) —
+     * a UI mostra "a jogar" até cada um chegar via `liveMatchOtherResult`, revelado aos poucos
+     * ao longo da transmissão pra parecer que estão acontecendo "ao mesmo tempo".
+     */
+    otherFixtures: { homeTeamId: ClubId; awayTeamId: ClubId }[];
+  };
+}
+
+/** Um confronto da rodada (fora o do jogador) tendo seu resultado revelado durante a transmissão ao vivo. */
+export interface LiveMatchOtherResultResponse {
+  type: 'liveMatchOtherResult';
+  requestId: string;
+  payload: { fixture: Fixture };
 }
 
 /** Batida de relógio periódica pra UI animar o minuto corrente mesmo sem evento novo. */
@@ -150,6 +175,7 @@ export type EngineResponse =
   | CareerStateResponse
   | RoundResultResponse
   | LiveMatchStartedResponse
+  | LiveMatchOtherResultResponse
   | LiveMatchTickResponse
   | LiveMatchEventResponse
   | LiveMatchTraceResponse

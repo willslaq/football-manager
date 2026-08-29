@@ -1,29 +1,19 @@
 import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import { findClub, sortStandingsForDisplay } from '../utils';
+import { findClub, sortStandingsForDisplay, standingsZone, type StandingsZone } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Button, Card } from '../components';
 import type { Screen } from '../../App';
 import './Table.css';
 
-type Zone = 'libertadores' | 'libertadores-pre' | 'sula' | 'relegation' | null;
-
-function zoneFor(position: number): Zone {
-  if (position <= 4) return 'libertadores';
-  if (position === 5) return 'libertadores-pre';
-  if (position <= 11) return 'sula';
-  if (position >= 17) return 'relegation';
-  return null;
-}
-
-const ZONE_COLOR: Record<Exclude<Zone, null>, string> = {
+const ZONE_COLOR: Record<Exclude<StandingsZone, null>, string> = {
   libertadores: 'var(--pitch)',
   'libertadores-pre': 'color-mix(in srgb, var(--pitch) 50%, transparent)',
   sula: 'var(--floodlight)',
   relegation: 'var(--danger)',
 };
 
-const LEGEND: { zone: Exclude<Zone, null>; label: string }[] = [
+const LEGEND: { zone: Exclude<StandingsZone, null>; label: string }[] = [
   { zone: 'libertadores', label: 'Libertadores' },
   { zone: 'libertadores-pre', label: 'Pré-Libertadores' },
   { zone: 'sula', label: 'Sul-Americana' },
@@ -76,7 +66,7 @@ export function Table({ onNavigate }: { onNavigate: (screen: Screen) => void }) 
                 const position = index + 1;
                 const club = findClub(career, entry.clubId);
                 const isOwn = entry.clubId === career.playerClubId;
-                const zone = zoneFor(position);
+                const zone = standingsZone(position);
                 const crest = club ? CLUB_CRESTS[club.id] : undefined;
 
                 return (

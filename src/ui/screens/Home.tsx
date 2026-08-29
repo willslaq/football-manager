@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import type { Club, Lineup, Player, Tactics } from '../../engine/types';
+import type { CareerState, Club, Lineup, Player, Tactics } from '../../engine/types';
 import { TACTIC_STYLE_LABELS } from '../../engine/types';
 import { DEFAULT_AUTO_TACTICS } from '../../engine/simulation/season';
+import { buildSeasonSummary } from '../../engine/simulation/seasonLifecycle';
 import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
 import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
@@ -70,12 +72,7 @@ function SaveExportControls({ defaultSlotName }: { defaultSlotName: string }) {
   return (
     <Card className="save-controls">
       <div className="save-controls__field">
-        <TextField
-          id="save-slot-name"
-          label="Nome do save"
-          value={slotName}
-          onChange={(e) => setSlotName(e.target.value)}
-        />
+        <TextField id="save-slot-name" label="Nome do save" value={slotName} onChange={(e) => setSlotName(e.target.value)} />
       </div>
       <Button variant="secondary" onClick={handleSave}>
         Salvar
@@ -88,6 +85,59 @@ function SaveExportControls({ defaultSlotName }: { defaultSlotName: string }) {
   );
 }
 
+/** Lista compacta de clubes (crest/nome/pontos) — Libertadores/rebaixamento no resumo de fim de temporada. */
+function ClubStandingList({ career, clubIds, accent }: { career: CareerState; clubIds: string[]; accent: string }) {
+  const table = sortStandingsForDisplay(career.season.competitions[0].standings);
+  const entries = table.filter((e) => clubIds.includes(e.clubId));
+  return (
+    <ul className="season-end__club-list">
+      {entries.map((entry) => {
+        const club = findClub(career, entry.clubId);
+        return (
+          <li key={entry.clubId} className="season-end__club-row" style={{ '--accent': accent } as CSSProperties}>
+            {club && CLUB_CRESTS[club.id] && <img className="season-end__club-crest" src={CLUB_CRESTS[club.id]} alt="" />}
+            <span className="season-end__club-name">{club?.name ?? entry.clubId}</span>
+            <span className="season-end__club-points numeric">{entry.points} pts</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Artilheiro/Luva de Ouro — jogador + clube + número. */
+function PlayerHighlightCard({
+  career,
+  label,
+  playerId,
+  value,
+  unit,
+}: {
+  career: CareerState;
+  label: string;
+  playerId: string | undefined;
+  value: number | undefined;
+  unit: string;
+}) {
+  if (!playerId || value === undefined) return null;
+  const player = career.world.players.find((p) => p.id === playerId);
+  const club = career.world.clubs.find((c) => c.squad.includes(playerId));
+  return (
+    <Card accentColor={club?.colors.primary} className="season-end__highlight">
+      {club && CLUB_CRESTS[club.id] && <img className="season-end__highlight-crest" src={CLUB_CRESTS[club.id]} alt="" />}
+      <div>
+        <p className="season-end__highlight-label">{label}</p>
+        <p className="season-end__highlight-name">{player?.name ?? playerId}</p>
+        <p className="season-end__highlight-club">{club?.name}</p>
+      </div>
+      <p className="season-end__highlight-value numeric">
+        {value}
+        <span className="season-end__highlight-unit">{unit}</span>
+      </p>
+    </Card>
+  );
+}
+
 export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const career = useCareerStore((s) => s.career);
   const lineup = useCareerStore((s) => s.lineup);
@@ -95,6 +145,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const loading = useCareerStore((s) => s.loading);
   const error = useCareerStore((s) => s.error);
   const advanceRound = useCareerStore((s) => s.advanceRound);
+  const startNewSeason = useCareerStore((s) => s.startNewSeason);
 
   if (!career) return null;
 
@@ -108,6 +159,8 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
     const table = sortStandingsForDisplay(competition.standings);
     const championEntry = table[0];
     const champion = findClub(career, championEntry.clubId);
+    const summary = buildSeasonSummary(career);
+
     return (
       <div className="home">
         <Card accentColor={champion?.colors.primary} className="champion-card">
@@ -124,6 +177,39 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
             Ver tabela final
           </Button>
         </Card>
+
+        <div className="season-end__highlights">
+          <PlayerHighlightCard
+            career={career}
+            label="Artilheiro"
+            playerId={summary.topScorer?.playerId}
+            value={summary.topScorer?.goals}
+            unit="gols"
+          />
+          <PlayerHighlightCard
+            career={career}
+            label="Luva de Ouro"
+            playerId={summary.goldenGlove?.playerId}
+            value={summary.goldenGlove?.saves}
+            unit="defesas"
+          />
+        </div>
+
+        <div className="season-end__zones">
+          <Card className="season-end__zone">
+            <span className="eyebrow">Classificados para a Libertadores</span>
+            <ClubStandingList career={career} clubIds={summary.libertadores} accent="var(--pitch)" />
+          </Card>
+          <Card className="season-end__zone">
+            <span className="eyebrow">Rebaixados</span>
+            <ClubStandingList career={career} clubIds={summary.relegated} accent="var(--danger)" />
+          </Card>
+        </div>
+
+        <Button variant="primary" block disabled={loading} onClick={() => startNewSeason()}>
+          {loading ? 'Preparando nova temporada…' : 'Iniciar nova temporada'}
+        </Button>
+
         <SaveExportControls defaultSlotName={slotName} />
       </div>
     );
@@ -162,6 +248,9 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
               <p className="matchup__tactics">
                 {homeTactics.formation} · {TACTIC_STYLE_LABELS[homeTactics.style]}
               </p>
+              <p className="matchup__morale" title="Moral do clube — não influencia a simulação, só reflete a campanha">
+                Moral <span className="numeric">{homeTeam.morale}</span>
+              </p>
               <Badge tone={isHome ? 'pitch' : 'neutral'}>Mandante</Badge>
             </div>
 
@@ -178,6 +267,9 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
               <p className="matchup__tactics">
                 {awayTactics.formation} · {TACTIC_STYLE_LABELS[awayTactics.style]}
               </p>
+              <p className="matchup__morale" title="Moral do clube — não influencia a simulação, só reflete a campanha">
+                Moral <span className="numeric">{awayTeam.morale}</span>
+              </p>
               <Badge tone={!isHome ? 'pitch' : 'neutral'}>Visitante</Badge>
             </div>
           </div>
@@ -186,12 +278,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
           {error && <p className="error-banner">{error}</p>}
 
           <div className="matchup__action">
-            <Button
-              variant="primary"
-              block
-              disabled={!lineupCheck.valid || loading}
-              onClick={() => advanceRound()}
-            >
+            <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={() => advanceRound()}>
               {loading ? 'Simulando…' : 'Avançar rodada'}
             </Button>
           </div>

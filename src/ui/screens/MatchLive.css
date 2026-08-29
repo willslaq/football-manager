@@ -1,9 +1,19 @@
+.match-live-layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-5);
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
 .match-live {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
   max-width: 42rem;
-  margin: 0 auto;
+  min-width: 0;
+  flex: 1;
 
   opacity: 1;
   transform: translateY(0);
@@ -14,6 +24,33 @@
   @starting-style {
     opacity: 0;
     transform: translateY(10px);
+  }
+}
+
+/* Lista lateral com os outros resultados da rodada, revelados aos poucos durante a transmissão. */
+.ml-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 18rem;
+  flex-shrink: 0;
+  padding: var(--space-4);
+  align-self: stretch;
+}
+
+@media (max-width: 860px) {
+  .match-live-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .match-live {
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .ml-sidebar {
+    width: auto;
   }
 }
 

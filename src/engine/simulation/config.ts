@@ -8,6 +8,23 @@ import type { Sector } from './strength';
 export const HOME_ADVANTAGE = 1.06;
 
 /**
+ * Ajuste de `Club.morale` (0-100) aplicado ao fim de cada partida da rodada, conforme o
+ * resultado — puramente de exibição (ver `Club.morale`), não realimenta a simulação.
+ */
+export const CLUB_MORALE_WIN_DELTA = 4;
+export const CLUB_MORALE_DRAW_DELTA = 0;
+export const CLUB_MORALE_LOSS_DELTA = -4;
+
+/**
+ * Cortes de posição final usados tanto pela tabela (zonas de classificação/rebaixamento,
+ * `ui/utils.ts`) quanto pelo resumo de fim de temporada (`seasonLifecycle.ts`) — mesma fonte
+ * pros dois lados não divergirem. 20 times: 1-4 Libertadores (fase de grupos), 5 Pré-Libertadores
+ * (ainda "classificado pra Libertadores" pro resumo de temporada), 17-20 rebaixamento.
+ */
+export const LIBERTADORES_CUTOFF_POSITION = 5;
+export const RELEGATION_CUTOFF_POSITION = 17;
+
+/**
  * Fator de compressão (0-1) aplicado a toda razão de força centrada em 0.5
  * (ataque vs defesa, posse) antes de virar volume/qualidade de chances.
  * Sem isso, o mesmo gap de força é aplicado duas vezes (volume E qualidade

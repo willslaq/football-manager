@@ -3,7 +3,7 @@ import { useCareerStore } from '../../store/careerStore';
 import type { EngineTraceEntry } from '../../engine/types';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Button, Card, IconBall, MatchEventFeed } from '../components';
+import { Button, Card, IconBall, MatchEventFeed, RoundResultsList } from '../components';
 import './MatchLive.css';
 
 function IconPlay() {
@@ -71,7 +71,8 @@ function formatTraceEntry(
   if (entry.kind === 'foul') {
     const fouler = entry.foulerId ? playerName(entry.foulerId) : '?';
     const victim = entry.victimId ? playerName(entry.victimId) : '?';
-    const cardLabel = entry.card === 'none' ? 'sem cartão' : entry.card === 'second_yellow' ? '2º amarelo → vermelho' : entry.card;
+    const cardLabel =
+      entry.card === 'none' ? 'sem cartão' : entry.card === 'second_yellow' ? '2º amarelo → vermelho' : entry.card;
     return `#${i} [${entry.minute}'] FALTA ${clubName(entry.teamId)} · ${fouler} em ${victim} · zona=${entry.zone} → ${cardLabel}`;
   }
   const outcome = entry.isGoal ? 'GOL' : entry.isOnTarget ? 'no alvo (defendido)' : 'fora';
@@ -104,130 +105,145 @@ export function MatchLive() {
 
   return (
     <>
-      <main className="match-live">
-        <div className="ml-header">
-          <span className="ml-live-badge">
-            <span className="ml-live-dot" />
-            {isFullTime ? 'Fim de jogo' : liveMatch.paused ? 'Pausado' : 'Ao vivo'}
-          </span>
-          <span className="ml-minute numeric">{liveMatch.minute}&apos;</span>
-        </div>
-
-        {!isFullTime && (
-          <div className="ml-controls">
-            <Button variant="secondary" size="sm" onClick={toggleLiveMatchPause} aria-pressed={liveMatch.paused}>
-              {liveMatch.paused ? <IconPlay /> : <IconPause />}
-              {liveMatch.paused ? 'Retomar' : 'Pausar'}
-            </Button>
-
-            <div className="ml-speed-toggle" role="group" aria-label="Velocidade da simulação">
-              <button
-                type="button"
-                className={liveMatch.speed === 1 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
-                aria-pressed={liveMatch.speed === 1}
-                onClick={() => setLiveMatchSpeed(1)}
-              >
-                <IconChevron />
-                1x
-              </button>
-              <button
-                type="button"
-                className={liveMatch.speed === 2 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
-                aria-pressed={liveMatch.speed === 2}
-                onClick={() => setLiveMatchSpeed(2)}
-              >
-                <IconChevron />
-                <IconChevron />
-                2x
-              </button>
-            </div>
+      <div className="match-live-layout">
+        <main className="match-live">
+          <div className="ml-header">
+            <span className="ml-live-badge">
+              <span className="ml-live-dot" />
+              {isFullTime ? 'Fim de jogo' : liveMatch.paused ? 'Pausado' : 'Ao vivo'}
+            </span>
+            <span className="ml-minute numeric">{liveMatch.minute}&apos;</span>
           </div>
-        )}
 
-        <Card accentColor={home?.colors.primary} className="ml-scoreboard">
-          <div className="ml-teams">
-            <div className="ml-team">
-              {home && CLUB_CRESTS[home.id] && <img className="ml-team__crest" src={CLUB_CRESTS[home.id]} alt="" />}
-              <span className="ml-team__name" title={home?.name}>
-                {home?.name ?? liveMatch.homeTeamId}
-              </span>
-              {homeGoalEvents.length > 0 && (
-                <ul className="ml-goals">
-                  {homeGoalEvents.map((event, i) => (
-                    <li key={i}>
-                      <IconBall className="ml-goals__ball" />
-                      {event.minute}&apos; {playerName(event.playerId)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+          {!isFullTime && (
+            <div className="ml-controls">
+              <Button variant="secondary" size="sm" onClick={toggleLiveMatchPause} aria-pressed={liveMatch.paused}>
+                {liveMatch.paused ? <IconPlay /> : <IconPause />}
+                {liveMatch.paused ? 'Retomar' : 'Pausar'}
+              </Button>
 
-            <div className="ml-score numeric">
-              <span>{liveMatch.homeGoals}</span>
-              <span className="ml-score__sep">—</span>
-              <span>{liveMatch.awayGoals}</span>
-            </div>
-
-            <div className="ml-team">
-              {away && CLUB_CRESTS[away.id] && <img className="ml-team__crest" src={CLUB_CRESTS[away.id]} alt="" />}
-              <span className="ml-team__name" title={away?.name}>
-                {away?.name ?? liveMatch.awayTeamId}
-              </span>
-              {awayGoalEvents.length > 0 && (
-                <ul className="ml-goals">
-                  {awayGoalEvents.map((event, i) => (
-                    <li key={i}>
-                      <IconBall className="ml-goals__ball" />
-                      {event.minute}&apos; {playerName(event.playerId)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </Card>
-
-        <Card className="ml-possession">
-          <div className="ml-possession__row">
-            <span className="ml-possession__value numeric">{liveMatch.possessionHome}%</span>
-            <div className="ml-possession__body">
-              <span className="ml-possession__label">Posse de bola</span>
-              <div className="ml-possession__track">
-                <div className="ml-possession__fill ml-possession__fill--home" style={{ width: `${liveMatch.possessionHome}%` }} />
-                <div
-                  className="ml-possession__fill ml-possession__fill--away"
-                  style={{ width: `${100 - liveMatch.possessionHome}%` }}
-                />
+              <div className="ml-speed-toggle" role="group" aria-label="Velocidade da simulação">
+                <button
+                  type="button"
+                  className={liveMatch.speed === 1 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
+                  aria-pressed={liveMatch.speed === 1}
+                  onClick={() => setLiveMatchSpeed(1)}
+                >
+                  <IconChevron />
+                  1x
+                </button>
+                <button
+                  type="button"
+                  className={liveMatch.speed === 2 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
+                  aria-pressed={liveMatch.speed === 2}
+                  onClick={() => setLiveMatchSpeed(2)}
+                >
+                  <IconChevron />
+                  <IconChevron />
+                  2x
+                </button>
               </div>
             </div>
-            <span className="ml-possession__value ml-possession__value--away numeric">{100 - liveMatch.possessionHome}%</span>
-          </div>
-        </Card>
+          )}
 
-        <Card className="ml-feed">
-          <span className="eyebrow">Lance a lance</span>
-          <MatchEventFeed
-            events={liveMatch.events}
-            homeTeamId={liveMatch.homeTeamId}
-            homeTeamName={home?.name}
-            awayTeamName={away?.name}
-            homeCrestSrc={home && CLUB_CRESTS[home.id]}
-            awayCrestSrc={away && CLUB_CRESTS[away.id]}
-            playerName={playerName}
-            order="desc"
-            emptyMessage="Partida em andamento…"
+          <Card accentColor={home?.colors.primary} className="ml-scoreboard">
+            <div className="ml-teams">
+              <div className="ml-team">
+                {home && CLUB_CRESTS[home.id] && <img className="ml-team__crest" src={CLUB_CRESTS[home.id]} alt="" />}
+                <span className="ml-team__name" title={home?.name}>
+                  {home?.name ?? liveMatch.homeTeamId}
+                </span>
+                {homeGoalEvents.length > 0 && (
+                  <ul className="ml-goals">
+                    {homeGoalEvents.map((event, i) => (
+                      <li key={i}>
+                        <IconBall className="ml-goals__ball" />
+                        {event.minute}&apos; {playerName(event.playerId)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="ml-score numeric">
+                <span>{liveMatch.homeGoals}</span>
+                <span className="ml-score__sep">—</span>
+                <span>{liveMatch.awayGoals}</span>
+              </div>
+
+              <div className="ml-team">
+                {away && CLUB_CRESTS[away.id] && <img className="ml-team__crest" src={CLUB_CRESTS[away.id]} alt="" />}
+                <span className="ml-team__name" title={away?.name}>
+                  {away?.name ?? liveMatch.awayTeamId}
+                </span>
+                {awayGoalEvents.length > 0 && (
+                  <ul className="ml-goals">
+                    {awayGoalEvents.map((event, i) => (
+                      <li key={i}>
+                        <IconBall className="ml-goals__ball" />
+                        {event.minute}&apos; {playerName(event.playerId)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </Card>
+
+          <Card className="ml-possession">
+            <div className="ml-possession__row">
+              <span className="ml-possession__value numeric">{liveMatch.possessionHome}%</span>
+              <div className="ml-possession__body">
+                <span className="ml-possession__label">Posse de bola</span>
+                <div className="ml-possession__track">
+                  <div
+                    className="ml-possession__fill ml-possession__fill--home"
+                    style={{ width: `${liveMatch.possessionHome}%` }}
+                  />
+                  <div
+                    className="ml-possession__fill ml-possession__fill--away"
+                    style={{ width: `${100 - liveMatch.possessionHome}%` }}
+                  />
+                </div>
+              </div>
+              <span className="ml-possession__value ml-possession__value--away numeric">{100 - liveMatch.possessionHome}%</span>
+            </div>
+          </Card>
+
+          <Card className="ml-feed">
+            <span className="eyebrow">Lance a lance</span>
+            <MatchEventFeed
+              events={liveMatch.events}
+              homeTeamId={liveMatch.homeTeamId}
+              homeTeamName={home?.name}
+              awayTeamName={away?.name}
+              homeCrestSrc={home && CLUB_CRESTS[home.id]}
+              awayCrestSrc={away && CLUB_CRESTS[away.id]}
+              playerName={playerName}
+              order="desc"
+              emptyMessage="Partida em andamento…"
+            />
+          </Card>
+
+          {!isFullTime && (
+            <Button variant="ghost" block onClick={skipLiveMatch}>
+              Pular para o resultado
+            </Button>
+          )}
+        </main>
+
+        <Card className="ml-sidebar" aria-label="Outros resultados da rodada">
+          <span className="eyebrow">Outros jogos da rodada</span>
+          <RoundResultsList
+            entries={liveMatch.otherMatches}
+            playerClubId={career.playerClubId}
+            clubName={clubName}
+            emptyMessage="Nenhum outro jogo nessa rodada."
           />
         </Card>
+      </div>
 
-        {!isFullTime && (
-          <Button variant="ghost" block onClick={skipLiveMatch}>
-            Pular para o resultado
-          </Button>
-        )}
-      </main>
-
-      {/* Fora de .match-live de propósito: esse container tem transform pra animação de
+      {/* Fora de .match-live-layout de propósito: esse container tem transform pra animação de
           entrada, e um ancestral com transform vira containing block de position:fixed —
           o painel "escondido" fora da tela ficaria visível de novo dependendo da largura da janela. */}
       <button
@@ -244,7 +260,12 @@ export function MatchLive() {
       <div className={geekOpen ? 'ml-geek-panel ml-geek-panel--open' : 'ml-geek-panel'} aria-hidden={!geekOpen}>
         <div className="ml-geek-panel__header">
           <span>engine.log</span>
-          <button type="button" className="ml-geek-panel__close" onClick={() => setGeekOpen(false)} aria-label="Fechar log técnico">
+          <button
+            type="button"
+            className="ml-geek-panel__close"
+            onClick={() => setGeekOpen(false)}
+            aria-label="Fechar log técnico"
+          >
             ×
           </button>
         </div>

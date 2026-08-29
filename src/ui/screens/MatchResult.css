@@ -300,3 +300,12 @@
   flex-shrink: 0;
   margin-top: 0.1rem;
 }
+
+/* Resultado da rodada */
+
+.mr-round {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}

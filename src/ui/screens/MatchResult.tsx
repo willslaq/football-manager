@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card, IconBall, MatchEventFeed } from '../components';
+import { Badge, Button, Card, IconBall, MatchEventFeed, RoundResultsList } from '../components';
 import type { Screen } from '../../App';
 import type { MatchResult as MatchResultData } from '../../engine/types';
 import './MatchResult.css';
@@ -62,29 +62,30 @@ export function MatchResult({ onNavigate, result: resultProp }: MatchResultProps
   const home = findClub(career, match.homeTeamId);
   const away = findClub(career, match.awayTeamId);
   const playersById = new Map(career.world.players.map((p) => [p.id, p]));
+  const clubsById = new Map(career.world.clubs.map((c) => [c.id, c]));
+  const clubName = (id: string) => clubsById.get(id)?.shortName ?? id;
   const competition = career.season.competitions[0];
   const matchRoundIndex = competition.fixtures.findIndex((round) => round.some((f) => f.result === match));
   const roundPlayed = matchRoundIndex === -1 ? career.season.currentRound - 1 : matchRoundIndex + 1;
+  const roundFixtures = matchRoundIndex === -1 ? [] : competition.fixtures[matchRoundIndex];
 
   const isPlayerHome = match.homeTeamId === career.playerClubId;
   const isPlayerAway = match.awayTeamId === career.playerClubId;
   const playerGoals = isPlayerHome ? match.homeGoals : match.awayGoals;
   const opponentGoals = isPlayerHome ? match.awayGoals : match.homeGoals;
   const outcome =
-    isPlayerHome || isPlayerAway
-      ? playerGoals > opponentGoals
-        ? 'win'
-        : playerGoals < opponentGoals
-          ? 'loss'
-          : 'draw'
-      : null;
+    isPlayerHome || isPlayerAway ? (playerGoals > opponentGoals ? 'win' : playerGoals < opponentGoals ? 'loss' : 'draw') : null;
   const outcomeLabel = outcome === 'win' ? 'Vitória' : outcome === 'loss' ? 'Derrota' : outcome === 'draw' ? 'Empate' : null;
 
   const homeEvents = match.events.filter((e) => e.type === 'goal' && e.teamId === match.homeTeamId);
   const awayEvents = match.events.filter((e) => e.type === 'goal' && e.teamId === match.awayTeamId);
 
   const motm = playersById.get(match.manOfTheMatch);
-  const motmClub = home?.squad.includes(match.manOfTheMatch) ? home : away?.squad.includes(match.manOfTheMatch) ? away : undefined;
+  const motmClub = home?.squad.includes(match.manOfTheMatch)
+    ? home
+    : away?.squad.includes(match.manOfTheMatch)
+      ? away
+      : undefined;
 
   const playerName = (id: string) => playersById.get(id)?.name ?? id;
 
@@ -143,9 +144,7 @@ export function MatchResult({ onNavigate, result: resultProp }: MatchResultProps
 
       {motm && (
         <Card accentColor={motmClub?.colors.primary} className="mr-motm">
-          {motmClub && CLUB_CRESTS[motmClub.id] && (
-            <img className="mr-motm__crest" src={CLUB_CRESTS[motmClub.id]} alt="" />
-          )}
+          {motmClub && CLUB_CRESTS[motmClub.id] && <img className="mr-motm__crest" src={CLUB_CRESTS[motmClub.id]} alt="" />}
           <div>
             <p className="mr-motm__label">Craque da partida</p>
             <p className="mr-motm__name">{motm.name}</p>
@@ -202,6 +201,17 @@ export function MatchResult({ onNavigate, result: resultProp }: MatchResultProps
           );
         })}
       </Card>
+
+      {roundFixtures.length > 1 && (
+        <Card className="mr-round">
+          <span className="eyebrow">Resultado da rodada {roundPlayed}</span>
+          <RoundResultsList
+            entries={roundFixtures.map((f) => ({ homeTeamId: f.homeTeamId, awayTeamId: f.awayTeamId, result: f.result ?? null }))}
+            playerClubId={career.playerClubId}
+            clubName={clubName}
+          />
+        </Card>
+      )}
 
       <Button variant="primary" block onClick={() => onNavigate(resultProp ? 'matchHistory' : 'home')}>
         {resultProp ? 'Voltar ao histórico' : 'Continuar'}

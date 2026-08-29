@@ -4,14 +4,24 @@
 import {
   advanceRound,
   createBrasileiraoCareer,
+  deriveSeed,
   generateSeason,
   generateWorld,
+  mulberry32,
   pickAutoLineup,
+  roll,
   setTacticalIntensity,
+  startNewSeason,
   validateCareerState,
 } from '../engine';
-import type { CareerState, EngineTraceEntry, Lineup, Tactics } from '../engine/types';
-import { runLiveMatch, type ChanceTraceEntry, type LiveMatchController, type PossessionTraceEntry } from './liveMatch';
+import type { CareerState, EngineTraceEntry, Fixture, Lineup, Tactics } from '../engine/types';
+import {
+  runLiveMatch,
+  type ChanceTraceEntry,
+  type LiveMatchController,
+  type OtherRoundResult,
+  type PossessionTraceEntry,
+} from './liveMatch';
 import type { ClubSummary, EngineRequest, EngineResponse } from './protocol';
 
 let career: CareerState | null = null;
@@ -142,10 +152,25 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           break;
         }
 
+        // Os demais confrontos da rodada já foram simulados por completo dentro de `advanceRound`
+        // (mesmo motor, ver season.ts) — só a entrega ao vivo do jogo do jogador é escalonada no
+        // tempo; os outros "chegam" aos poucos, em minutos sorteados de forma determinística (mesma
+        // seed da carreira), pra dar a sensação de estarem acontecendo ao mesmo tempo.
+        const otherFixtures = playedRound.filter((f) => f !== playerFixture);
+        const revealRng = mulberry32(deriveSeed(nextState.seed, `roundReveal:${previousRound}`));
+        const otherResults: OtherRoundResult[] = otherFixtures.map((fixture) => ({
+          fixture,
+          revealMinute: roll(revealRng, 5, 90),
+        }));
+
         respond({
           type: 'liveMatchStarted',
           requestId: request.requestId,
-          payload: { homeTeamId: playerMatch.homeTeamId, awayTeamId: playerMatch.awayTeamId },
+          payload: {
+            homeTeamId: playerMatch.homeTeamId,
+            awayTeamId: playerMatch.awayTeamId,
+            otherFixtures: otherFixtures.map((f) => ({ homeTeamId: f.homeTeamId, awayTeamId: f.awayTeamId })),
+          },
         });
 
         // A entrada 'setup' é a análise pré-jogo (força por setor, posse, nº de chances) — chega
@@ -170,12 +195,30 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
                 requestId: request.requestId,
                 payload: { minute, homeGoals, awayGoals, possessionHome },
               }),
+            onOtherResult: (fixture: Fixture) =>
+              respond({ type: 'liveMatchOtherResult', requestId: request.requestId, payload: { fixture } }),
           },
+          otherResults,
         );
         liveSessions.set(request.requestId, controller);
         controller.done.then(() => {
           liveSessions.delete(request.requestId);
           sendRoundResult();
+        });
+        break;
+      }
+
+      case 'startNewSeason': {
+        if (!career) throw new Error('Nenhuma carreira iniciada');
+        career = startNewSeason(career);
+        respond({
+          type: 'careerState',
+          requestId: request.requestId,
+          payload: {
+            state: career,
+            suggestedLineup: buildSuggestedLineup(career),
+            suggestedTactics: DEFAULT_TACTICS,
+          },
         });
         break;
       }
@@ -204,23 +247,33 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         // (neutro — mesmo "jogador médio" usado pra calibrar o motor).
         // Saves de antes da suspensão por cartão não têm pendingYellowCards/suspendedMatches — sem
         // isso, o decremento em updatePlayerStats (season.ts) vira NaN silenciosamente. Completa com 0.
+        // Saves de antes da moral de clube não têm `Club.morale` — completa com 70 (neutro).
+        // Saves de antes do resumo de temporada (history) só tinham {year, competitionId, champion} —
+        // completa os campos novos com "vazio" (sem Libertadores/rebaixados/artilheiro/luva de ouro
+        // registrados retroativamente pra temporadas já encerradas antes dessa versão).
         const incoming = request.payload.state;
         const normalized: CareerState = {
           ...incoming,
           settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
           world: {
             ...incoming.world,
+            clubs: incoming.world.clubs.map((club) => ({ ...club, morale: club.morale ?? 70 })),
             players: incoming.world.players.map((player) => ({
               ...player,
               attributes:
-                typeof player.attributes.aggression === 'number'
-                  ? player.attributes
-                  : { ...player.attributes, aggression: 50 },
+                typeof player.attributes.aggression === 'number' ? player.attributes : { ...player.attributes, aggression: 50 },
               seasonStats: { ...player.seasonStats, saves: player.seasonStats.saves ?? 0 },
               pendingYellowCards: player.pendingYellowCards ?? 0,
               suspendedMatches: player.suspendedMatches ?? 0,
             })),
           },
+          history: incoming.history.map((entry) => ({
+            ...entry,
+            libertadores: entry.libertadores ?? [],
+            relegated: entry.relegated ?? [],
+            topScorer: entry.topScorer ?? null,
+            goldenGlove: entry.goldenGlove ?? null,
+          })),
         };
         const result = validateCareerState(normalized);
         if (!result.valid) {

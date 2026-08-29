@@ -1,7 +1,7 @@
 // Transmite uma MatchResult já calculada como uma sequência de eventos pausados em tempo real.
 // O motor de simulação (engine/simulation/match.ts) continua puro e síncrono — só a entrega é ao vivo.
 
-import type { EngineTraceEntry, MatchEvent, MatchResult } from '../engine/types';
+import type { EngineTraceEntry, Fixture, MatchEvent, MatchResult } from '../engine/types';
 
 /** Duração real de um minuto de jogo em 1x. 90 min de jogo ≈ 45s reais. */
 const REAL_MS_PER_GAME_MINUTE = 500;
@@ -26,6 +26,14 @@ export interface LiveMatchHandlers {
   onTrace: (entry: ChanceTraceEntry) => void;
   /** possessionHome: posse do mandante no minuto corrente, 0-100 (já arredondado pra UI). */
   onTick: (minute: number, homeGoals: number, awayGoals: number, possessionHome: number) => void;
+  /** Resultado de outro confronto da rodada (já simulado) "chegando" na lista lateral ao vivo. */
+  onOtherResult?: (fixture: Fixture) => void;
+}
+
+/** Um confronto da rodada (fora o do jogador), já com resultado, e o minuto em que ele deve "chegar" na transmissão. */
+export interface OtherRoundResult {
+  fixture: Fixture;
+  revealMinute: number;
 }
 
 export interface LiveMatchController {
@@ -43,10 +51,12 @@ export function runLiveMatch(
   result: MatchResult,
   traces: LiveMatchTraces,
   handlers: LiveMatchHandlers,
+  otherResults: OtherRoundResult[] = [],
 ): LiveMatchController {
   const remainingEvents = [...result.events].sort((a, b) => a.minute - b.minute);
   const remainingTrace = [...traces.chances].sort((a, b) => a.minute - b.minute);
   const remainingPossession = [...traces.possession].sort((a, b) => a.minute - b.minute);
+  const remainingOtherResults = [...otherResults].sort((a, b) => a.revealMinute - b.revealMinute);
   let homeGoals = 0;
   let awayGoals = 0;
   /** Posse do mandante corrente, 0-100 — atualizada conforme o relógio passa por cada minuto simulado. */
@@ -83,6 +93,7 @@ export function runLiveMatch(
     while (remainingEvents.length > 0) emitNext();
     while (remainingTrace.length > 0) handlers.onTrace(remainingTrace.shift()!);
     remainingPossession.length = 0;
+    while (remainingOtherResults.length > 0) handlers.onOtherResult?.(remainingOtherResults.shift()!.fixture);
     handlers.onTick(FULL_TIME_MINUTE, homeGoals, awayGoals, result.stats.possession.home);
     finish();
   }
@@ -103,6 +114,9 @@ export function runLiveMatch(
     while (remainingTrace.length > 0 && remainingTrace[0].minute <= minute) handlers.onTrace(remainingTrace.shift()!);
     while (remainingPossession.length > 0 && remainingPossession[0].minute <= minute) {
       possessionHome = Math.round(remainingPossession.shift()!.possessionHome * 100);
+    }
+    while (remainingOtherResults.length > 0 && remainingOtherResults[0].revealMinute <= minute) {
+      handlers.onOtherResult?.(remainingOtherResults.shift()!.fixture);
     }
     handlers.onTick(minute, homeGoals, awayGoals, possessionHome);
     if (minute >= FULL_TIME_MINUTE) finish();

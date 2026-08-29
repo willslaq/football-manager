@@ -61,6 +61,18 @@ export function clubReputationFromStanding(position: number, totalTeams: number)
   return clamp(90 - t * 50, 0, 100);
 }
 
+/**
+ * Deriva a moral inicial de um clube (0-100) a partir da posição final da temporada anterior
+ * (ou, na criação de uma carreira nova, da posição real atual — mesma fonte usada por
+ * `clubReputationFromStanding`): 1º colocado = 100, último colocado = 20, interpolado
+ * linearmente entre os dois. Puramente de exibição — ver `Club.morale`.
+ */
+export function moraleFromFinalStanding(position: number, totalTeams: number): number {
+  if (totalTeams <= 1) return 100;
+  const t = (position - 1) / (totalTeams - 1);
+  return clamp(100 - t * 80, 20, 100);
+}
+
 /** Curva de idade: rendimento sobe até ~24, platô 24-29, declina depois dos 29. */
 function ageFactor(age: number): number {
   if (age < 24) return 0.82 + (age - 15) * (0.18 / 9);

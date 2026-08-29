@@ -40,6 +40,7 @@ function makeClub(id: string, name: string, squad: string[]): Club {
     name,
     shortName: name.slice(0, 3).toUpperCase(),
     reputation: 50,
+    morale: 70,
     colors: { primary: '#ff0000', secondary: '#ffffff' },
     stadiumCapacity: 20000,
     squad,

@@ -47,6 +47,7 @@ function validateClub(club: Club, playerIds: Set<string>, errors: string[]): voi
   if (!club.name) errors.push(`${label}: name vazio`);
   if (!club.shortName) errors.push(`${label}: shortName vazio`);
   if (!inRange(club.reputation, 0, 100)) errors.push(`${label}: reputation fora de [0, 100]`);
+  if (!inRange(club.morale, 0, 100)) errors.push(`${label}: morale fora de [0, 100]`);
   if (club.stadiumCapacity <= 0) errors.push(`${label}: stadiumCapacity deve ser > 0`);
   if (club.squad.length === 0) errors.push(`${label}: squad vazio`);
 
@@ -147,6 +148,17 @@ export function validateCareerState(state: CareerState): ValidationResult {
   for (const entry of state.history) {
     if (!clubIds.has(entry.champion)) {
       errors.push(`history referencia campeão inexistente (${entry.champion})`);
+    }
+    for (const clubId of [...entry.libertadores, ...entry.relegated]) {
+      if (!clubIds.has(clubId)) {
+        errors.push(`history (${entry.year}) referencia clube inexistente (${clubId})`);
+      }
+    }
+    if (entry.topScorer && !playerIds.has(entry.topScorer.playerId)) {
+      errors.push(`history (${entry.year}) referencia artilheiro inexistente (${entry.topScorer.playerId})`);
+    }
+    if (entry.goldenGlove && !playerIds.has(entry.goldenGlove.playerId)) {
+      errors.push(`history (${entry.year}) referencia goleiro (luva de ouro) inexistente (${entry.goldenGlove.playerId})`);
     }
   }
 

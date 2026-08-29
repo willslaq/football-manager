@@ -50,6 +50,13 @@ export function removeSuspendedStarters(lineup: Lineup, players: Player[]): Line
   };
 }
 
+/** Um confronto da rodada fora o do jogador — `result: null` até chegar via liveMatchOtherResult. */
+export interface OtherMatchState {
+  homeTeamId: ClubId;
+  awayTeamId: ClubId;
+  result: MatchResult | null;
+}
+
 /** Estado da partida do jogador sendo transmitida ao vivo, minuto a minuto. */
 export interface LiveMatchState {
   homeTeamId: ClubId;
@@ -63,6 +70,8 @@ export interface LiveMatchState {
   /** Ritmo de reprodução: 1x = tempo padrão, 2x = duas vezes mais rápido. */
   speed: 1 | 2;
   paused: boolean;
+  /** Os demais confrontos da rodada, revelados aos poucos (ver worker/liveMatch.ts). */
+  otherMatches: OtherMatchState[];
 }
 
 interface CareerStore {
@@ -86,6 +95,8 @@ interface CareerStore {
   startCareer: (seed: number, trainerName: string, clubId: string, tacticalIntensity?: TacticalIntensity) => void;
   setTacticalIntensity: (tacticalIntensity: TacticalIntensity) => void;
   advanceRound: () => void;
+  /** Encerra a temporada atual (precisa estar 'finished') e começa a seguinte. */
+  startNewSeason: () => void;
   skipLiveMatch: () => void;
   setLiveMatchSpeed: (speed: 1 | 2) => void;
   toggleLiveMatchPause: () => void;
@@ -152,10 +163,31 @@ export const useCareerStore = create<CareerStore>((set, get) => {
             possessionHome: 50,
             speed: 1,
             paused: false,
+            otherMatches: response.payload.otherFixtures.map((f) => ({
+              homeTeamId: f.homeTeamId,
+              awayTeamId: f.awayTeamId,
+              result: null,
+            })),
           },
           engineLog: [],
           loading: false,
         });
+        break;
+      case 'liveMatchOtherResult':
+        set((state) =>
+          state.liveMatch
+            ? {
+                liveMatch: {
+                  ...state.liveMatch,
+                  otherMatches: state.liveMatch.otherMatches.map((m) =>
+                    m.homeTeamId === response.payload.fixture.homeTeamId && m.awayTeamId === response.payload.fixture.awayTeamId
+                      ? { ...m, result: response.payload.fixture.result ?? null }
+                      : m,
+                  ),
+                },
+              }
+            : {},
+        );
         break;
       case 'liveMatchTrace':
         set((state) => ({ engineLog: [...state.engineLog, response.payload.entry] }));
@@ -256,6 +288,12 @@ export const useCareerStore = create<CareerStore>((set, get) => {
       send({ type: 'advanceRound', requestId, payload: { playerLineup: lineup, playerTactics: tactics } });
     },
 
+    startNewSeason: () => {
+      // Mantém activeSaveId — é a mesma carreira/save continuando, não uma nova (diferente de startCareer).
+      set({ loading: true, error: null });
+      send({ type: 'startNewSeason', requestId: crypto.randomUUID(), payload: {} });
+    },
+
     skipLiveMatch: () => {
       if (!liveMatchRequestId) return;
       send({ type: 'skipLiveMatch', requestId: crypto.randomUUID(), payload: { liveRequestId: liveMatchRequestId } });
@@ -306,8 +344,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
     saveCurrentCareer: async (slotName) => {
       const { career, activeSaveId, saves, lineup, tactics } = get();
       if (!career) return;
-      const resolvedName =
-        slotName?.trim() || saves.find((s) => s.id === activeSaveId)?.slotName || defaultSlotName(career);
+      const resolvedName = slotName?.trim() || saves.find((s) => s.id === activeSaveId)?.slotName || defaultSlotName(career);
       const id = await saveCareer(resolvedName, career, lineup, tactics, activeSaveId ?? undefined);
       set({ activeSaveId: id });
       await get().refreshSaves();

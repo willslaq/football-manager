@@ -67,6 +67,12 @@
   margin-left: 0.3em;
 }
 
+.matchup__morale {
+  margin: -0.2rem 0 0;
+  font-size: var(--text-xs);
+  color: var(--mist);
+}
+
 .matchup__vs {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
@@ -115,6 +121,131 @@
 .champion-card__points {
   font-size: var(--text-sm);
   color: var(--mist);
+}
+
+/* Resumo de fim de temporada */
+
+.season-end__highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-4);
+}
+
+.season-end__highlight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.season-end__highlight-crest {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.season-end__highlight-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mist);
+}
+
+.season-end__highlight-name {
+  font-size: var(--text-lg);
+  color: var(--chalk);
+}
+
+.season-end__highlight-club {
+  font-size: var(--text-xs);
+  color: var(--mist);
+}
+
+.season-end__highlight-value {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--chalk);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.season-end__highlight-unit {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--mist);
+}
+
+.season-end__zones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-4);
+}
+
+.season-end__zone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.season-end__club-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.season-end__club-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--line);
+  position: relative;
+  padding-left: var(--space-3);
+}
+
+.season-end__club-row:first-child {
+  border-top: none;
+}
+
+.season-end__club-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+}
+
+.season-end__club-crest {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.season-end__club-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--chalk);
+}
+
+.season-end__club-points {
+  font-size: var(--text-xs);
+  color: var(--mist);
+  flex-shrink: 0;
 }
 
 .save-controls {

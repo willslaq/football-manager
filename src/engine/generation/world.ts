@@ -2,7 +2,7 @@ import { mulberry32 } from '../rng';
 import type { Club } from '../types/club';
 import type { Player } from '../types/player';
 import type { World } from '../types/career';
-import { clubReputationFromStanding, generatePlayerDerived, playerSeed } from './attributes';
+import { clubReputationFromStanding, generatePlayerDerived, moraleFromFinalStanding, playerSeed } from './attributes';
 import type { RawClubFile, RawStandingsFile } from './rawData';
 import standingsFile from '../../data/brasileirao-2026/standings-current.json';
 
@@ -82,6 +82,7 @@ export function generateWorld(seed: number): World {
       name: raw.club.name,
       shortName: raw.club.shortName,
       reputation,
+      morale: moraleFromFinalStanding(tablePosition, totalTeams),
       colors: raw.club.colors,
       stadiumCapacity: raw.club.stadiumCapacity,
       squad,

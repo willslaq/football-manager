@@ -5,6 +5,7 @@ import type { Competition, Fixture, StandingEntry } from '../types/competition';
 import type { EngineTraceEntry } from '../types/match';
 import type { Player } from '../types/player';
 import type { Lineup, Tactics } from '../types/tactics';
+import { CLUB_MORALE_DRAW_DELTA, CLUB_MORALE_LOSS_DELTA, CLUB_MORALE_WIN_DELTA } from './config';
 import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
 import { simulateMatch, type MatchTeamInput } from './match';
 
@@ -92,6 +93,17 @@ function updateStandingEntry(entry: StandingEntry, goalsFor: number, goalsAgains
     goalsAgainst: entry.goalsAgainst + goalsAgainst,
     points: entry.points + (won ? 3 : drawn ? 1 : 0),
   };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+/** Ajuste de moral do clube pelo resultado da partida (ver `Club.morale` — só exibição). */
+function moraleAfterResult(morale: number, goalsFor: number, goalsAgainst: number): number {
+  const delta =
+    goalsFor > goalsAgainst ? CLUB_MORALE_WIN_DELTA : goalsFor < goalsAgainst ? CLUB_MORALE_LOSS_DELTA : CLUB_MORALE_DRAW_DELTA;
+  return clamp(morale + delta, 0, 100);
 }
 
 function applyResultToStandings(standings: StandingEntry[], fixture: Fixture): StandingEntry[] {
@@ -212,6 +224,7 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
   const redCardsByPlayer = new Map<string, number>();
   let standings = competition.standings;
   const playedRound: Fixture[] = [];
+  const moraleByClub = new Map<ClubId, number>();
 
   for (const fixture of round) {
     const isPlayerHome = fixture.homeTeamId === state.playerClubId;
@@ -246,6 +259,11 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
     const playedFixture: Fixture = { ...fixture, result };
     standings = applyResultToStandings(standings, playedFixture);
     playedRound.push(playedFixture);
+
+    const homeClub = clubsById.get(fixture.homeTeamId);
+    const awayClub = clubsById.get(fixture.awayTeamId);
+    if (homeClub) moraleByClub.set(homeClub.id, moraleAfterResult(homeClub.morale, result.homeGoals, result.awayGoals));
+    if (awayClub) moraleByClub.set(awayClub.id, moraleAfterResult(awayClub.morale, result.awayGoals, result.homeGoals));
   }
 
   const updatedCompetition: Competition = {
@@ -260,7 +278,7 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
   return {
     ...state,
     world: {
-      ...state.world,
+      clubs: state.world.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
       players: updatePlayerStats(
         state.world.players,
         starterIds,

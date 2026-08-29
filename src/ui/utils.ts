@@ -1,3 +1,4 @@
+import { LIBERTADORES_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from '../engine/simulation/config';
 import type { CareerState, Club, ClubId, Player, Position, StandingEntry, TacticalIntensity } from '../engine/types';
 
 export const TACTICAL_INTENSITY_COPY: Record<TacticalIntensity, { label: string; hint: string }> = {
@@ -93,4 +94,19 @@ export function sortStandingsForDisplay(standings: StandingEntry[]): StandingEnt
 export function standingPosition(standings: StandingEntry[], clubId: ClubId): number | null {
   const index = sortStandingsForDisplay(standings).findIndex((entry) => entry.clubId === clubId);
   return index === -1 ? null : index + 1;
+}
+
+export type StandingsZone = 'libertadores' | 'libertadores-pre' | 'sula' | 'relegation' | null;
+
+/**
+ * Zona de classificação/rebaixamento de uma posição final — usada tanto pela Tabela (zebra de
+ * cores) quanto pelo resumo de fim de temporada (Home). Os cortes (`LIBERTADORES_CUTOFF_POSITION`/
+ * `RELEGATION_CUTOFF_POSITION`) vêm do motor pra não divergir do que `buildSeasonSummary` calcula.
+ */
+export function standingsZone(position: number): StandingsZone {
+  if (position < LIBERTADORES_CUTOFF_POSITION) return 'libertadores';
+  if (position === LIBERTADORES_CUTOFF_POSITION) return 'libertadores-pre';
+  if (position <= 11) return 'sula';
+  if (position >= RELEGATION_CUTOFF_POSITION) return 'relegation';
+  return null;
 }

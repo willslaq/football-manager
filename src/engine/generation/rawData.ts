@@ -115,5 +115,5 @@ export type RawFixturesFile = RawFixtureRound[];
 export interface RawCompetitionFile {
   id: string;
   name: string;
-  season: { year: number };
+  season: { year: number; startDate: string; endDate: string };
 }

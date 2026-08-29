@@ -82,8 +82,8 @@ function buildExampleCareerState(): CareerState {
           name: 'Liga Exemplo',
           teams: [home.id, away.id],
           fixtures: [
-            [{ round: 0, homeTeamId: home.id, awayTeamId: away.id }],
-            [{ round: 1, homeTeamId: away.id, awayTeamId: home.id }],
+            [{ round: 0, date: '2026-01-31', homeTeamId: home.id, awayTeamId: away.id }],
+            [{ round: 1, date: '2026-02-07', homeTeamId: away.id, awayTeamId: home.id }],
           ],
           standings: [
             { clubId: home.id, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
@@ -92,6 +92,7 @@ function buildExampleCareerState(): CareerState {
         },
       ],
       state: 'not_started',
+      currentDate: '2026-01-30',
       currentRound: 1,
     },
     history: [],

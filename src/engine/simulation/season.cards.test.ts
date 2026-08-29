@@ -73,7 +73,17 @@ describe('advanceRound — suspensão bloqueia escalação automática da CPU e 
     };
 
     const lineup = autoLineupFor(stateWithSuspension, 'palmeiras');
-    const next = advanceRound(stateWithSuspension, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+    // O jogo do clube de CPU pode cair no mesmo dia do jogo do jogador ou no outro dia do fim de
+    // semana da rodada (ver advanceToNextEvent) — nesse segundo caso só é alcançado numa chamada
+    // seguinte. Avança até esse clube específico ter jogado.
+    let next = stateWithSuspension;
+    for (let i = 0; i < 3; i++) {
+      next = advanceRound(next, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+      const cpuFixtureResolved = next.season.competitions[0].fixtures
+        .flat()
+        .some((f) => f.result && (f.homeTeamId === cpuClub.id || f.awayTeamId === cpuClub.id));
+      if (cpuFixtureResolved) break;
+    }
 
     const suspendedAfter = next.world.players.find((p) => p.id === suspendedPlayerId)!;
 

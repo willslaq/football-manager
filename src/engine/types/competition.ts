@@ -5,6 +5,8 @@ export type CompetitionId = string;
 
 export interface Fixture {
   round: number;
+  /** ISO 'YYYY-MM-DD' — gerado em tempo de geração (ver engine/generation/calendar.ts), nunca vem do fixtures.json bruto. */
+  date: string;
   homeTeamId: ClubId;
   awayTeamId: ClubId;
   /** Ausente até a rodada ser simulada. */

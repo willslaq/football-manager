@@ -1,16 +1,68 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
 import type { CareerState, Club, Lineup, Player, Tactics } from '../../engine/types';
 import { TACTIC_STYLE_LABELS } from '../../engine/types';
+import { addDays, toEpochDay } from '../../engine/generation/calendar';
 import { DEFAULT_AUTO_TACTICS } from '../../engine/simulation/season';
 import { buildSeasonSummary } from '../../engine/simulation/seasonLifecycle';
 import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
 import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card, TextField } from '../components';
+import { Badge, Button, Card, RoundResultsList, TextField } from '../components';
 import type { Screen } from '../../App';
 import './Home.css';
+
+/** Data de um fixture (ISO 'YYYY-MM-DD') em pt-BR curto — ex.: "sáb., 30 de ago." UTC pra não deslocar o dia por fuso. */
+function formatFixtureDate(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString('pt-BR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short',
+    timeZone: 'UTC',
+  });
+}
+
+/** Só o dia do mês, 2 dígitos — o número grande que "rola" na animação de avanço de tempo. */
+function formatRollDay(iso: string): string {
+  return iso.slice(-2);
+}
+
+/** Dia da semana + mês por extenso — contexto abaixo do número grande, atualiza junto, sem animação própria. */
+function formatRollContext(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString('pt-BR', { weekday: 'long', month: 'long', timeZone: 'UTC' });
+}
+
+/**
+ * O número do dia "rolando": o valor antigo sobe e some, o novo entra por baixo e toma o lugar
+ * — mesmo efeito de um relógio de estação/odômetro. Cada mudança de `date` remonta os dois spans
+ * (via `key`), o que dispara a transição de entrada (`@starting-style`) e a animação de saída.
+ */
+function DayRoll({ date }: { date: string }) {
+  const [outgoing, setOutgoing] = useState<string | null>(null);
+  const prevDateRef = useRef(date);
+
+  useEffect(() => {
+    if (prevDateRef.current === date) return;
+    setOutgoing(prevDateRef.current);
+    prevDateRef.current = date;
+    const t = setTimeout(() => setOutgoing(null), 260);
+    return () => clearTimeout(t);
+  }, [date]);
+
+  return (
+    <span className="cal-roll">
+      {outgoing && (
+        <span key={`out-${outgoing}`} className="cal-roll__digit cal-roll__digit--out numeric">
+          {formatRollDay(outgoing)}
+        </span>
+      )}
+      <span key={`in-${date}`} className="cal-roll__digit cal-roll__digit--in numeric">
+        {formatRollDay(date)}
+      </span>
+    </span>
+  );
+}
 
 /**
  * Tática exibida no card do confronto: o time do jogador mostra a tática atual salva
@@ -144,10 +196,65 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const tactics = useCareerStore((s) => s.tactics);
   const loading = useCareerStore((s) => s.loading);
   const error = useCareerStore((s) => s.error);
-  const advanceRound = useCareerStore((s) => s.advanceRound);
+  const advanceTime = useCareerStore((s) => s.advanceTime);
+  const startMatch = useCareerStore((s) => s.startMatch);
+  const passedResults = useCareerStore((s) => s.passedResults);
   const startNewSeason = useCareerStore((s) => s.startNewSeason);
 
+  // Animação de "avançar o tempo": enquanto o calendário caminha dia a dia (de verdade, no motor,
+  // numa só chamada síncrona — ver advanceCalendar), mostra os dias passando um a um na tela, com
+  // a UI de fundo borrada, até estacionar no dia de verdade que o motor devolveu. `pendingAdvance`
+  // marca que estamos esperando a resposta de um clique em "Avançar o tempo" (não de "Iniciar
+  // Partida", que não mexe no calendário) pra saber quando montar a sequência de dias a animar.
+  const currentDate = career?.season.currentDate ?? null;
+  const pendingAdvanceRef = useRef(false);
+  const prevDateRef = useRef<string | null>(currentDate);
+  const [rollSequence, setRollSequence] = useState<string[] | null>(null);
+  const [rollIndex, setRollIndex] = useState(0);
+
+  useEffect(() => {
+    if (pendingAdvanceRef.current && currentDate && prevDateRef.current && currentDate !== prevDateRef.current) {
+      const from = prevDateRef.current;
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const totalDays = toEpochDay(currentDate) - toEpochDay(from);
+      const days = reducedMotion ? 1 : Math.max(1, totalDays);
+      setRollSequence(
+        Array.from({ length: days }, (_, i) => (i === days - 1 ? currentDate : addDays(from, i + 1))),
+      );
+      setRollIndex(0);
+      pendingAdvanceRef.current = false;
+    }
+    prevDateRef.current = currentDate;
+  }, [currentDate]);
+
+  useEffect(() => {
+    if (!rollSequence) return undefined;
+    if (rollIndex >= rollSequence.length - 1) {
+      const t = setTimeout(() => setRollSequence(null), 450);
+      return () => clearTimeout(t);
+    }
+    const stepDelay = Math.min(200, Math.max(50, 1800 / rollSequence.length));
+    const t = setTimeout(() => setRollIndex((i) => i + 1), stepDelay);
+    return () => clearTimeout(t);
+  }, [rollSequence, rollIndex]);
+
+  function handleAdvanceTime(): void {
+    pendingAdvanceRef.current = true;
+    advanceTime();
+  }
+
   if (!career) return null;
+
+  // Renderizado nos dois retornos abaixo (temporada encerrada ou não) — "avançar o tempo" pode
+  // ser exatamente o que encerra a temporada, e a animação já em andamento não deve sumir de repente.
+  const rollOverlay = rollSequence && (
+    <div className="calendar-roll-overlay" role="status" aria-live="polite" aria-label="Avançando o calendário">
+      <div className="calendar-roll">
+        <DayRoll date={rollSequence[rollIndex]} />
+        <span className="calendar-roll__context">{formatRollContext(rollSequence[rollIndex])}</span>
+      </div>
+    </div>
+  );
 
   const playerClub = findClub(career, career.playerClubId);
   const competition = career.season.competitions[0];
@@ -211,12 +318,30 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
         </Button>
 
         <SaveExportControls defaultSlotName={slotName} />
+
+        {rollOverlay}
       </div>
     );
   }
 
-  const round = competition.fixtures[career.season.currentRound - 1];
-  const fixture = round?.find((f) => f.homeTeamId === career.playerClubId || f.awayTeamId === career.playerClubId);
+  // Próximo jogo do time do jogador ainda sem resultado, em qualquer rodada — não necessariamente
+  // "hoje": com o calendário real, a maior parte dos dias não tem jogo do jogador (ver
+  // `advanceTime`), então o card/botão não pode mais depender de um fixture "da rodada atual".
+  // `date >= currentDate` é essencial: rodadas anteriores à rodada real do snapshot inicial não
+  // têm `.result` por design (só entram como saldo agregado nas standings — ver
+  // `deriveCurrentRound` em season.ts), e sem esse filtro o primeiro fixture "sem resultado"
+  // encontrado seria um desses, lá no passado, não o próximo jogo de verdade.
+  const fixture = competition.fixtures
+    .flat()
+    .find(
+      (f) =>
+        !f.result &&
+        f.date >= career.season.currentDate &&
+        (f.homeTeamId === career.playerClubId || f.awayTeamId === career.playerClubId),
+    );
+  // Botão de duas caras: se o calendário já está no dia desse jogo, "Iniciar Partida" (simula e
+  // transmite ao vivo); senão, "Avançar o tempo" (só caminha o calendário até esse dia).
+  const isMatchDay = !!fixture && fixture.date === career.season.currentDate;
   const isHome = fixture?.homeTeamId === career.playerClubId;
   const opponentId = fixture ? (isHome ? fixture.awayTeamId : fixture.homeTeamId) : undefined;
   const opponent = opponentId ? findClub(career, opponentId) : undefined;
@@ -230,10 +355,27 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
 
   return (
     <div className="home">
+      {passedResults.length > 0 && (
+        <Card className="matchup-passed">
+          <span className="eyebrow">Enquanto isso…</span>
+          <RoundResultsList
+            entries={passedResults.map((f) => ({
+              homeTeamId: f.homeTeamId,
+              awayTeamId: f.awayTeamId,
+              homeGoals: f.result?.homeGoals ?? 0,
+              awayGoals: f.result?.awayGoals ?? 0,
+              finished: true,
+            }))}
+            clubName={(id) => findClub(career, id)?.name ?? id}
+          />
+        </Card>
+      )}
+
       {fixture && homeTeam && awayTeam && (
         <Card accentColor={playerClub?.colors.primary} className="matchup">
           <span className="eyebrow">
-            Rodada {career.season.currentRound}/{competition.fixtures.length} · {competition.name}
+            Rodada {fixture.round}/{competition.fixtures.length} · {formatFixtureDate(fixture.date)} ·{' '}
+            {competition.name}
           </span>
 
           <div className="matchup__teams">
@@ -278,14 +420,22 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
           {error && <p className="error-banner">{error}</p>}
 
           <div className="matchup__action">
-            <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={() => advanceRound()}>
-              {loading ? 'Simulando…' : 'Avançar rodada'}
-            </Button>
+            {isMatchDay ? (
+              <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={() => startMatch()}>
+                {loading ? 'Simulando…' : 'Iniciar Partida'}
+              </Button>
+            ) : (
+              <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={handleAdvanceTime}>
+                {loading ? 'Avançando…' : 'Avançar o tempo'}
+              </Button>
+            )}
           </div>
         </Card>
       )}
 
       <SaveExportControls defaultSlotName={slotName} />
+
+      {rollOverlay}
     </div>
   );
 }

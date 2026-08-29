@@ -2,11 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { createBrasileiraoCareer } from '../generation/career';
 import type { CareerState } from '../types/career';
 import type { Lineup, Tactics } from '../types/tactics';
-import { advanceRound, commitPlayerMatchResult, simulateRound } from './season';
+import { advanceCalendar, advanceRound, commitPlayerMatchResult, startMatchDay } from './season';
 import { pickAutoLineup } from './autoLineup';
 import { simulateMatch, type MatchSubstitution } from './match';
 
 const DEFAULT_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
+
+/** Composição `advanceCalendar` + `startMatchDay` usada nos testes que precisam do jogo do jogador ainda não comitado. */
+function advanceToMatchDay(state: CareerState, input: { playerLineup: Lineup; playerTactics: Tactics }) {
+  const calendar = advanceCalendar(state, input);
+  if (!calendar.reachedPlayerMatchDay) {
+    throw new Error('advanceToMatchDay: nenhum jogo do time do jogador alcançável a partir daqui');
+  }
+  return startMatchDay(calendar.nextState, input);
+}
 
 function autoLineupFor(state: ReturnType<typeof createBrasileiraoCareer>, clubId: string): Lineup {
   const playersById = new Map(state.world.players.map((p) => [p.id, p]));
@@ -33,13 +42,20 @@ describe('advanceRound', () => {
     const lineup = autoLineupFor(state, 'palmeiras');
     const next = advanceRound(state, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
 
-    expect(next.season.currentRound).toBe(roundBefore + 1);
     expect(next.season.state).toBe('in_progress');
+    // A rodada agora pode se espalhar por sábado e domingo (ver assignFixtureDates) — currentRound
+    // só avança quando TODOS os fixtures da rodada já têm resultado. Se o jogo do time do jogador
+    // caiu no primeiro dia, o resto (segundo dia) só é resolvido na PRÓXIMA chamada — então aqui
+    // só garantimos que currentRound não regride, não que já avançou.
+    expect(next.season.currentRound).toBeGreaterThanOrEqual(roundBefore);
 
-    const playedRound = next.season.competitions[0].fixtures[roundBefore - 1];
-    expect(playedRound.every((f) => f.result !== undefined)).toBe(true);
+    // O jogo do próprio time do jogador na rodada anterior sempre é resolvido nessa chamada.
+    const playerFixtureAfter = next.season.competitions[0].fixtures[roundBefore - 1].find(
+      (f) => f.homeTeamId === 'palmeiras' || f.awayTeamId === 'palmeiras',
+    )!;
+    expect(playerFixtureAfter.result).toBeDefined();
 
-    // Consistência interna da tabela após a rodada.
+    // Consistência interna da tabela após o avanço.
     for (const entry of next.season.competitions[0].standings) {
       expect(entry.won + entry.drawn + entry.lost).toBe(entry.played);
     }
@@ -49,7 +65,7 @@ describe('advanceRound', () => {
 
     const totalPlayedBefore = state.season.competitions[0].standings.reduce((s, e) => s + e.played, 0);
     const totalPlayedAfter = next.season.competitions[0].standings.reduce((s, e) => s + e.played, 0);
-    expect(totalPlayedAfter - totalPlayedBefore).toBe(playedRound.length * 2);
+    expect(totalPlayedAfter).toBeGreaterThan(totalPlayedBefore);
   });
 
   it('atualiza estatísticas de temporada dos jogadores que jogaram (aparições, gols e defesas)', () => {
@@ -138,6 +154,7 @@ describe('advanceRound', () => {
     const lineup = autoLineupFor(state, 'palmeiras');
     const palmeirasSquad = new Set(state.world.clubs.find((c) => c.id === 'palmeiras')!.squad);
     const outsidePlayer = state.world.players.find((p) => !palmeirasSquad.has(p.id))!;
+    const outsideClub = state.world.clubs.find((c) => c.squad.includes(outsidePlayer.id))!;
 
     const stateWithSuspension: CareerState = {
       ...state,
@@ -147,40 +164,87 @@ describe('advanceRound', () => {
       },
     };
 
-    const next = advanceRound(stateWithSuspension, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+    // O jogo do clube de fora pode cair no mesmo dia do jogo do jogador ou no outro dia do fim de
+    // semana da rodada (ver advanceToNextEvent) — nesse segundo caso só é alcançado numa chamada
+    // seguinte. Avança até esse clube específico ter jogado.
+    let next: CareerState = stateWithSuspension;
+    for (let i = 0; i < 3; i++) {
+      next = advanceRound(next, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+      const outsideFixtureResolved = next.season.competitions[0].fixtures
+        .flat()
+        .some((f) => f.result && (f.homeTeamId === outsideClub.id || f.awayTeamId === outsideClub.id));
+      if (outsideFixtureResolved) break;
+    }
+
     const after = next.world.players.find((p) => p.id === outsidePlayer.id)!;
     expect(after.suspendedMatches).toBe(1);
   });
 });
 
-describe('simulateRound + commitPlayerMatchResult (partida do jogador entregue ao vivo, com possível substituição)', () => {
-  it('simulateRound comita as partidas de CPU na hora, mas deixa a do jogador sem resultado até commitPlayerMatchResult', () => {
+describe('advanceCalendar + startMatchDay + commitPlayerMatchResult (partida do jogador entregue ao vivo, com possível substituição)', () => {
+  it('advanceCalendar para exatamente no dia do próximo jogo do jogador, sem simular nada dessa data ainda', () => {
     const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
     const lineup = autoLineupFor(state, 'palmeiras');
-    const { nextState, playerFixture, playerMatchResult, roundIndex } = simulateRound(state, {
+    const calendar = advanceCalendar(state, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+
+    expect(calendar.reachedPlayerMatchDay).toBe(true);
+    expect(calendar.seasonFinished).toBe(false);
+
+    // Rodadas anteriores à do snapshot inicial não têm `.result` por design (só saldo agregado
+    // nas standings) — sem o filtro por data, o primeiro fixture "do jogador" encontrado seria
+    // um desses, lá no passado (ver o mesmo cuidado em Home.tsx).
+    const playerFixture = calendar.nextState.season.competitions[0].fixtures
+      .flat()
+      .find(
+        (f) =>
+          !f.result &&
+          f.date >= calendar.nextState.season.currentDate &&
+          (f.homeTeamId === 'palmeiras' || f.awayTeamId === 'palmeiras'),
+      )!;
+    expect(playerFixture.date).toBe(calendar.nextState.season.currentDate);
+    expect(playerFixture.result).toBeUndefined();
+  });
+
+  it('startMatchDay comita os jogos da mesma data na hora, mas deixa o do jogador sem resultado até commitPlayerMatchResult', () => {
+    const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
+    const lineup = autoLineupFor(state, 'palmeiras');
+    const { nextState, playerFixture, playerMatchResult, competitionId, roundIndex } = advanceToMatchDay(state, {
       playerLineup: lineup,
       playerTactics: DEFAULT_TACTICS,
     });
 
     expect(playerFixture).toBeDefined();
     expect(playerMatchResult).toBeDefined();
+    if (!playerFixture || competitionId === undefined || roundIndex === undefined) {
+      throw new Error('rodada de teste sem partida do jogador');
+    }
 
     const round = nextState.season.competitions[0].fixtures[roundIndex];
     const playerFixtureInRound = round.find(
-      (f) => f.homeTeamId === playerFixture!.homeTeamId && f.awayTeamId === playerFixture!.awayTeamId,
+      (f) => f.homeTeamId === playerFixture.homeTeamId && f.awayTeamId === playerFixture.awayTeamId,
     )!;
     expect(playerFixtureInRound.result).toBeUndefined();
-    expect(round.filter((f) => f !== playerFixtureInRound).every((f) => f.result !== undefined)).toBe(true);
+    // Todo fixture da rodada com data até a do jogador (mesmo dia) já foi resolvido — o que
+    // sobrar pro outro dia do fim de semana da rodada ainda não foi alcançado (ver startMatchDay).
+    const alreadyReached = round.filter((f) => f !== playerFixtureInRound && f.date <= playerFixture.date);
+    expect(alreadyReached.length).toBeGreaterThan(0);
+    expect(alreadyReached.every((f) => f.result !== undefined)).toBe(true);
   });
 
   it('commitPlayerMatchResult grava o resultado final e credita estatísticas a quem entrou como substituto', () => {
     const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
     const lineup = autoLineupFor(state, 'palmeiras');
-    const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, roundIndex, seed } = simulateRound(
-      state,
-      { playerLineup: lineup, playerTactics: DEFAULT_TACTICS },
-    );
-    if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput || seed === undefined) {
+    const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, competitionId, roundIndex, seed } =
+      advanceToMatchDay(state, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+    if (
+      !playerFixture ||
+      !playerMatchResult ||
+      !homeTeamInput ||
+      !awayTeamInput ||
+      competitionId === undefined ||
+      roundIndex === undefined ||
+      seed === undefined
+    ) {
       throw new Error('rodada de teste sem partida do jogador');
     }
 
@@ -199,7 +263,11 @@ describe('simulateRound + commitPlayerMatchResult (partida do jogador entregue a
     };
     const finalResult = simulateMatch(homeTeamInput, awayTeamInput, seed, state.settings.tacticalIntensity, undefined, [sub]);
 
-    const committed = commitPlayerMatchResult(nextState, { playerFixture, roundIndex, homeTeamInput, awayTeamInput }, finalResult);
+    const committed = commitPlayerMatchResult(
+      nextState,
+      { playerFixture, competitionId, roundIndex, homeTeamInput, awayTeamInput },
+      finalResult,
+    );
 
     const committedFixture = committed.season.competitions[0].fixtures[roundIndex].find(
       (f) => f.homeTeamId === playerFixture.homeTeamId && f.awayTeamId === playerFixture.awayTeamId,

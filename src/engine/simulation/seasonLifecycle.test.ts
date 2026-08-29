@@ -47,7 +47,10 @@ describe('advanceRound — moral do clube (só exibição)', () => {
     const lineup = autoLineupFor(state, 'palmeiras');
     const next = advanceRound(state, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
 
-    const round = next.season.competitions[0].fixtures[state.season.currentRound - 1];
+    // A rodada pode se espalhar por sábado e domingo (ver assignFixtureDates) — só os fixtures já
+    // alcançados por essa chamada (mesmo dia do jogo do jogador ou antes) têm resultado.
+    const round = next.season.competitions[0].fixtures[state.season.currentRound - 1].filter((f) => f.result);
+    expect(round.length).toBeGreaterThan(0);
     for (const fixture of round) {
       const result = fixture.result!;
       const homeBefore = state.world.clubs.find((c) => c.id === fixture.homeTeamId)!.morale;

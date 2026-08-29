@@ -10,6 +10,8 @@ export interface ValidationResult {
   errors: string[];
 }
 
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 function inRange(value: number, min: number, max: number): boolean {
   return Number.isFinite(value) && value >= min && value <= max;
 }
@@ -94,6 +96,10 @@ export function validateCareerState(state: CareerState): ValidationResult {
     errors.push(`season.currentRound inválido (${state.season.currentRound})`);
   }
 
+  if (!ISO_DATE_RE.test(state.season.currentDate)) {
+    errors.push(`season.currentDate inválido (${state.season.currentDate})`);
+  }
+
   if (state.season.competitions.length === 0) {
     errors.push('season.competitions vazio');
   }
@@ -119,6 +125,9 @@ export function validateCareerState(state: CareerState): ValidationResult {
         const fixtureLabel = `${compLabel} rodada ${roundIndex} (${fixture.homeTeamId} x ${fixture.awayTeamId})`;
         if (fixture.homeTeamId === fixture.awayTeamId) {
           errors.push(`${fixtureLabel}: mandante e visitante são o mesmo clube`);
+        }
+        if (!ISO_DATE_RE.test(fixture.date)) {
+          errors.push(`${fixtureLabel}: date inválido (${fixture.date})`);
         }
         if (!teamSet.has(fixture.homeTeamId)) {
           errors.push(`${fixtureLabel}: homeTeamId fora de teams`);

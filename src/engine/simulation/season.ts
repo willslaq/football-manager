@@ -1,9 +1,11 @@
+import { addDays } from '../generation/calendar';
 import { deriveSeed } from '../rng';
 import type { CareerState } from '../types/career';
 import type { Club, ClubId } from '../types/club';
-import type { Competition, Fixture, StandingEntry } from '../types/competition';
+import type { CompetitionId, Competition, Fixture, StandingEntry } from '../types/competition';
 import type { EngineTraceEntry, MatchResult } from '../types/match';
-import type { Player } from '../types/player';
+import type { Player, PlayerId } from '../types/player';
+import type { Season } from '../types/season';
 import type { Lineup, Tactics } from '../types/tactics';
 import { CLUB_MORALE_DRAW_DELTA, CLUB_MORALE_LOSS_DELTA, CLUB_MORALE_WIN_DELTA } from './config';
 import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
@@ -150,14 +152,15 @@ export function applyCardSuspension(
 }
 
 /**
- * Suspensão em cumprimento decrementa pra todo mundo do elenco, tenha jogado essa rodada ou
- * não — é assim que o jogador volta a ficar disponível na rodada seguinte. Roda uma única vez
- * por rodada (ver `simulateRound`), separado de `applyParticipantStats` porque a partida do
- * jogador só tem seu resultado final conhecido depois da transmissão ao vivo (e possíveis
- * substituições) terminar — mas a liberação de suspensão de TODO o elenco não pode esperar isso.
+ * Suspensão em cumprimento decrementa pros elencos dos dois clubes de UMA partida, no momento em
+ * que ela é resolvida — é assim que o jogador volta a ficar disponível pro próximo jogo do seu
+ * clube. Escopo por partida (não mais "todo mundo, uma vez por rodada"): com o calendário real,
+ * uma rodada pode se espalhar por mais de uma data, então não existe mais um "tick" único por
+ * rodada — cada clube serve sua suspensão exatamente quando SEU jogo acontece, não antes.
  */
-function decrementSuspensions(players: Player[]): Player[] {
+function decrementSuspensions(players: Player[], clubSquadIds: Set<PlayerId>): Player[] {
   return players.map((player) => {
+    if (!clubSquadIds.has(player.id)) return player;
     const servedSuspension = Math.max(0, player.suspendedMatches - 1);
     return servedSuspension === player.suspendedMatches ? player : { ...player, suspendedMatches: servedSuspension };
   });
@@ -238,143 +241,290 @@ function applyParticipantStats(
   });
 }
 
-export interface SimulateRoundResult {
-  nextState: CareerState;
-  /** Índice da rodada simulada em `competition.fixtures` — precisa ser guardado por quem chama pra achar o fixture de novo em `commitPlayerMatchResult` (currentRound já avançou nesse meio-tempo). */
+/**
+ * Rodada "atual" pra exibição — informativa/derivada, nunca mutada direto (ver `Season.currentRound`).
+ * A menor rodada com algum fixture ainda pendente (sem `result`) datado hoje ou no futuro
+ * (`date &gt;= currentDate`). Ancorada em `date`, não em `.result`: as rodadas 1..(rodada do
+ * snapshot real - 1) vêm de `standings-current.json` sem placar jogo a jogo (só o saldo agregado
+ * já está nas standings) — comparar por data as exclui corretamente sem confundi-las com "ainda
+ * por simular", o que compará-las por ausência de `.result` faria (bug: ficariam "atuais" pra sempre).
+ */
+function deriveCurrentRound(season: Season): number {
+  const competition = season.competitions[0];
+  for (const round of competition.fixtures) {
+    if (round.some((f) => !f.result && f.date >= season.currentDate)) return round[0].round;
+  }
+  return competition.fixtures.length + 1;
+}
+
+/** Localizador de um fixture dentro de `season.competitions` — pra reencontrá-lo depois de mutações imutáveis. */
+interface FixtureRef {
+  competitionIndex: number;
   roundIndex: number;
-  /** Ausentes quando a rodada não tem confronto do time do jogador (defensivo — não deveria acontecer no calendário atual). */
-  playerFixture?: Fixture;
-  playerMatchResult?: MatchResult;
-  homeTeamInput?: MatchTeamInput;
-  awayTeamInput?: MatchTeamInput;
-  seed?: number;
+  fixture: Fixture;
+}
+
+/** Todo fixture ainda sem resultado, de todas as competições, datado `date === targetDate`. */
+function fixturesOnDate(competitions: Competition[], targetDate: string): FixtureRef[] {
+  const refs: FixtureRef[] = [];
+  competitions.forEach((competition, competitionIndex) => {
+    competition.fixtures.forEach((round, roundIndex) => {
+      for (const fixture of round) {
+        if (!fixture.result && fixture.date === targetDate) refs.push({ competitionIndex, roundIndex, fixture });
+      }
+    });
+  });
+  return refs;
+}
+
+/** A menor data `&gt;= cursor` que tem algum fixture pendente, em qualquer competição — `undefined` se não houver mais nenhuma (temporada esgotada). */
+function earliestPendingDate(competitions: Competition[], cursor: string): string | undefined {
+  let earliest: string | undefined;
+  for (const competition of competitions) {
+    for (const round of competition.fixtures) {
+      for (const fixture of round) {
+        if (fixture.result || fixture.date < cursor) continue;
+        if (!earliest || fixture.date < earliest) earliest = fixture.date;
+      }
+    }
+  }
+  return earliest;
 }
 
 /**
- * Simula todos os confrontos da rodada atual e já comita tabela/estatísticas/moral de TODOS
- * eles, exceto o do time do jogador: esse é entregue ao vivo pra UI (com possíveis
- * substituições no meio, ver match.ts's `MatchSubstitution`), então seu resultado ainda pode
- * mudar — só é definitivo quando `commitPlayerMatchResult` for chamado com o resultado final.
- * Função pura: recebe o estado e devolve um novo estado, sem mutar o original.
+ * Simula e comita de uma vez uma lista de fixtures (nenhum deles do time do jogador — CPU x CPU
+ * sempre) que compartilham a mesma data: tabela, moral dos clubes envolvidos, estatísticas de
+ * quem jogou e suspensão servida (escopada aos dois elencos de cada partida — ver
+ * `decrementSuspensions`). `onCommitted` recebe cada fixture já resolvido, na ordem processada,
+ * pra quem chama decidir se ele é "enquanto isso" (data passada) ou "mesmo dia" (ver
+ * `advanceToNextEvent`). Função pura.
  */
-export function simulateRound(state: CareerState, input: AdvanceRoundInput): SimulateRoundResult {
-  if (state.season.state === 'finished') {
-    throw new Error('simulateRound: a temporada já terminou');
-  }
-  if (input.playerLineup.starters.length !== 11) {
-    throw new Error('simulateRound: escalação do jogador precisa ter exatamente 11 titulares');
+function commitFixturesBatch(
+  state: CareerState,
+  refs: FixtureRef[],
+  input: AdvanceRoundInput,
+  clubsById: Map<ClubId, Club>,
+  playersById: Map<string, Player>,
+  onCommitted: (fixture: Fixture) => void,
+): CareerState {
+  if (refs.length === 0) return state;
+
+  let players = state.world.players;
+  let clubs = state.world.clubs;
+  const competitions = state.season.competitions.map((c) => ({ ...c, fixtures: c.fixtures.map((r) => [...r]) }));
+
+  for (const { competitionIndex, roundIndex, fixture } of refs) {
+    const home = buildTeamInput(fixture.homeTeamId, false, input, clubsById, playersById);
+    const away = buildTeamInput(fixture.awayTeamId, false, input, clubsById, playersById);
+    const seed = deriveSeed(state.seed, `fixture:${fixture.round}:${fixture.homeTeamId}:${fixture.awayTeamId}`);
+    const result = simulateMatch(home, away, seed, state.settings.tacticalIntensity);
+    const playedFixture: Fixture = { ...fixture, result };
+
+    competitions[competitionIndex].fixtures[roundIndex] = competitions[competitionIndex].fixtures[roundIndex].map((f) =>
+      f === fixture ? playedFixture : f,
+    );
+    competitions[competitionIndex].standings = applyResultToStandings(competitions[competitionIndex].standings, playedFixture);
+
+    const stats = collectMatchStatMaps(home.players, away.players, result);
+    const homeClub = clubsById.get(fixture.homeTeamId);
+    const awayClub = clubsById.get(fixture.awayTeamId);
+    const clubSquadIds = new Set<PlayerId>([...(homeClub?.squad ?? []), ...(awayClub?.squad ?? [])]);
+    players = applyParticipantStats(
+      decrementSuspensions(players, clubSquadIds),
+      stats.participantIds,
+      stats.goalsByPlayer,
+      stats.savesByGoalkeeper,
+      stats.yellowCardsByPlayer,
+      stats.redCardsByPlayer,
+    );
+    if (homeClub) {
+      const morale = moraleAfterResult(homeClub.morale, result.homeGoals, result.awayGoals);
+      clubs = clubs.map((c) => (c.id === homeClub.id ? { ...c, morale } : c));
+    }
+    if (awayClub) {
+      const morale = moraleAfterResult(awayClub.morale, result.awayGoals, result.homeGoals);
+      clubs = clubs.map((c) => (c.id === awayClub.id ? { ...c, morale } : c));
+    }
+
+    onCommitted(playedFixture);
   }
 
-  const competition = state.season.competitions[0];
-  const roundIndex = state.season.currentRound - 1;
-  const round = competition.fixtures[roundIndex];
-  if (!round) {
-    throw new Error(`simulateRound: rodada ${state.season.currentRound} não existe nesta competição`);
+  return { ...state, world: { ...state.world, players, clubs }, season: { ...state.season, competitions } };
+}
+
+export interface AdvanceCalendarResult {
+  nextState: CareerState;
+  /** Fixtures resolvidos em datas antes da parada — recapitulação estática ("enquanto isso"), sem revelação ao vivo. */
+  simulatedAlongTheWay: Fixture[];
+  /** true quando `currentDate` já é a data do próximo jogo do time do jogador — pronto pra `startMatchDay`. */
+  reachedPlayerMatchDay: boolean;
+  /** true quando a temporada se esgotou sem mais nenhum jogo do jogador (não sobra mais nada, nem pra `startMatchDay`). */
+  seasonFinished: boolean;
+}
+
+/**
+ * Avança só o CALENDÁRIO, dia a dia, a partir de `state.season.currentDate + 1`: em cada data com
+ * algum jogo pendente (de QUALQUER competição — não hardcoded a `competitions[0]`, pra dar certo
+ * quando existir uma segunda competição concorrente no futuro) que NÃO seja do time do jogador,
+ * comita na hora (`simulatedAlongTheWay`) e continua andando. Para assim que chega numa data em
+ * que o time do jogador joga — sem simular nada dessa data (isso é trabalho de `startMatchDay`,
+ * chamado como uma ação separada) — ou quando esgota a temporada sem mais nenhum jogo do jogador.
+ * Função pura: recebe o estado e devolve um novo estado, sem mutar o original.
+ */
+export function advanceCalendar(state: CareerState, input: AdvanceRoundInput): AdvanceCalendarResult {
+  if (state.season.state === 'finished') {
+    throw new Error('advanceCalendar: a temporada já terminou');
   }
 
   const playersById = new Map(state.world.players.map((p) => [p.id, p]));
   const clubsById = new Map(state.world.clubs.map((c) => [c.id, c]));
 
-  const cpuParticipantIds = new Set<string>();
-  const cpuGoalsByPlayer = new Map<string, number>();
-  const cpuSavesByGoalkeeper = new Map<string, number>();
-  const cpuYellowCardsByPlayer = new Map<string, number>();
-  const cpuRedCardsByPlayer = new Map<string, number>();
-  let standings = competition.standings;
-  const playedRound: Fixture[] = [];
-  const moraleByClub = new Map<ClubId, number>();
+  let workingState = state;
+  let cursor = addDays(state.season.currentDate, 1);
+  const simulatedAlongTheWay: Fixture[] = [];
+  let reachedPlayerMatchDay = false;
+  let seasonFinished = false;
 
-  let playerFixture: Fixture | undefined;
-  let playerMatchResult: MatchResult | undefined;
-  let playerHomeTeamInput: MatchTeamInput | undefined;
-  let playerAwayTeamInput: MatchTeamInput | undefined;
-  let playerSeed: number | undefined;
-
-  for (const fixture of round) {
-    const isPlayerHome = fixture.homeTeamId === state.playerClubId;
-    const isPlayerAway = fixture.awayTeamId === state.playerClubId;
-    const isPlayerFixture = isPlayerHome || isPlayerAway;
-
-    const home = buildTeamInput(fixture.homeTeamId, isPlayerHome, input, clubsById, playersById);
-    const away = buildTeamInput(fixture.awayTeamId, isPlayerAway, input, clubsById, playersById);
-
-    const seed = deriveSeed(state.seed, `round${state.season.currentRound}:${fixture.homeTeamId}:${fixture.awayTeamId}`);
-    const result = simulateMatch(
-      home,
-      away,
-      seed,
-      state.settings.tacticalIntensity,
-      isPlayerFixture ? input.onPlayerChance : undefined,
-    );
-
-    if (isPlayerFixture) {
-      // Ainda sem resultado definitivo — a UI transmite ao vivo (e pode pedir substituições,
-      // que reroda `simulateMatch`); o fixture entra "como está" na rodada, e `commitPlayerMatchResult`
-      // troca por `{ ...fixture, result }` quando o resultado final estiver pronto.
-      playerFixture = fixture;
-      playerMatchResult = result;
-      playerHomeTeamInput = home;
-      playerAwayTeamInput = away;
-      playerSeed = seed;
-      playedRound.push(fixture);
-      continue;
+  for (;;) {
+    const date = earliestPendingDate(workingState.season.competitions, cursor);
+    if (!date) {
+      seasonFinished = true;
+      break;
     }
 
-    const stats = collectMatchStatMaps(home.players, away.players, result);
-    for (const id of stats.participantIds) cpuParticipantIds.add(id);
-    for (const [id, n] of stats.goalsByPlayer) cpuGoalsByPlayer.set(id, (cpuGoalsByPlayer.get(id) ?? 0) + n);
-    for (const [id, n] of stats.savesByGoalkeeper) cpuSavesByGoalkeeper.set(id, (cpuSavesByGoalkeeper.get(id) ?? 0) + n);
-    for (const [id, n] of stats.yellowCardsByPlayer) cpuYellowCardsByPlayer.set(id, (cpuYellowCardsByPlayer.get(id) ?? 0) + n);
-    for (const [id, n] of stats.redCardsByPlayer) cpuRedCardsByPlayer.set(id, (cpuRedCardsByPlayer.get(id) ?? 0) + n);
+    const onDate = fixturesOnDate(workingState.season.competitions, date);
+    const playerRef = onDate.find(
+      (r) => r.fixture.homeTeamId === state.playerClubId || r.fixture.awayTeamId === state.playerClubId,
+    );
 
-    const playedFixture: Fixture = { ...fixture, result };
-    standings = applyResultToStandings(standings, playedFixture);
-    playedRound.push(playedFixture);
+    if (playerRef) {
+      // Chegou no dia do próximo jogo do jogador — só posiciona o calendário aqui, sem simular
+      // nada dessa data ainda (nem esse jogo, nem os outros do mesmo dia).
+      workingState = { ...workingState, season: { ...workingState.season, currentDate: date } };
+      reachedPlayerMatchDay = true;
+      break;
+    }
 
-    const homeClub = clubsById.get(fixture.homeTeamId);
-    const awayClub = clubsById.get(fixture.awayTeamId);
-    if (homeClub) moraleByClub.set(homeClub.id, moraleAfterResult(homeClub.morale, result.homeGoals, result.awayGoals));
-    if (awayClub) moraleByClub.set(awayClub.id, moraleAfterResult(awayClub.morale, result.awayGoals, result.homeGoals));
+    workingState = commitFixturesBatch(workingState, onDate, input, clubsById, playersById, (f) =>
+      simulatedAlongTheWay.push(f),
+    );
+    workingState = { ...workingState, season: { ...workingState.season, currentDate: date } };
+    cursor = addDays(date, 1);
   }
 
-  const updatedCompetition: Competition = {
-    ...competition,
-    standings,
-    fixtures: competition.fixtures.map((r, i) => (i === roundIndex ? playedRound : r)),
+  const finalSeason: Season = { ...workingState.season, state: seasonFinished ? 'finished' : 'in_progress' };
+  const nextState: CareerState = { ...workingState, season: { ...finalSeason, currentRound: deriveCurrentRound(finalSeason) } };
+
+  return { nextState, simulatedAlongTheWay, reachedPlayerMatchDay, seasonFinished };
+}
+
+export interface StartMatchDayResult {
+  nextState: CareerState;
+  competitionId?: CompetitionId;
+  roundIndex?: number;
+  /** Ausentes se `state.season.currentDate` não é, na verdade, dia de jogo do time do jogador (chame `advanceCalendar` antes). */
+  playerFixture?: Fixture;
+  playerMatchResult?: MatchResult;
+  homeTeamInput?: MatchTeamInput;
+  awayTeamInput?: MatchTeamInput;
+  seed?: number;
+  /** Fixtures resolvidos na MESMA data de `playerFixture` — alimentam a barra lateral de revelação ao vivo (gol a gol) existente. */
+  sameDateFixtures: Fixture[];
+  /**
+   * Presente só quando esse era o ÚLTIMO jogo do time do jogador na temporada: o resto do
+   * calendário (só jogos de CPU) é varrido e comitado na mesma chamada, senão a temporada nunca
+   * seria marcada 'finished' sem mais um "Avançar o tempo" sem efeito nenhum pro jogador.
+   */
+  simulatedAlongTheWay: Fixture[];
+  seasonFinished: boolean;
+}
+
+/**
+ * Simula o jogo do time do jogador na data ATUAL do calendário (`state.season.currentDate`) — só
+ * deve ser chamada depois que `advanceCalendar` sinalizar `reachedPlayerMatchDay: true`. Comita
+ * na hora qualquer outro jogo da mesma data (`sameDateFixtures`); deixa o jogo do jogador em si
+ * sem resultado (a UI transmite ao vivo, com possíveis substituições — `commitPlayerMatchResult`
+ * grava o resultado final depois). Função pura.
+ */
+export function startMatchDay(state: CareerState, input: AdvanceRoundInput): StartMatchDayResult {
+  if (state.season.state === 'finished') {
+    throw new Error('startMatchDay: a temporada já terminou');
+  }
+  if (input.playerLineup.starters.length !== 11) {
+    throw new Error('startMatchDay: escalação do jogador precisa ter exatamente 11 titulares');
+  }
+
+  const playersById = new Map(state.world.players.map((p) => [p.id, p]));
+  const clubsById = new Map(state.world.clubs.map((c) => [c.id, c]));
+
+  const date = state.season.currentDate;
+  const onDate = fixturesOnDate(state.season.competitions, date);
+  const playerRef = onDate.find(
+    (r) => r.fixture.homeTeamId === state.playerClubId || r.fixture.awayTeamId === state.playerClubId,
+  );
+  if (!playerRef) {
+    throw new Error('startMatchDay: não há jogo do time do jogador na data atual — chame advanceCalendar primeiro');
+  }
+
+  const sameDateFixtures: Fixture[] = [];
+  const others = onDate.filter((r) => r !== playerRef);
+  let workingState = commitFixturesBatch(state, others, input, clubsById, playersById, (f) => sameDateFixtures.push(f));
+
+  const isPlayerHome = playerRef.fixture.homeTeamId === state.playerClubId;
+  const home = buildTeamInput(playerRef.fixture.homeTeamId, isPlayerHome, input, clubsById, playersById);
+  const away = buildTeamInput(playerRef.fixture.awayTeamId, !isPlayerHome, input, clubsById, playersById);
+  const seed = deriveSeed(state.seed, `fixture:${playerRef.fixture.round}:${playerRef.fixture.homeTeamId}:${playerRef.fixture.awayTeamId}`);
+  const result = simulateMatch(home, away, seed, workingState.settings.tacticalIntensity, input.onPlayerChance);
+
+  // A partida do time do jogador "aconteceu" nessa data — a suspensão é servida agora, mesmo o
+  // resultado só sendo comitado depois (transmissão ao vivo + possíveis substituições).
+  const homeClub = clubsById.get(playerRef.fixture.homeTeamId);
+  const awayClub = clubsById.get(playerRef.fixture.awayTeamId);
+  const clubSquadIds = new Set<PlayerId>([...(homeClub?.squad ?? []), ...(awayClub?.squad ?? [])]);
+  workingState = {
+    ...workingState,
+    world: { ...workingState.world, players: decrementSuspensions(workingState.world.players, clubSquadIds) },
   };
 
-  const totalRounds = competition.fixtures.length;
-  const nextRound = state.season.currentRound + 1;
+  const playerFixture = playerRef.fixture;
+  const competitionId = workingState.season.competitions[playerRef.competitionIndex].id;
+  const roundIndex = playerRef.roundIndex;
 
-  const nextState: CareerState = {
-    ...state,
-    world: {
-      clubs: state.world.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
-      players: applyParticipantStats(
-        decrementSuspensions(state.world.players),
-        cpuParticipantIds,
-        cpuGoalsByPlayer,
-        cpuSavesByGoalkeeper,
-        cpuYellowCardsByPlayer,
-        cpuRedCardsByPlayer,
+  // Se não sobra mais nenhum jogo FUTURO do time do jogador na temporada, varre o resto do
+  // calendário (só jogos de CPU) nessa mesma chamada — reaproveita `advanceCalendar`: como o jogo
+  // do jogador ainda não foi comitado, mas está datado exatamente em `date` e o cursor dele
+  // começa em `date + 1`, ele nunca é revisitado (ver `earliestPendingDate`'s filtro por cursor).
+  const hasMoreForPlayer = workingState.season.competitions.some((c) =>
+    c.fixtures.some((round) =>
+      round.some(
+        (f) => !f.result && f.date > date && (f.homeTeamId === state.playerClubId || f.awayTeamId === state.playerClubId),
       ),
-    },
-    season: {
-      ...state.season,
-      currentRound: nextRound,
-      state: nextRound > totalRounds ? 'finished' : 'in_progress',
-      competitions: [updatedCompetition],
-    },
-  };
+    ),
+  );
+
+  let simulatedAlongTheWay: Fixture[] = [];
+  let seasonFinished = false;
+  if (!hasMoreForPlayer) {
+    const swept = advanceCalendar(workingState, input);
+    workingState = swept.nextState;
+    simulatedAlongTheWay = swept.simulatedAlongTheWay;
+    seasonFinished = swept.seasonFinished;
+  } else {
+    workingState = { ...workingState, season: { ...workingState.season, currentRound: deriveCurrentRound(workingState.season) } };
+  }
 
   return {
-    nextState,
+    nextState: workingState,
+    competitionId,
     roundIndex,
     playerFixture,
-    playerMatchResult,
-    homeTeamInput: playerHomeTeamInput,
-    awayTeamInput: playerAwayTeamInput,
-    seed: playerSeed,
+    playerMatchResult: result,
+    homeTeamInput: home,
+    awayTeamInput: away,
+    seed,
+    sameDateFixtures,
+    simulatedAlongTheWay,
+    seasonFinished,
   };
 }
 
@@ -382,14 +532,19 @@ export function simulateRound(state: CareerState, input: AdvanceRoundInput): Sim
  * Comita o resultado FINAL (pós-substituições, se houve) da partida do jogador: tabela, moral
  * dos dois clubes envolvidos e estatísticas de quem participou (titulares + qualquer
  * substituto que entrou — ver `collectMatchStatMaps`). Chamado depois que a transmissão ao
- * vivo termina (ver engine.worker.ts). Função pura.
+ * vivo termina (ver engine.worker.ts). Suspensão do time do jogador já foi servida em
+ * `advanceToNextEvent` no instante em que a data foi alcançada — não repete aqui. Função pura.
  */
 export function commitPlayerMatchResult(
   state: CareerState,
-  ctx: { playerFixture: Fixture; roundIndex: number; homeTeamInput: MatchTeamInput; awayTeamInput: MatchTeamInput },
+  ctx: { playerFixture: Fixture; competitionId: CompetitionId; roundIndex: number; homeTeamInput: MatchTeamInput; awayTeamInput: MatchTeamInput },
   finalResult: MatchResult,
 ): CareerState {
-  const competition = state.season.competitions[0];
+  const competitionIndex = state.season.competitions.findIndex((c) => c.id === ctx.competitionId);
+  const competition = state.season.competitions[competitionIndex];
+  if (!competition) {
+    throw new Error(`commitPlayerMatchResult: competição ${ctx.competitionId} não encontrada`);
+  }
   const round = competition.fixtures[ctx.roundIndex];
   if (!round) {
     throw new Error(`commitPlayerMatchResult: rodada de índice ${ctx.roundIndex} não existe nesta competição`);
@@ -407,6 +562,13 @@ export function commitPlayerMatchResult(
 
   const stats = collectMatchStatMaps(ctx.homeTeamInput.players, ctx.awayTeamInput.players, finalResult);
 
+  const nextSeason: Season = {
+    ...state.season,
+    competitions: state.season.competitions.map((c, i) =>
+      i === competitionIndex ? { ...competition, standings, fixtures: competition.fixtures.map((r, ri) => (ri === ctx.roundIndex ? updatedRound : r)) } : c,
+    ),
+  };
+
   return {
     ...state,
     world: {
@@ -420,33 +582,27 @@ export function commitPlayerMatchResult(
         stats.redCardsByPlayer,
       ),
     },
-    season: {
-      ...state.season,
-      competitions: [
-        {
-          ...competition,
-          standings,
-          fixtures: competition.fixtures.map((r, i) => (i === ctx.roundIndex ? updatedRound : r)),
-        },
-      ],
-    },
+    season: { ...nextSeason, currentRound: deriveCurrentRound(nextSeason) },
   };
 }
 
 /**
- * Avança a rodada atual da temporada de uma vez só: simula todos os confrontos e já comita
- * tudo (tabela, moral, estatísticas), incluindo a partida do jogador — sem transmissão ao vivo
- * nem chance de substituição. É `simulateRound` + `commitPlayerMatchResult` compostos; usado
- * pelos testes e por qualquer fluxo que só queira o resultado final da rodada de uma vez
- * (ver engine.worker.ts pro fluxo ao vivo, que chama os dois separadamente).
+ * Avança o tempo de uma vez só até a próxima partida do time do jogador, já comitando tudo
+ * (tabela, moral, estatísticas) inclusive ela — sem transmissão ao vivo nem chance de
+ * substituição. É `advanceCalendar` + `startMatchDay` + `commitPlayerMatchResult` compostos;
+ * usado pelos testes e por qualquer fluxo que só queira o resultado final de uma vez (ver
+ * engine.worker.ts pro fluxo ao vivo de verdade, que chama os três separadamente, como duas
+ * ações distintas da UI — "avançar o tempo" e "iniciar partida").
  */
 export function advanceRound(state: CareerState, input: AdvanceRoundInput): CareerState {
-  const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, roundIndex } = simulateRound(
-    state,
-    input,
-  );
-  if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput) {
+  const calendar = advanceCalendar(state, input);
+  if (!calendar.reachedPlayerMatchDay) {
+    return calendar.nextState;
+  }
+  const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, competitionId, roundIndex } =
+    startMatchDay(calendar.nextState, input);
+  if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput || competitionId === undefined || roundIndex === undefined) {
     return nextState;
   }
-  return commitPlayerMatchResult(nextState, { playerFixture, roundIndex, homeTeamInput, awayTeamInput }, playerMatchResult);
+  return commitPlayerMatchResult(nextState, { playerFixture, competitionId, roundIndex, homeTeamInput, awayTeamInput }, playerMatchResult);
 }

@@ -253,13 +253,13 @@ export function MatchLive() {
           )}
         </main>
 
-        <Card className="ml-sidebar" aria-label="Outros resultados da rodada">
-          <span className="eyebrow">Outros jogos da rodada</span>
+        <Card className="ml-sidebar" aria-label="Outros jogos do dia">
+          <span className="eyebrow">Outros jogos do dia</span>
           <RoundResultsList
             entries={liveMatch.otherMatches}
             playerClubId={career.playerClubId}
             clubName={clubName}
-            emptyMessage="Nenhum outro jogo nessa rodada."
+            emptyMessage="Nenhum outro jogo nesse dia."
           />
         </Card>
       </div>

@@ -43,8 +43,27 @@ export interface SetTacticalIntensityRequest {
   payload: { tacticalIntensity: TacticalIntensity };
 }
 
-export interface AdvanceRoundRequest {
-  type: 'advanceRound';
+/**
+ * Avança só o CALENDÁRIO até a data do próximo jogo do time do jogador (ver `advanceCalendar` em
+ * simulation/season.ts) — não pula direto pra "próxima rodada" nem já inicia a partida: caminha
+ * data a data, comitando qualquer jogo que não seja do jogador conforme sua data é alcançada, e
+ * PARA assim que chega no dia do próximo jogo do jogador (sem simulá-lo ainda). Uma vez que
+ * `career.season.currentDate` bate com a data desse jogo, a UI troca pro botão "Iniciar Partida"
+ * (ver `StartMatchRequest`) — são duas ações distintas de propósito, não uma sequência automática.
+ */
+export interface AdvanceTimeRequest {
+  type: 'advanceTime';
+  requestId: string;
+  payload: { playerLineup: Lineup; playerTactics: Tactics };
+}
+
+/**
+ * Simula e transmite ao vivo o jogo do time do jogador na data ATUAL do calendário (ver
+ * `startMatchDay` em simulation/season.ts) — só deve ser enviado quando `career.season.currentDate`
+ * já é a data desse jogo (chegada lá via `AdvanceTimeRequest`).
+ */
+export interface StartMatchRequest {
+  type: 'startMatch';
   requestId: string;
   payload: { playerLineup: Lineup; playerTactics: Tactics };
 }
@@ -63,7 +82,7 @@ export interface SetCareerRequest {
   payload: { state: CareerState };
 }
 
-/** Pede pro motor pular direto pro fim da partida ao vivo em andamento (o requestId do `advanceRound` que a originou). */
+/** Pede pro motor pular direto pro fim da partida ao vivo em andamento (o requestId do `startMatch` que a originou). */
 export interface SkipLiveMatchRequest {
   type: 'skipLiveMatch';
   requestId: string;
@@ -99,7 +118,8 @@ export interface RequestSubstitutionRequest {
 export type EngineRequest =
   | ListClubsRequest
   | StartCareerRequest
-  | AdvanceRoundRequest
+  | AdvanceTimeRequest
+  | StartMatchRequest
   | StartNewSeasonRequest
   | SetCareerRequest
   | SkipLiveMatchRequest
@@ -123,7 +143,23 @@ export interface CareerStateResponse {
 export interface RoundResultResponse {
   type: 'roundResult';
   requestId: string;
-  payload: { state: CareerState; playerMatch: MatchResult | null };
+  payload: {
+    state: CareerState;
+    playerMatch: MatchResult | null;
+    /** true quando o avanço de tempo esgotou a temporada sem achar mais nenhuma partida do jogador. */
+    seasonFinished: boolean;
+  };
+}
+
+/**
+ * Confrontos (de qualquer clube menos o do jogador) resolvidos em datas ANTES da parada do
+ * avanço de tempo — "enquanto isso": já definitivos, sem revelação ao vivo (ver `AdvanceTimeRequest`
+ * e `simulatedAlongTheWay` em simulation/season.ts). Chega antes de `liveMatchStarted`/`roundResult`.
+ */
+export interface PassedFixturesResponse {
+  type: 'passedFixtures';
+  requestId: string;
+  payload: { fixtures: Fixture[] };
 }
 
 /** Disparado assim que a partida do jogador começa a ser transmitida ao vivo (antes do roundResult final). */
@@ -212,6 +248,7 @@ export type EngineResponse =
   | ClubsListResponse
   | CareerStateResponse
   | RoundResultResponse
+  | PassedFixturesResponse
   | LiveMatchStartedResponse
   | LiveMatchOtherResultResponse
   | LiveMatchTickResponse

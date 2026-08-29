@@ -15,6 +15,13 @@
   text-align: center;
 }
 
+.matchup-passed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+}
+
 .matchup__teams {
   display: flex;
   align-items: center;
@@ -263,4 +270,104 @@
 .save-controls__message {
   font-size: var(--text-sm);
   color: var(--pitch);
+}
+
+/* Animação de "avançar o tempo": tela toda borrada, com o dia do mês "rolando" até estacionar
+   no dia de verdade que o motor calculou (ver Home.tsx's DayRoll/rollSequence). */
+
+.calendar-roll-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(10 20 15 / 45%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  opacity: 1;
+  transition: opacity 200ms var(--ease-out);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.calendar-roll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.cal-roll {
+  position: relative;
+  display: inline-block;
+  width: 5.5rem;
+  height: 5.5rem;
+  overflow: hidden;
+}
+
+.cal-roll__digit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: var(--chalk);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+}
+
+.cal-roll__digit--in {
+  transform: translateY(0);
+  transition: transform 240ms var(--ease-out);
+
+  @starting-style {
+    transform: translateY(100%);
+  }
+}
+
+.cal-roll__digit--out {
+  animation: cal-roll-out 240ms var(--ease-out) forwards;
+}
+
+@keyframes cal-roll-out {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.calendar-roll__context {
+  font-size: var(--text-sm);
+  color: var(--mist);
+  text-transform: capitalize;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-roll-overlay {
+    transition: none;
+
+    @starting-style {
+      opacity: 1;
+    }
+  }
+
+  .cal-roll__digit--in {
+    transition: none;
+
+    @starting-style {
+      transform: none;
+    }
+  }
+
+  .cal-roll__digit--out {
+    animation: none;
+    display: none;
+  }
 }

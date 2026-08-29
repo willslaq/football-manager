@@ -2,6 +2,8 @@
 // Único lugar com estado mutável de carreira — o motor em si continua puro.
 
 import {
+  advanceCalendar,
+  backfillFixtureDates,
   commitPlayerMatchResult,
   createBrasileiraoCareer,
   generateSeason,
@@ -10,12 +12,12 @@ import {
   pickAutoLineup,
   setTacticalIntensity,
   simulateMatch,
-  simulateRound,
+  startMatchDay,
   startNewSeason,
   validateCareerState,
 } from '../engine';
 import type { MatchSubstitution, MatchTeamInput } from '../engine';
-import type { CareerState, EngineTraceEntry, Fixture, Lineup, MatchResult, Tactics } from '../engine/types';
+import type { CareerState, CompetitionId, EngineTraceEntry, Fixture, Lineup, MatchResult, Tactics } from '../engine/types';
 import {
   runLiveMatch,
   type ChanceTraceEntry,
@@ -38,6 +40,7 @@ interface LiveMatchSession {
   awayTeamInput: MatchTeamInput;
   seed: number;
   playerFixture: Fixture;
+  competitionId: CompetitionId;
   roundIndex: number;
   playerTeamSide: 'home' | 'away';
   /** Substituições confirmadas até agora, acumuladas — reenviadas por inteiro a cada nova rodada de `simulateMatch`. */
@@ -122,33 +125,77 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         break;
       }
 
-      case 'advanceRound': {
+      case 'advanceTime': {
         if (!career) throw new Error('Nenhuma carreira iniciada');
-        const engineTrace: EngineTraceEntry[] = [];
-        const { nextState, roundIndex, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, seed } =
-          simulateRound(career, {
-            playerLineup: request.payload.playerLineup,
-            playerTactics: request.payload.playerTactics,
-            onPlayerChance: (entry) => engineTrace.push(entry),
-          });
+        const { nextState, simulatedAlongTheWay, seasonFinished } = advanceCalendar(career, {
+          playerLineup: request.payload.playerLineup,
+          playerTactics: request.payload.playerTactics,
+        });
         career = nextState;
 
-        const sendRoundResult = (state: CareerState, playerMatch: MatchResult | null): void => {
-          respond({ type: 'roundResult', requestId: request.requestId, payload: { state, playerMatch } });
+        if (simulatedAlongTheWay.length > 0) {
+          respond({ type: 'passedFixtures', requestId: request.requestId, payload: { fixtures: simulatedAlongTheWay } });
+        }
+
+        // Só move o calendário — nunca inicia a partida sozinho, mesmo ao chegar exatamente no
+        // dia do próximo jogo do jogador. Iniciar é uma ação separada (`startMatch`, ver a UI:
+        // o botão vira "Iniciar Partida" quando `career.season.currentDate` bate com essa data).
+        respond({ type: 'roundResult', requestId: request.requestId, payload: { state: career, playerMatch: null, seasonFinished } });
+        break;
+      }
+
+      case 'startMatch': {
+        if (!career) throw new Error('Nenhuma carreira iniciada');
+        const engineTrace: EngineTraceEntry[] = [];
+        const {
+          nextState,
+          competitionId,
+          roundIndex,
+          playerFixture,
+          playerMatchResult,
+          homeTeamInput,
+          awayTeamInput,
+          seed,
+          sameDateFixtures,
+          simulatedAlongTheWay,
+          seasonFinished,
+        } = startMatchDay(career, {
+          playerLineup: request.payload.playerLineup,
+          playerTactics: request.payload.playerTactics,
+          onPlayerChance: (entry) => engineTrace.push(entry),
+        });
+        career = nextState;
+
+        // Só populado quando esse era o último jogo do jogador na temporada (ver startMatchDay's
+        // varredura do resto do calendário) — "enquanto isso" de jogos que nunca vão ficar "ao
+        // vivo" já que não há mais partida do jogador pra assistir depois.
+        if (simulatedAlongTheWay.length > 0) {
+          respond({ type: 'passedFixtures', requestId: request.requestId, payload: { fixtures: simulatedAlongTheWay } });
+        }
+
+        const sendRoundResult = (state: CareerState, playerMatch: MatchResult | null, finished: boolean): void => {
+          respond({ type: 'roundResult', requestId: request.requestId, payload: { state, playerMatch, seasonFinished: finished } });
         };
 
-        if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput || seed === undefined) {
-          sendRoundResult(career, null);
+        if (
+          !playerFixture ||
+          !playerMatchResult ||
+          !homeTeamInput ||
+          !awayTeamInput ||
+          seed === undefined ||
+          competitionId === undefined ||
+          roundIndex === undefined
+        ) {
+          // Defensivo — não deveria acontecer (startMatch só é enviado quando currentDate já é
+          // dia de jogo do jogador, ver o comentário em AdvanceTimeRequest).
+          sendRoundResult(career, null, seasonFinished);
           break;
         }
 
-        // Os demais confrontos da rodada já foram comitados por completo dentro de `simulateRound`
-        // (mesmo motor, ver season.ts) — só a entrega ao vivo do jogo do jogador é escalonada no
-        // tempo; os outros "chegam" aos poucos, gol a gol, no mesmo minuto em que aconteceram na
-        // simulação deles (mesma linha do tempo — todos os jogos da rodada acontecem "ao mesmo tempo").
-        const playedRound = career.season.competitions[0].fixtures[roundIndex];
-        const otherFixtures = playedRound.filter((f) => f !== playerFixture);
-        const otherResults: OtherRoundResult[] = otherFixtures.map((fixture) => ({ fixture }));
+        // Os demais jogos da MESMA DATA já foram comitados dentro de `startMatchDay` — só a
+        // entrega ao vivo do jogo do jogador é escalonada no tempo; os outros "chegam" aos poucos,
+        // gol a gol, no mesmo minuto em que aconteceram na simulação deles (mesma linha do tempo).
+        const otherResults: OtherRoundResult[] = sameDateFixtures.map((fixture) => ({ fixture }));
 
         respond({
           type: 'liveMatchStarted',
@@ -156,7 +203,7 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           payload: {
             homeTeamId: playerMatchResult.homeTeamId,
             awayTeamId: playerMatchResult.awayTeamId,
-            otherFixtures: otherFixtures.map((f) => ({ homeTeamId: f.homeTeamId, awayTeamId: f.awayTeamId })),
+            otherFixtures: sameDateFixtures.map((f) => ({ homeTeamId: f.homeTeamId, awayTeamId: f.awayTeamId })),
           },
         });
 
@@ -201,6 +248,7 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           awayTeamInput,
           seed,
           playerFixture,
+          competitionId,
           roundIndex,
           playerTeamSide: playerFixture.homeTeamId === career.playerClubId ? 'home' : 'away',
           substitutions: [],
@@ -221,10 +269,16 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
 
           career = commitPlayerMatchResult(
             career,
-            { playerFixture: session.playerFixture, roundIndex: session.roundIndex, homeTeamInput, awayTeamInput },
+            {
+              playerFixture: session.playerFixture,
+              competitionId: session.competitionId,
+              roundIndex: session.roundIndex,
+              homeTeamInput,
+              awayTeamInput,
+            },
             finalResult,
           );
-          sendRoundResult(career, finalResult);
+          sendRoundResult(career, finalResult, seasonFinished);
         });
         break;
       }
@@ -339,10 +393,15 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         // Saves de antes do resumo de temporada (history) só tinham {year, competitionId, champion} —
         // completa os campos novos com "vazio" (sem Libertadores/rebaixados/artilheiro/luva de ouro
         // registrados retroativamente pra temporadas já encerradas antes dessa versão).
+        // Saves de antes do calendário real não têm date/currentDate — sem o snapshot original pra
+        // reancorar, usa a rodada já salva + a data real de hoje como âncora (ver backfillFixtureDates).
         const incoming = request.payload.state;
         const normalized: CareerState = {
           ...incoming,
           settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
+          season: incoming.season.currentDate
+            ? incoming.season
+            : backfillFixtureDates(incoming.season, new Date().toISOString().slice(0, 10)),
           world: {
             ...incoming.world,
             clubs: incoming.world.clubs.map((club) => ({ ...club, morale: club.morale ?? 70 })),

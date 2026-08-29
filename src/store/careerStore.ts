@@ -5,6 +5,7 @@ import type {
   CareerState,
   ClubId,
   EngineTraceEntry,
+  Fixture,
   Lineup,
   MatchEvent,
   MatchResult,
@@ -181,6 +182,12 @@ interface CareerStore {
   tactics: Tactics;
   lastMatch: MatchResult | null;
   liveMatch: LiveMatchState | null;
+  /**
+   * Jogos (de qualquer clube menos o do jogador) que o avanço de tempo simulou "pelo caminho",
+   * em datas antes da parada atual — recapitulação estática, sem revelação ao vivo (ver
+   * `advanceTime`/`passedFixtures`). Limpo no próximo `advanceTime`/início de partida ao vivo.
+   */
+  passedResults: Fixture[];
   /** Rastro técnico bruto do motor pra partida ao vivo/mais recente — "modo geek" da UI. */
   engineLog: EngineTraceEntry[];
   loading: boolean;
@@ -194,7 +201,14 @@ interface CareerStore {
   listClubs: (seed: number) => void;
   startCareer: (seed: number, trainerName: string, clubId: string, tacticalIntensity?: TacticalIntensity) => void;
   setTacticalIntensity: (tacticalIntensity: TacticalIntensity) => void;
-  advanceRound: () => void;
+  /**
+   * Avança só o CALENDÁRIO, dia a dia, até a data do próximo jogo do time do jogador — comita
+   * qualquer outro jogo alcançado pelo caminho, mas NUNCA inicia a partida do jogador sozinho,
+   * mesmo ao chegar exatamente nessa data (ver `startMatch`, uma ação separada).
+   */
+  advanceTime: () => void;
+  /** Simula e transmite ao vivo o jogo do time do jogador — só deve ser chamada quando `career.season.currentDate` já é a data desse jogo (ver `advanceTime`). */
+  startMatch: () => void;
   /** Encerra a temporada atual (precisa estar 'finished') e começa a seguinte. */
   startNewSeason: () => void;
   skipLiveMatch: () => void;
@@ -258,11 +272,15 @@ export const useCareerStore = create<CareerStore>((set, get) => {
           tactics: loaded?.tactics ?? response.payload.suggestedTactics,
           lastMatch: null,
           liveMatch: null,
+          passedResults: [],
           loading: false,
           error: null,
         });
         break;
       }
+      case 'passedFixtures':
+        set({ passedResults: response.payload.fixtures });
+        break;
       case 'liveMatchStarted': {
         const { lineup, career: currentCareer } = get();
         set({
@@ -421,6 +439,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
     tactics: { formation: '4-4-2', style: 'balanced' },
     lastMatch: null,
     liveMatch: null,
+    passedResults: [],
     engineLog: [],
     loading: false,
     error: null,
@@ -443,13 +462,22 @@ export const useCareerStore = create<CareerStore>((set, get) => {
       send({ type: 'setTacticalIntensity', requestId: crypto.randomUUID(), payload: { tacticalIntensity } });
     },
 
-    advanceRound: () => {
+    advanceTime: () => {
+      const { lineup, tactics } = get();
+      if (!lineup) return;
+      // Não seta liveMatchRequestId aqui — essa ação nunca inicia uma partida ao vivo sozinha
+      // (ver startMatch), então não há sessão pra pausar/pular/substituir ainda.
+      set({ loading: true, error: null, passedResults: [] });
+      send({ type: 'advanceTime', requestId: crypto.randomUUID(), payload: { playerLineup: lineup, playerTactics: tactics } });
+    },
+
+    startMatch: () => {
       const { lineup, tactics } = get();
       if (!lineup) return;
       const requestId = crypto.randomUUID();
       liveMatchRequestId = requestId;
       set({ loading: true, error: null });
-      send({ type: 'advanceRound', requestId, payload: { playerLineup: lineup, playerTactics: tactics } });
+      send({ type: 'startMatch', requestId, payload: { playerLineup: lineup, playerTactics: tactics } });
     },
 
     startNewSeason: () => {

@@ -32,6 +32,25 @@ export const POSITION_GROUP: Record<Position, PositionGroup> = {
   CA: 'ATA',
 };
 
+/** Nome completo de cada posição (pt-BR) — ver tabela de siglas em engine/types/player.ts. */
+export const POSITION_LABEL: Record<Position, string> = {
+  GOL: 'Goleiro',
+  ZAG: 'Zagueiro',
+  LD: 'Lateral Direito',
+  LE: 'Lateral Esquerdo',
+  ALD: 'Ala Direito',
+  ALE: 'Ala Esquerdo',
+  VOL: 'Volante',
+  MC: 'Meia Central',
+  MD: 'Meia Direita',
+  ME: 'Meia Esquerda',
+  MEA: 'Meia-Atacante',
+  PD: 'Ponta Direita',
+  PE: 'Ponta Esquerda',
+  SA: 'Segundo Atacante',
+  CA: 'Centroavante',
+};
+
 export type PlayerListFilter = PositionGroup | 'ALL';
 
 /** Filtro de setor — mesmo conjunto usado no Elenco e na Escalação. */

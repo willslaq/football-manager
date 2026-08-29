@@ -1,16 +1,7 @@
 import type { ClubId, MatchEvent, MatchEventType } from '../../engine/types';
 import { Badge } from './Badge';
-import { IconBall } from './Icons';
+import { IconBall, IconCard } from './Icons';
 import './MatchEventFeed.css';
-
-/** Cartão de árbitro em miniatura, levemente inclinado (mesma linguagem visual de uma transmissão). */
-function IconCard({ color }: { color: string }) {
-  return (
-    <svg width="11" height="15" viewBox="0 0 12 16" aria-hidden="true" className="match-event-feed__card">
-      <rect x="1" y="1" width="10" height="14" rx="1.6" fill={color} transform="rotate(-9 6 8)" />
-    </svg>
-  );
-}
 
 const FEED_META: Partial<Record<MatchEventType, { label: string; tone: 'pitch' | 'floodlight' | 'neutral'; verb: string; suffix: string }>> = {
   goal: { label: 'GOL', tone: 'pitch', verb: 'Gol de', suffix: '' },
@@ -46,7 +37,7 @@ function FeedItem({
       {event.type === 'goal' ? (
         <IconBall className="match-event-feed__ball" />
       ) : cardColor ? (
-        <IconCard color={cardColor} />
+        <IconCard color={cardColor} className="match-event-feed__card" />
       ) : (
         <Badge tone={meta.tone}>{meta.label}</Badge>
       )}

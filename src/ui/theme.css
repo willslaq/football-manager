@@ -171,6 +171,30 @@ button {
   color: var(--pitch);
 }
 
+/** Scrollbar fina no tom do design system, pra listas roláveis (ex.: tabela do Elenco) em vez da barra nativa do SO. */
+.scroll-styled {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--mist) 40%, transparent) transparent;
+}
+
+.scroll-styled::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.scroll-styled::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-styled::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--mist) 40%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.scroll-styled::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--mist) 65%, transparent);
+}
+
 .error-banner {
   border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
   background: color-mix(in srgb, var(--danger) 12%, transparent);

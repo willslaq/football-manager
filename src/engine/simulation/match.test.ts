@@ -102,4 +102,31 @@ describe('simulateMatch', () => {
     expect(winsA).toBeGreaterThan(winsB);
     expect(winsB / N).toBeGreaterThan(0.15);
   });
+
+  it('a força de ataque degrada ao longo da partida pelo desgaste de energia (Player.condition)', () => {
+    const early: number[] = [];
+    const late: number[] = [];
+
+    for (let seed = 0; seed < 300; seed++) {
+      simulateMatch(home, away, seed, 'subtle', (entry) => {
+        if (entry.kind !== 'chance' || entry.teamId !== home.clubId) return;
+        if (entry.minute <= 15) early.push(entry.attackStrength);
+        else if (entry.minute >= 75) late.push(entry.attackStrength);
+      });
+    }
+
+    // Amostra mínima pra média não ser ruído — BASE_CHANCES_PER_TEAM=6/90min é esparso.
+    expect(early.length).toBeGreaterThan(30);
+    expect(late.length).toBeGreaterThan(30);
+
+    const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    const earlyAvg = avg(early);
+    const lateAvg = avg(late);
+
+    // Perceptível (não é ruído estatístico) mas não catastrófico — mesma faixa de
+    // degradação implícita em ENERGY_DRAIN_PER_MINUTE_OUTFIELD/effectiveRating's conditionFactor.
+    expect(lateAvg).toBeLessThan(earlyAvg);
+    expect(earlyAvg - lateAvg).toBeGreaterThan(earlyAvg * 0.02);
+    expect(earlyAvg - lateAvg).toBeLessThan(earlyAvg * 0.25);
+  });
 });

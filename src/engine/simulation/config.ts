@@ -8,6 +8,29 @@ import type { Sector } from './strength';
 export const HOME_ADVANTAGE = 1.06;
 
 /**
+ * Energia (`Player.condition`) drenada minuto a minuto durante a partida — degrada a nota
+ * efetiva do jogador ao longo do jogo via `effectiveRating`'s `conditionFactor`, que já
+ * existia mas até aqui nunca variava dentro de uma partida. Efêmero: a drenagem vive só
+ * dentro de `simulateMatch` (ver `matchEnergy` em match.ts) e nunca é gravada de volta em
+ * `Player.condition` — sem calendário de verdade ainda (só uma rodada por vez, sem meio de
+ * semana), cada partida começa com o jogador 100% recuperado. Persistir fadiga entre
+ * partidas é um passo futuro (precisa de calendário com dias de descanso).
+ */
+export const ENERGY_DRAIN_PER_MINUTE_OUTFIELD = 0.35;
+/** Goleiro corre muito menos que um jogador de linha — drena bem mais devagar. */
+export const ENERGY_DRAIN_PER_MINUTE_GOALKEEPER = 0.05;
+/** Piso de segurança pra energia em partida — nunca usado na prática com a taxa acima em 90min, é só uma trava. */
+export const ENERGY_MIN = 55;
+/**
+ * A energia em si drena todo minuto (barato — só um Map), mas recomputar força de setor +
+ * taxas por minuto a partir dela (`recomputeStrengthForFatigue` em match.ts) é caro o bastante
+ * pra pesar em simulações de alto volume (ver `match.test.ts`'s teste de 10.000 partidas) —
+ * refeito só a cada N minutos simulados. Degradação ainda fica suave o bastante pro jogador
+ * não perceber os "degraus" (nenhuma UI mostra o valor minuto a minuto hoje).
+ */
+export const ENERGY_RECOMPUTE_INTERVAL_MINUTES = 5;
+
+/**
  * Ajuste de `Club.morale` (0-100) aplicado ao fim de cada partida da rodada, conforme o
  * resultado — puramente de exibição (ver `Club.morale`), não realimenta a simulação.
  */

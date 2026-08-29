@@ -9,6 +9,10 @@ import {
   BASE_FREE_KICK_CONVERSION,
   BASE_GOAL_PROBABILITY,
   BASE_PENALTY_CONVERSION,
+  ENERGY_DRAIN_PER_MINUTE_GOALKEEPER,
+  ENERGY_DRAIN_PER_MINUTE_OUTFIELD,
+  ENERGY_MIN,
+  ENERGY_RECOMPUTE_INTERVAL_MINUTES,
   FOUL_PROBABILITY_CAP,
   MAX_FREE_KICK_CONVERSION,
   MAX_GOAL_PROBABILITY,
@@ -118,9 +122,7 @@ interface ChanceParams {
 function expectedChances(params: ChanceParams): number {
   const { attack, defense, ownStyleMod, oppStyleMod, possession } = params;
   const ratio = compressRatio(attack / (attack + defense || 1));
-  return (
-    BASE_CHANCES_PER_TEAM * ratio * 2 * ownStyleMod.attackVolume * oppStyleMod.concedeVolume * possessionFactor(possession)
-  );
+  return BASE_CHANCES_PER_TEAM * ratio * 2 * ownStyleMod.attackVolume * oppStyleMod.concedeVolume * possessionFactor(possession);
 }
 
 interface ResolvedChance {
@@ -335,6 +337,23 @@ export function simulateMatch(
 
   const rng = mulberry32(seed);
 
+  // Energia em partida (ver ENERGY_DRAIN_PER_MINUTE_* em config.ts) — drena minuto a minuto e
+  // degrada `computeSectorStrengths` via `effectiveRating`'s conditionFactor (que já existia,
+  // mas até aqui nunca variava dentro do jogo). Começa do `Player.condition` persistido (hoje
+  // sempre 100 — sem calendário/meio de semana ainda, ninguém entra em campo cansado de partida
+  // anterior) e é inteiramente local a essa simulação: nunca é gravada de volta no `Player`.
+  const matchEnergy = new Map<PlayerId, number>();
+  for (const player of [...home.players, ...away.players]) matchEnergy.set(player.id, player.condition);
+
+  /** Drena a energia de quem está em campo naquele time — chamado uma vez por minuto simulado. */
+  function drainEnergy(state: TeamMatchState): void {
+    for (const player of state.players) {
+      const rate = player.position === 'GOL' ? ENERGY_DRAIN_PER_MINUTE_GOALKEEPER : ENERGY_DRAIN_PER_MINUTE_OUTFIELD;
+      const current = matchEnergy.get(player.id) ?? player.condition;
+      matchEnergy.set(player.id, clamp(current - rate, ENERGY_MIN, 100));
+    }
+  }
+
   // Goleiro titular de cada time — fixo a partida inteira (sem modelo de substituição ainda),
   // usado só pra creditar a defesa (shot_saved) ao goleiro certo.
   const homeGoalkeeper = home.players.find((p) => p.position === 'GOL');
@@ -431,8 +450,8 @@ export function simulateMatch(
     fouls: 0,
   };
 
-  /** Recomputa as taxas por minuto (chance e falta) dos dois times a partir da força/elenco corrente — chamado no setup e de novo a cada expulsão, já que a força de um lado também muda a taxa de chance do outro (ataque vs. defesa). */
-  function recomputeRates(): void {
+  /** Recomputa só a taxa de chance por minuto dos dois times a partir da força corrente — a parte que fadiga (recomputeStrengthForFatigue) precisa recalcular a cada intervalo, sem tocar a taxa de falta (perfil de faltas não muda com energia). */
+  function recomputeChanceRates(): void {
     const homeExpected = expectedChances({
       attack: homeState.strength.attack,
       defense: awayState.strength.defense,
@@ -449,12 +468,46 @@ export function simulateMatch(
     });
     homeState.minuteRate = homeExpected / MATCH_MINUTES;
     awayState.minuteRate = awayExpected / MATCH_MINUTES;
+  }
+
+  /** Recomputa a taxa de falta por minuto dos dois times a partir do elenco corrente — só muda quando o elenco em campo muda (expulsão), não com energia. */
+  function recomputeFoulRates(): void {
     homeState.foulMinuteRate =
-      (BASE_FOULS_PER_TEAM * teamFoulProfile(homeState.players, homeState.slotPositionByPlayerId) * styleFoulModifier(homeState.tactics.style)) /
+      (BASE_FOULS_PER_TEAM *
+        teamFoulProfile(homeState.players, homeState.slotPositionByPlayerId) *
+        styleFoulModifier(homeState.tactics.style)) /
       MATCH_MINUTES;
     awayState.foulMinuteRate =
-      (BASE_FOULS_PER_TEAM * teamFoulProfile(awayState.players, awayState.slotPositionByPlayerId) * styleFoulModifier(awayState.tactics.style)) /
+      (BASE_FOULS_PER_TEAM *
+        teamFoulProfile(awayState.players, awayState.slotPositionByPlayerId) *
+        styleFoulModifier(awayState.tactics.style)) /
       MATCH_MINUTES;
+  }
+
+  /** Recomputa as taxas por minuto (chance e falta) dos dois times — chamado no setup e de novo a cada expulsão, já que a força/elenco de um lado também muda a taxa do outro (ataque vs. defesa). */
+  function recomputeRates(): void {
+    recomputeChanceRates();
+    recomputeFoulRates();
+  }
+
+  /**
+   * Recomputa a força de setor dos dois times a partir da energia corrente (ver drainEnergy) e
+   * a taxa de chance por minuto — chamado periodicamente (não todo minuto: caro demais em
+   * simulações de alto volume, ver ENERGY_RECOMPUTE_INTERVAL_MINUTES). Passa `matchEnergy`
+   * direto pro motor de força (`conditionByPlayerId`) em vez de clonar os `Player[]` — mais barato.
+   */
+  function recomputeStrengthForFatigue(): void {
+    homeState.strength = applyFormationShape(
+      computeSectorStrengths(homeState.players, true, homeState.slotPositionByPlayerId, matchEnergy),
+      homeState.tactics.formation,
+      tacticalIntensity,
+    );
+    awayState.strength = applyFormationShape(
+      computeSectorStrengths(awayState.players, false, awayState.slotPositionByPlayerId, matchEnergy),
+      awayState.tactics.formation,
+      tacticalIntensity,
+    );
+    recomputeChanceRates();
   }
 
   /**
@@ -468,7 +521,7 @@ export function simulateMatch(
     const slot = state.slotPositionByPlayerId?.[player.id] ?? player.position;
     const sector = positionSector(slot);
     const recomputed = applyFormationShape(
-      computeSectorStrengths(state.players, state.isHome, state.slotPositionByPlayerId),
+      computeSectorStrengths(state.players, state.isHome, state.slotPositionByPlayerId, matchEnergy),
       state.tactics.formation,
       tacticalIntensity,
     );
@@ -572,10 +625,16 @@ export function simulateMatch(
   let possessionSum = 0;
 
   for (let minute = 1; minute <= MATCH_MINUTES; minute++) {
+    drainEnergy(homeState);
+    drainEnergy(awayState);
+    if (minute === 1 || minute % ENERGY_RECOMPUTE_INTERVAL_MINUTES === 0) recomputeStrengthForFatigue();
+
     const drift = scorelineDrift(homeState.goals, awayState.goals, minute);
     const minuteTarget = clamp(possessionTargetHome + drift, POSSESSION_MINUTE_CLAMP[0], POSSESSION_MINUTE_CLAMP[1]);
     currentPossessionHome = clamp(
-      currentPossessionHome + (minuteTarget - currentPossessionHome) * POSSESSION_WALK_PULL_RATE + (rng() - 0.5) * POSSESSION_WALK_NOISE,
+      currentPossessionHome +
+        (minuteTarget - currentPossessionHome) * POSSESSION_WALK_PULL_RATE +
+        (rng() - 0.5) * POSSESSION_WALK_NOISE,
       POSSESSION_MINUTE_CLAMP[0],
       POSSESSION_MINUTE_CLAMP[1],
     );
@@ -589,7 +648,13 @@ export function simulateMatch(
     );
     if (chance(rng, homeChanceProbability)) {
       homeState.shots++;
-      const resolved = resolveChanceOutcome(rng, homeState.strength.attack, awayState.strength.defense, homeStyleMod, homeState.players);
+      const resolved = resolveChanceOutcome(
+        rng,
+        homeState.strength.attack,
+        awayState.strength.defense,
+        homeStyleMod,
+        homeState.players,
+      );
       onChance?.({
         kind: 'chance',
         minute,
@@ -627,7 +692,13 @@ export function simulateMatch(
     );
     if (chance(rng, awayChanceProbability)) {
       awayState.shots++;
-      const resolved = resolveChanceOutcome(rng, awayState.strength.attack, homeState.strength.defense, awayStyleMod, awayState.players);
+      const resolved = resolveChanceOutcome(
+        rng,
+        awayState.strength.attack,
+        homeState.strength.defense,
+        awayStyleMod,
+        awayState.players,
+      );
       onChance?.({
         kind: 'chance',
         minute,
@@ -724,4 +795,3 @@ export function simulateMatch(
     explanation,
   };
 }
-

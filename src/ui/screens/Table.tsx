@@ -2,7 +2,8 @@ import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
 import { findClub, sortStandingsForDisplay } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Card } from '../components';
+import { Button, Card } from '../components';
+import type { Screen } from '../../App';
 import './Table.css';
 
 type Zone = 'libertadores' | 'libertadores-pre' | 'sula' | 'relegation' | null;
@@ -29,7 +30,7 @@ const LEGEND: { zone: Exclude<Zone, null>; label: string }[] = [
   { zone: 'relegation', label: 'Rebaixamento' },
 ];
 
-export function Table() {
+export function Table({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const career = useCareerStore((s) => s.career);
   if (!career) return null;
 
@@ -48,6 +49,9 @@ export function Table() {
             </span>
           ))}
         </div>
+        <Button variant="secondary" size="sm" onClick={() => onNavigate('matchHistory')}>
+          Histórico de partidas
+        </Button>
       </div>
 
       <Card className="standings__card">

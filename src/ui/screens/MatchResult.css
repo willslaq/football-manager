@@ -122,6 +122,17 @@
   text-align: center;
 }
 
+.mr-goals li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.mr-goals__ball {
+  flex-shrink: 0;
+}
+
 /* Craque da partida */
 
 .mr-motm {

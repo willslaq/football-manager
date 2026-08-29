@@ -144,6 +144,17 @@
   text-align: center;
 }
 
+.ml-goals li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.ml-goals__ball {
+  flex-shrink: 0;
+}
+
 /* Posse de bola ao vivo */
 
 .ml-possession {

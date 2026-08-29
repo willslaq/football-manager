@@ -1,0 +1,302 @@
+.match-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.mh-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.mh-title {
+  font-size: var(--text-2xl);
+  color: var(--chalk);
+}
+
+.mh-filter {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.mh-empty {
+  color: var(--mist);
+}
+
+@keyframes mh-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Modo "Meus jogos" ---------- */
+
+.mh-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.card.mh-match {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  animation: mh-rise-in 220ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+.mh-match__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mh-match__round {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mist);
+}
+
+.mh-match__result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.mh-match__body {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.mh-match__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.mh-match__side--away {
+  align-items: flex-end;
+}
+
+.mh-match__team {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.mh-match__team--away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.mh-match__name {
+  font-weight: 600;
+  color: var(--chalk);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mh-match__crest {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mh-match__scorers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.mh-match__scorers--away {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.mh-match__scorer {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--text-xs);
+  color: var(--mist);
+  white-space: nowrap;
+}
+
+.mh-match__scorers--away .mh-match__scorer {
+  justify-content: flex-end;
+}
+
+.mh-match__scorer-ball {
+  flex-shrink: 0;
+}
+
+.mh-match__score {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--chalk);
+  white-space: nowrap;
+  align-self: start;
+}
+
+.mh-match__outcome {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.05rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.mh-match__outcome--win {
+  color: var(--pitch);
+  background: color-mix(in srgb, var(--pitch) 18%, transparent);
+}
+
+.mh-match__outcome--draw {
+  color: var(--floodlight);
+  background: color-mix(in srgb, var(--floodlight) 20%, transparent);
+}
+
+.mh-match__outcome--loss {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+}
+
+/* ---------- Modo "Rodada completa" ---------- */
+
+.mh-pager {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mh-pager__select {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.mh-rounds {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.card.mh-round {
+  padding: var(--space-3) var(--space-4);
+  animation: mh-rise-in 220ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+.mh-round__label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mist);
+  margin-bottom: var(--space-2);
+}
+
+.mh-round__fixtures {
+  display: flex;
+  flex-direction: column;
+}
+
+.mh-fixture {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border: none;
+  border-top: 1px solid var(--line);
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+  transition: background-color 0.15s ease;
+}
+
+.mh-round__fixtures .mh-fixture:first-child {
+  border-top: none;
+}
+
+.mh-fixture:hover {
+  background: var(--surface-2);
+}
+
+.mh-fixture--own {
+  position: relative;
+  padding-left: calc(var(--space-2) + 3px);
+}
+
+.mh-fixture--own::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  width: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--outcome-color, var(--pitch));
+}
+
+.mh-fixture__team {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.mh-fixture__team--away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.mh-fixture__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mh-fixture__crest {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mh-fixture__score {
+  font-weight: 700;
+  color: var(--chalk);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card.mh-match,
+  .card.mh-round {
+    animation: none;
+  }
+}

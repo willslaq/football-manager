@@ -57,12 +57,14 @@ export interface MatchResult {
   stats: MatchStats;
   manOfTheMatch: PlayerId;
   explanation: Reason[];
+  /** Só presente na partida do jogador — gerado ao vivo e anexado ao fixture pra rever depois no "modo geek". */
+  trace?: EngineTraceEntry[];
 }
 
 /**
  * Rastro técnico bruto do motor — os números reais por trás de cada rolagem.
- * Não faz parte do MatchResult (não é persistido no estado de carreira);
- * existe só pra transmitir ao vivo pro "modo geek" da UI, sob demanda.
+ * Transmitido ao vivo pro "modo geek" da UI e, na partida do jogador, anexado
+ * ao MatchResult (campo `trace`) pra rever depois de salvo.
  */
 export type EngineTraceEntry =
   | {

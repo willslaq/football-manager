@@ -4,6 +4,7 @@ export * from './Badge';
 export * from './Button';
 export * from './Card';
 export * from './FileButton';
+export * from './Icons';
 export * from './MatchEventFeed';
 export * from './ProgressBar';
 export * from './TextField';

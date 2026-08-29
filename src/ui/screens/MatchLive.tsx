@@ -3,7 +3,7 @@ import { useCareerStore } from '../../store/careerStore';
 import type { EngineTraceEntry } from '../../engine/types';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Button, Card, MatchEventFeed } from '../components';
+import { Button, Card, IconBall, MatchEventFeed } from '../components';
 import './MatchLive.css';
 
 function IconPlay() {
@@ -155,6 +155,7 @@ export function MatchLive() {
                 <ul className="ml-goals">
                   {homeGoalEvents.map((event, i) => (
                     <li key={i}>
+                      <IconBall className="ml-goals__ball" />
                       {event.minute}&apos; {playerName(event.playerId)}
                     </li>
                   ))}
@@ -177,6 +178,7 @@ export function MatchLive() {
                 <ul className="ml-goals">
                   {awayGoalEvents.map((event, i) => (
                     <li key={i}>
+                      <IconBall className="ml-goals__ball" />
                       {event.minute}&apos; {playerName(event.playerId)}
                     </li>
                   ))}

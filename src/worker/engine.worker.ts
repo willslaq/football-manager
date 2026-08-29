@@ -91,14 +91,39 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         if (!career) throw new Error('Nenhuma carreira iniciada');
         const previousRound = career.season.currentRound;
         const engineTrace: EngineTraceEntry[] = [];
-        const nextState = advanceRound(career, {
+        const simulatedState = advanceRound(career, {
           playerLineup: request.payload.playerLineup,
           playerTactics: request.payload.playerTactics,
           onPlayerChance: (entry) => engineTrace.push(entry),
         });
+
+        // Anexa o rastro técnico bruto (gerado só pro fixture do jogador, acima) ao result desse
+        // fixture antes de persistir — sem isso ele existiria só na transmissão ao vivo e se perderia.
+        const roundIndex = previousRound - 1;
+        const simulatedRound = simulatedState.season.competitions[0].fixtures[roundIndex];
+        const enrichedRound = simulatedRound.map((fixture) => {
+          const isPlayerFixture =
+            fixture.homeTeamId === simulatedState.playerClubId || fixture.awayTeamId === simulatedState.playerClubId;
+          if (!isPlayerFixture || !fixture.result || engineTrace.length === 0) return fixture;
+          return { ...fixture, result: { ...fixture.result, trace: engineTrace } };
+        });
+        const nextState: CareerState = {
+          ...simulatedState,
+          season: {
+            ...simulatedState.season,
+            competitions: [
+              {
+                ...simulatedState.season.competitions[0],
+                fixtures: simulatedState.season.competitions[0].fixtures.map((round, i) =>
+                  i === roundIndex ? enrichedRound : round,
+                ),
+              },
+            ],
+          },
+        };
         career = nextState;
 
-        const playedRound = nextState.season.competitions[0].fixtures[previousRound - 1];
+        const playedRound = nextState.season.competitions[0].fixtures[roundIndex];
         const playerFixture = playedRound.find(
           (f) => f.homeTeamId === nextState.playerClubId || f.awayTeamId === nextState.playerClubId,
         );

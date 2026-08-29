@@ -167,6 +167,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
           loading: false,
           error: null,
         });
+        scheduleAutoSave();
         break;
       case 'settingsUpdated':
         set({ career: response.payload.state });

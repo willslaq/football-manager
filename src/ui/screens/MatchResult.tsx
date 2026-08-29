@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card, MatchEventFeed } from '../components';
+import { Badge, Button, Card, IconBall, MatchEventFeed } from '../components';
 import type { Screen } from '../../App';
+import type { MatchResult as MatchResultData } from '../../engine/types';
 import './MatchResult.css';
 
 function IconChevronDown({ open }: { open: boolean }) {
@@ -44,23 +45,31 @@ function reasonBadge(impact: number): { label: string; tone: 'pitch' | 'floodlig
   return null;
 }
 
-export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
+interface MatchResultProps {
+  onNavigate: (screen: Screen) => void;
+  /** Resultado específico a exibir (ex.: partida do histórico). Sem isso, usa a última partida jogada. */
+  result?: MatchResultData;
+}
+
+export function MatchResult({ onNavigate, result: resultProp }: MatchResultProps) {
   const career = useCareerStore((s) => s.career);
   const lastMatch = useCareerStore((s) => s.lastMatch);
+  const match = resultProp ?? lastMatch;
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  if (!career || !lastMatch) return null;
+  if (!career || !match) return null;
 
-  const home = findClub(career, lastMatch.homeTeamId);
-  const away = findClub(career, lastMatch.awayTeamId);
+  const home = findClub(career, match.homeTeamId);
+  const away = findClub(career, match.awayTeamId);
   const playersById = new Map(career.world.players.map((p) => [p.id, p]));
   const competition = career.season.competitions[0];
-  const roundPlayed = career.season.currentRound - 1;
+  const matchRoundIndex = competition.fixtures.findIndex((round) => round.some((f) => f.result === match));
+  const roundPlayed = matchRoundIndex === -1 ? career.season.currentRound - 1 : matchRoundIndex + 1;
 
-  const isPlayerHome = lastMatch.homeTeamId === career.playerClubId;
-  const isPlayerAway = lastMatch.awayTeamId === career.playerClubId;
-  const playerGoals = isPlayerHome ? lastMatch.homeGoals : lastMatch.awayGoals;
-  const opponentGoals = isPlayerHome ? lastMatch.awayGoals : lastMatch.homeGoals;
+  const isPlayerHome = match.homeTeamId === career.playerClubId;
+  const isPlayerAway = match.awayTeamId === career.playerClubId;
+  const playerGoals = isPlayerHome ? match.homeGoals : match.awayGoals;
+  const opponentGoals = isPlayerHome ? match.awayGoals : match.homeGoals;
   const outcome =
     isPlayerHome || isPlayerAway
       ? playerGoals > opponentGoals
@@ -71,11 +80,11 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
       : null;
   const outcomeLabel = outcome === 'win' ? 'Vitória' : outcome === 'loss' ? 'Derrota' : outcome === 'draw' ? 'Empate' : null;
 
-  const homeEvents = lastMatch.events.filter((e) => e.type === 'goal' && e.teamId === lastMatch.homeTeamId);
-  const awayEvents = lastMatch.events.filter((e) => e.type === 'goal' && e.teamId === lastMatch.awayTeamId);
+  const homeEvents = match.events.filter((e) => e.type === 'goal' && e.teamId === match.homeTeamId);
+  const awayEvents = match.events.filter((e) => e.type === 'goal' && e.teamId === match.awayTeamId);
 
-  const motm = playersById.get(lastMatch.manOfTheMatch);
-  const motmClub = home?.squad.includes(lastMatch.manOfTheMatch) ? home : away?.squad.includes(lastMatch.manOfTheMatch) ? away : undefined;
+  const motm = playersById.get(match.manOfTheMatch);
+  const motmClub = home?.squad.includes(match.manOfTheMatch) ? home : away?.squad.includes(match.manOfTheMatch) ? away : undefined;
 
   const playerName = (id: string) => playersById.get(id)?.name ?? id;
 
@@ -93,12 +102,13 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
           <div className="mr-team">
             {home && CLUB_CRESTS[home.id] && <img className="mr-team__crest" src={CLUB_CRESTS[home.id]} alt="" />}
             <span className="mr-team__name" title={home?.name}>
-              {home?.name ?? lastMatch.homeTeamId}
+              {home?.name ?? match.homeTeamId}
             </span>
             {homeEvents.length > 0 && (
               <ul className="mr-goals">
                 {homeEvents.map((event, i) => (
                   <li key={i}>
+                    <IconBall className="mr-goals__ball" />
                     {event.minute}&apos; {playersById.get(event.playerId)?.name ?? event.playerId}
                   </li>
                 ))}
@@ -107,20 +117,21 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
           </div>
 
           <div className="mr-score numeric">
-            <span>{lastMatch.homeGoals}</span>
+            <span>{match.homeGoals}</span>
             <span className="mr-score__sep">—</span>
-            <span>{lastMatch.awayGoals}</span>
+            <span>{match.awayGoals}</span>
           </div>
 
           <div className="mr-team">
             {away && CLUB_CRESTS[away.id] && <img className="mr-team__crest" src={CLUB_CRESTS[away.id]} alt="" />}
             <span className="mr-team__name" title={away?.name}>
-              {away?.name ?? lastMatch.awayTeamId}
+              {away?.name ?? match.awayTeamId}
             </span>
             {awayEvents.length > 0 && (
               <ul className="mr-goals">
                 {awayEvents.map((event, i) => (
                   <li key={i}>
+                    <IconBall className="mr-goals__ball" />
                     {event.minute}&apos; {playersById.get(event.playerId)?.name ?? event.playerId}
                   </li>
                 ))}
@@ -155,8 +166,8 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
         {detailsOpen && (
           <div className="mr-details__body">
             <MatchEventFeed
-              events={lastMatch.events}
-              homeTeamId={lastMatch.homeTeamId}
+              events={match.events}
+              homeTeamId={match.homeTeamId}
               homeTeamName={home?.name}
               awayTeamName={away?.name}
               homeCrestSrc={home && CLUB_CRESTS[home.id]}
@@ -169,15 +180,15 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
       </Card>
 
       <Card className="mr-stats">
-        <StatRow label="Posse de bola" home={lastMatch.stats.possession.home} away={lastMatch.stats.possession.away} />
-        <StatRow label="Finalizações" home={lastMatch.stats.shots.home} away={lastMatch.stats.shots.away} />
-        <StatRow label="No alvo" home={lastMatch.stats.shotsOnTarget.home} away={lastMatch.stats.shotsOnTarget.away} />
-        <StatRow label="Faltas" home={lastMatch.stats.fouls.home} away={lastMatch.stats.fouls.away} />
+        <StatRow label="Posse de bola" home={match.stats.possession.home} away={match.stats.possession.away} />
+        <StatRow label="Finalizações" home={match.stats.shots.home} away={match.stats.shots.away} />
+        <StatRow label="No alvo" home={match.stats.shotsOnTarget.home} away={match.stats.shotsOnTarget.away} />
+        <StatRow label="Faltas" home={match.stats.fouls.home} away={match.stats.fouls.away} />
       </Card>
 
       <Card className="mr-explanation">
         <span className="eyebrow">Por que esse resultado?</span>
-        {lastMatch.explanation.map((reason, i) => {
+        {match.explanation.map((reason, i) => {
           const badge = reasonBadge(reason.impact);
           return (
             <div className="mr-reason" key={i}>
@@ -192,8 +203,8 @@ export function MatchResult({ onNavigate }: { onNavigate: (screen: Screen) => vo
         })}
       </Card>
 
-      <Button variant="primary" block onClick={() => onNavigate('home')}>
-        Continuar
+      <Button variant="primary" block onClick={() => onNavigate(resultProp ? 'matchHistory' : 'home')}>
+        {resultProp ? 'Voltar ao histórico' : 'Continuar'}
       </Button>
     </main>
   );

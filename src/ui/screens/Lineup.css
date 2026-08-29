@@ -87,9 +87,8 @@
 .pitch {
   --stripe: color-mix(in srgb, var(--pitch) 7%, transparent);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  aspect-ratio: 3 / 4;
+  min-height: 32rem;
   padding: var(--space-5) var(--space-3);
   border: 2px solid color-mix(in srgb, var(--chalk) 18%, transparent);
   border-radius: var(--radius-md);
@@ -98,22 +97,14 @@
     linear-gradient(180deg, color-mix(in srgb, var(--pitch) 16%, var(--ink)) 0%, color-mix(in srgb, var(--pitch) 5%, var(--ink)) 100%);
 }
 
-.pitch__row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(var(--space-2), 3vw, var(--space-5));
-  flex-wrap: wrap;
-  padding: var(--space-2) 0;
-}
-
-.pitch__row + .pitch__row {
-  border-top: 1px dashed color-mix(in srgb, var(--chalk) 14%, transparent);
-}
-
 .pitch-slot {
+  position: absolute;
+  transform: translate(-50%, -50%);
   border-radius: var(--radius-md);
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    left 0.2s var(--ease-out),
+    top 0.2s var(--ease-out);
 }
 
 .pitch-slot--over {

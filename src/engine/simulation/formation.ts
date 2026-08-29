@@ -1,5 +1,6 @@
 import type { Formation, Player, PlayerId, Position } from '../types';
 import { effectiveOverall } from './positionFit';
+import { type FieldCoord, coordForRole } from './pitchZones';
 
 export interface Slot {
   id: string;
@@ -7,6 +8,8 @@ export interface Slot {
   preferred: Position[];
   /** Posição exata que essa vaga representa na formação, pra validar encaixe. */
   canonical: Position;
+  /** Ponto da vaga no campo (mesmo sistema de `pitchZones.ts`) — usado pra renderizar o campo por coordenada, não por linha/índice fixo. */
+  coord: FieldCoord;
 }
 
 /** Linha de defesa: 3 zagueiros puros, 4 com laterais, 5 com alas avançados. */
@@ -97,78 +100,40 @@ export function buildSlots(formation: Formation): Slot[] {
   return renderOrder.flatMap((key) => {
     const sector = sectors.find((s) => s.key === key);
     if (!sector) return [];
-    return Array.from({ length: sector.count }, (_, i) => ({
-      id: `${sector.key}-${i}`,
-      sectorLabel: sector.label,
-      preferred: sector.preferred,
-      canonical: sector.canonical[i] ?? sector.preferred[0],
-    }));
+    const countByPosition = new Map<Position, number>();
+    for (const p of sector.canonical) countByPosition.set(p, (countByPosition.get(p) ?? 0) + 1);
+    const seenByPosition = new Map<Position, number>();
+    return Array.from({ length: sector.count }, (_, i) => {
+      const canonical = sector.canonical[i] ?? sector.preferred[0];
+      const indexAmongSame = seenByPosition.get(canonical) ?? 0;
+      seenByPosition.set(canonical, indexAmongSame + 1);
+      return {
+        id: `${sector.key}-${i}`,
+        sectorLabel: sector.label,
+        preferred: sector.preferred,
+        canonical,
+        coord: coordForRole(canonical, indexAmongSame, countByPosition.get(canonical) ?? 1),
+      };
+    });
   });
 }
 
 /**
- * Encaixe inicial/reencaixe ao trocar de formação: de trás pra frente (gol →
- * defesa → meio → ataque), cada setor pega, por força, quem já joga ali;
- * quem sobra (a formação tem menos vagas naquele setor do que jogadores
- * daquele tipo) avança pro setor seguinte, mais ofensivo.
+ * Casamento guloso vaga×jogador: monta a matriz de overall efetivo
+ * (`effectiveOverall`, que já penaliza jogador fora do lado/posição exata
+ * da vaga) uma única vez e, repetidamente, casa o par (vaga, jogador) de
+ * maior score ainda disponível — assim cada vaga fica com quem realmente
+ * rende mais ali (lado certo incluído), não só com quem apareceu primeiro
+ * na lista. Usado tanto pela auto-escalação completa (`autoAssign`) quanto,
+ * em escopo menor, por `assignToSlots` pra decidir qual jogador específico
+ * cai em qual vaga dentro de um mesmo setor.
  */
-export function assignToSlots(slots: Slot[], starters: Player[]): Record<string, PlayerId | null> {
-  const assignments: Record<string, PlayerId | null> = {};
-  for (const slot of slots) assignments[slot.id] = null;
-
-  const bySectorOrder = ['gk', 'def', 'dmid', 'mid', 'amid', 'att'];
-  const slotsBySector = bySectorOrder
-    .map((key) => slots.filter((s) => s.id.startsWith(`${key}-`)))
-    .filter((group) => group.length > 0);
-
-  let pool = [...starters];
-  slotsBySector.forEach((group, index) => {
-    const preferred = group[0].preferred;
-    const isLast = index === slotsBySector.length - 1;
-    const ownMatches = pool.filter((p) => preferred.includes(p.position));
-    const rest = pool.filter((p) => !preferred.includes(p.position));
-
-    if (isLast) {
-      const combined = [...ownMatches, ...rest];
-      group.forEach((slot, i) => {
-        assignments[slot.id] = combined[i]?.id ?? null;
-      });
-      pool = [];
-    } else {
-      const taken = ownMatches.slice(0, group.length);
-      const borrowed = rest.slice(0, group.length - taken.length);
-      const combined = [...taken, ...borrowed];
-      group.forEach((slot, i) => {
-        assignments[slot.id] = combined[i]?.id ?? null;
-      });
-      pool = [...ownMatches.slice(taken.length), ...rest.slice(borrowed.length)];
-    }
-  });
-
-  return assignments;
-}
-
-/**
- * Auto-escalação: pra cada vaga, escolhe o jogador disponível com maior
- * overall efetivo naquela posição exata (principal > secundária > parecida
- * > ruim). Guloso por par (vaga, jogador) de maior score global, repetido
- * até preencher as 11 vagas — assim o goleiro nato sempre fica com o gol
- * (jogador de linha ali cairia muito no score) e as demais vagas ficam com
- * quem realmente rende mais ali, não só com quem tem maior força bruta.
- *
- * A matriz de scores (vaga × jogador) é calculada uma única vez e reduzida
- * a cada escolha — recalcular `effectiveOverall` a cada uma das 11
- * iterações custava O(vagas² × elenco), caro o bastante pra estourar o
- * orçamento de `advanceRound` (RNF-001) agora que os ~19 times de CPU
- * também passam por aqui a cada rodada, não só a escalação manual do
- * jogador.
- */
-export function autoAssign(slots: Slot[], squad: Player[]): Record<string, PlayerId | null> {
+function greedyAssign(slots: Slot[], players: Player[]): Record<string, PlayerId | null> {
   const assignments: Record<string, PlayerId | null> = {};
   for (const slot of slots) assignments[slot.id] = null;
 
   const remainingSlots = [...slots];
-  const remainingPlayers = [...squad];
+  const remainingPlayers = [...players];
   const scores = remainingSlots.map((slot) => remainingPlayers.map((player) => effectiveOverall(player, slot.canonical)));
 
   while (remainingSlots.length > 0 && remainingPlayers.length > 0) {
@@ -196,6 +161,66 @@ export function autoAssign(slots: Slot[], squad: Player[]): Record<string, Playe
   }
 
   return assignments;
+}
+
+/**
+ * Encaixe inicial/reencaixe ao trocar de formação: de trás pra frente (gol →
+ * defesa → meio → ataque), cada setor pega, por força, quem já joga ali;
+ * quem sobra (a formação tem menos vagas naquele setor do que jogadores
+ * daquele tipo) avança pro setor seguinte, mais ofensivo. Dentro de cada
+ * setor, quem pega qual vaga específica (ex.: LE vs ZAG, VOL vs MC) é
+ * decidido por `greedyAssign` — não pela ordem em que os jogadores
+ * apareciam na lista — pra um lateral-esquerdo nato não acabar rotulado de
+ * zagueiro só porque era mais forte que o zagueiro de verdade.
+ */
+export function assignToSlots(slots: Slot[], starters: Player[]): Record<string, PlayerId | null> {
+  const assignments: Record<string, PlayerId | null> = {};
+  for (const slot of slots) assignments[slot.id] = null;
+
+  const bySectorOrder = ['gk', 'def', 'dmid', 'mid', 'amid', 'att'];
+  const slotsBySector = bySectorOrder
+    .map((key) => slots.filter((s) => s.id.startsWith(`${key}-`)))
+    .filter((group) => group.length > 0);
+
+  let pool = [...starters];
+  slotsBySector.forEach((group, index) => {
+    const preferred = group[0].preferred;
+    const isLast = index === slotsBySector.length - 1;
+    const ownMatches = pool.filter((p) => preferred.includes(p.position));
+    const rest = pool.filter((p) => !preferred.includes(p.position));
+
+    if (isLast) {
+      const combined = [...ownMatches, ...rest];
+      Object.assign(assignments, greedyAssign(group, combined));
+      pool = [];
+    } else {
+      const taken = ownMatches.slice(0, group.length);
+      const borrowed = rest.slice(0, group.length - taken.length);
+      const combined = [...taken, ...borrowed];
+      Object.assign(assignments, greedyAssign(group, combined));
+      pool = [...ownMatches.slice(taken.length), ...rest.slice(borrowed.length)];
+    }
+  });
+
+  return assignments;
+}
+
+/**
+ * Auto-escalação: pra cada vaga, escolhe o jogador disponível com maior
+ * overall efetivo naquela posição exata (principal > secundária > parecida
+ * > ruim), via `greedyAssign` — assim o goleiro nato sempre fica com o gol
+ * (jogador de linha ali cairia muito no score) e as demais vagas ficam com
+ * quem realmente rende mais ali, não só com quem tem maior força bruta.
+ *
+ * A matriz de scores (vaga × jogador) é calculada uma única vez e reduzida
+ * a cada escolha — recalcular `effectiveOverall` a cada uma das 11
+ * iterações custava O(vagas² × elenco), caro o bastante pra estourar o
+ * orçamento de `advanceRound` (RNF-001) agora que os ~19 times de CPU
+ * também passam por aqui a cada rodada, não só a escalação manual do
+ * jogador.
+ */
+export function autoAssign(slots: Slot[], squad: Player[]): Record<string, PlayerId | null> {
+  return greedyAssign(slots, squad);
 }
 
 /** Converte um mapeamento vaga→jogador na posição canônica de cada jogador, pra alimentar o motor de partida. */

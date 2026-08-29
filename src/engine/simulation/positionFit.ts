@@ -16,7 +16,7 @@ export type PositionFit = 'primary' | 'secondary' | 'similar' | 'poor';
  * "distância" entre posições — não tem relação com a força setorial que o
  * motor de partida já calcula (essa é mais grossa, por setor amplo).
  */
-const POSITION_COORD: Record<Position, { line: number; side: number }> = {
+export const POSITION_COORD: Record<Position, { line: number; side: number }> = {
   GOL: { line: 0, side: 0 },
   ZAG: { line: 1, side: 0 },
   LD: { line: 1.3, side: 1 },

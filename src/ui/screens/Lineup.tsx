@@ -4,14 +4,24 @@ import { FORMATIONS, TACTIC_STYLE_LABELS, TACTIC_STYLES } from '../../engine/typ
 import type { Formation, Player, TacticStyle } from '../../engine/types';
 import { formationStyleCoherence } from '../../engine';
 import { assignToSlots, autoAssign, buildSlots } from '../../engine/simulation/formation';
+import { positionAtCoord } from '../../engine/simulation/pitchZones';
 import { useCareerStore } from '../../store/careerStore';
 import { POSITION_FILTERS, POSITION_GROUP, resolveSquad, type PlayerListFilter } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
 import { Button, Card, TextField } from '../components';
 import './Lineup.css';
 
-/** Ordem de cima (ataque) para baixo (goleiro), como visto olhando pro campo. */
-const RENDER_ORDER = ['att', 'amid', 'mid', 'dmid', 'def', 'gk'];
+/**
+ * Converte a coordenada da vaga (mesmo sistema de `pitchZones.ts`: `side`
+ * -1..1, `line` 0..5) num ponto percentual dentro do `.pitch`, com uma
+ * margem pra ficha nunca encostar na borda do campo.
+ */
+function toLeftPercent(side: number): number {
+  return 8 + ((side + 1) / 2) * 84;
+}
+function toTopPercent(line: number): number {
+  return 8 + ((5 - line) / 5) * 84;
+}
 
 /** Mesmo limiar usado em match.ts (COHERENCE_NOTE_LOW_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
 const COHERENCE_WARNING_THRESHOLD = 0.95;
@@ -99,15 +109,24 @@ export function Lineup() {
     return assignToSlots(slots, startersNow);
   });
   const [dragOverSlot, setDragOverSlot] = useState<string | null>(null);
-  const skipNextFormationReshape = useRef(true);
+  /**
+   * Formação vista da última vez que o efeito abaixo reagiu de verdade —
+   * não um contador de "primeira execução". Um ref de "pula a primeira
+   * chamada" quebra sob o StrictMode do React 18: no mount, o efeito
+   * dispara duas vezes de propósito (pra achar efeitos impuros) e a
+   * segunda chamada já via a flag zerada pela primeira, então o reencaixe
+   * rodava de novo em TODO mount — não só quando a formação realmente
+   * mudava — embaralhando uma escalação que a inicialização já tinha
+   * restaurado corretamente. Comparar o valor evita isso: reexecuções com
+   * a mesma formação (StrictMode ou não) são sempre no-op.
+   */
+  const lastReshapedFormation = useRef(tactics.formation);
 
   const slots = useMemo(() => buildSlots(tactics.formation), [tactics.formation]);
 
   useEffect(() => {
-    if (skipNextFormationReshape.current) {
-      skipNextFormationReshape.current = false;
-      return;
-    }
+    if (lastReshapedFormation.current === tactics.formation) return;
+    lastReshapedFormation.current = tactics.formation;
     setAssignments((prev) => {
       const current = Object.values(prev)
         .filter((id): id is string => !!id)
@@ -173,7 +192,9 @@ export function Lineup() {
     }
     const emptySlots = slots.filter((s) => !assignments[s.id]);
     if (emptySlots.length === 0) return;
-    const bestFit = emptySlots.find((s) => s.preferred.includes(player.position)) ?? emptySlots[0];
+    const bestFit = [...emptySlots].sort(
+      (a, b) => effectiveOverall(player, b.canonical) - effectiveOverall(player, a.canonical),
+    )[0];
     assignPlayerToSlot(player.id, bestFit.id);
   }
 
@@ -332,62 +353,56 @@ export function Lineup() {
 
         <div className="lineup__pitch-col">
           <div className="pitch">
-            {RENDER_ORDER.map((sectorKey) => {
-              const rowSlots = slots.filter((s) => s.id.startsWith(`${sectorKey}-`));
-              if (rowSlots.length === 0) return null;
+            {slots.map((slot) => {
+              const player = assignments[slot.id] ? playersById.get(assignments[slot.id]!) : undefined;
+              const role = positionAtCoord(slot.coord);
+              const fit = player ? positionFit(player, slot.canonical) : null;
+              const adjustedOverall = player ? effectiveOverall(player, slot.canonical) : null;
+              const outOfPosition = fit !== null && fit !== 'primary' && fit !== 'secondary';
+              const fitTitle = !player
+                ? undefined
+                : fit === 'similar'
+                  ? `${player.name} — natural de ${player.position}, atuando em ${slot.canonical}. Leve queda de overall: ${adjustedOverall} (base ${player.strength}).`
+                  : fit === 'poor'
+                    ? `${player.name} — natural de ${player.position}, atuando em ${slot.canonical}. Grande queda de overall: ${adjustedOverall} (base ${player.strength}).`
+                    : `Remover ${player.name} da escalação`;
               return (
-                <div className="pitch__row" key={sectorKey}>
-                  {rowSlots.map((slot) => {
-                    const player = assignments[slot.id] ? playersById.get(assignments[slot.id]!) : undefined;
-                    const fit = player ? positionFit(player, slot.canonical) : null;
-                    const adjustedOverall = player ? effectiveOverall(player, slot.canonical) : null;
-                    const outOfPosition = fit !== null && fit !== 'primary' && fit !== 'secondary';
-                    const fitTitle = !player
-                      ? undefined
-                      : fit === 'similar'
-                        ? `${player.name} — natural de ${player.position}, atuando em ${slot.canonical}. Leve queda de overall: ${adjustedOverall} (base ${player.strength}).`
-                        : fit === 'poor'
-                          ? `${player.name} — natural de ${player.position}, atuando em ${slot.canonical}. Grande queda de overall: ${adjustedOverall} (base ${player.strength}).`
-                          : `Remover ${player.name} da escalação`;
-                    return (
-                      <div
-                        key={slot.id}
-                        className={`pitch-slot${dragOverSlot === slot.id ? ' pitch-slot--over' : ''}`}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDragEnter={() => setDragOverSlot(slot.id)}
-                        onDragLeave={() => setDragOverSlot((s) => (s === slot.id ? null : s))}
-                        onDrop={(e) => handleDrop(e, slot.id)}
-                      >
-                        {player ? (
-                          <button
-                            type="button"
-                            className={`chip${outOfPosition ? ` chip--${fit}` : ''}`}
-                            draggable
-                            onDragStart={(e) => {
-                              e.dataTransfer.setData('text/plain', player.id);
-                              e.dataTransfer.effectAllowed = 'move';
-                            }}
-                            onClick={() => clearSlot(slot.id)}
-                            title={fitTitle}
-                          >
-                            <span className="chip__badge-wrap">
-                              <span className="chip__badge">{slot.canonical}</span>
-                              {outOfPosition && (
-                                <span className={`chip__natural chip__natural--${fit}`}>{player.position}</span>
-                              )}
-                            </span>
-                            <span className="chip__name">{player.name}</span>
-                            <span className={`chip__overall chip__overall--${fit}`}>{adjustedOverall}</span>
-                          </button>
-                        ) : (
-                          <div className="chip chip--empty" title={slot.sectorLabel}>
-                            <span className="chip__badge chip__badge--empty">+</span>
-                            <span className="chip__name chip__name--empty">{slot.sectorLabel}</span>
-                          </div>
+                <div
+                  key={slot.id}
+                  className={`pitch-slot${dragOverSlot === slot.id ? ' pitch-slot--over' : ''}`}
+                  style={{ left: `${toLeftPercent(slot.coord.side)}%`, top: `${toTopPercent(slot.coord.line)}%` }}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDragEnter={() => setDragOverSlot(slot.id)}
+                  onDragLeave={() => setDragOverSlot((s) => (s === slot.id ? null : s))}
+                  onDrop={(e) => handleDrop(e, slot.id)}
+                >
+                  {player ? (
+                    <button
+                      type="button"
+                      className={`chip${outOfPosition ? ` chip--${fit}` : ''}`}
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('text/plain', player.id);
+                        e.dataTransfer.effectAllowed = 'move';
+                      }}
+                      onClick={() => clearSlot(slot.id)}
+                      title={fitTitle}
+                    >
+                      <span className="chip__badge-wrap">
+                        <span className="chip__badge">{role}</span>
+                        {outOfPosition && (
+                          <span className={`chip__natural chip__natural--${fit}`}>{player.position}</span>
                         )}
-                      </div>
-                    );
-                  })}
+                      </span>
+                      <span className="chip__name">{player.name}</span>
+                      <span className={`chip__overall chip__overall--${fit}`}>{adjustedOverall}</span>
+                    </button>
+                  ) : (
+                    <div className="chip chip--empty" title={slot.sectorLabel}>
+                      <span className="chip__badge chip__badge--empty">+</span>
+                      <span className="chip__name chip__name--empty">{slot.sectorLabel}</span>
+                    </div>
+                  )}
                 </div>
               );
             })}

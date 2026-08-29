@@ -107,7 +107,10 @@ export function SubstitutionDialog({
                     >
                       <span className="sub-row__pos">{entry.canonicalPosition}</span>
                       <span className="sub-row__name">{player?.name ?? entry.playerId}</span>
-                      <EnergyBar value={energyByPlayerId[entry.playerId] ?? 100} />
+                      {/* Antes do 1º tick de energia (minuto 1), ainda não há entrada em `energyByPlayerId`
+                          pra esse jogador — cai pra `player.condition` (persistido entre partidas), nunca
+                          num 100 fixo, senão mostraria injustamente "cheio" quem começou cansado. */}
+                      <EnergyBar value={energyByPlayerId[entry.playerId] ?? player?.condition ?? 100} />
                       {changed && <Badge tone="pitch">Entrou</Badge>}
                     </button>
                   </li>

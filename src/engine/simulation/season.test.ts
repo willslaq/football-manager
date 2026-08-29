@@ -280,4 +280,53 @@ describe('advanceCalendar + startMatchDay + commitPlayerMatchResult (partida do 
     const outPlayerAfter = committed.world.players.find((p) => p.id === outPlayer.id)!;
     expect(outPlayerAfter.seasonStats.appearances).toBe(1);
   });
+
+  it('commitPlayerMatchResult persiste a energia final da partida em Player.condition de quem jogou', () => {
+    const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
+    const lineup = autoLineupFor(state, 'palmeiras');
+    const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, competitionId, roundIndex } =
+      advanceToMatchDay(state, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+    if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput || competitionId === undefined || roundIndex === undefined) {
+      throw new Error('rodada de teste sem partida do jogador');
+    }
+
+    const committed = commitPlayerMatchResult(
+      nextState,
+      { playerFixture, competitionId, roundIndex, homeTeamInput, awayTeamInput },
+      playerMatchResult,
+    );
+
+    for (const starterId of [...homeTeamInput.players, ...awayTeamInput.players].map((p) => p.id)) {
+      const finalEnergy = playerMatchResult.finalEnergyByPlayerId[starterId];
+      const playerAfter = committed.world.players.find((p) => p.id === starterId)!;
+      expect(playerAfter.condition).toBe(Math.round(finalEnergy));
+      // Titular que jogou os 90 minutos gasta energia de verdade — condição não pode ficar intacta em 100.
+      expect(playerAfter.condition).toBeLessThan(100);
+    }
+  });
+
+  it('advanceCalendar recupera Player.condition proporcionalmente aos dias de descanso até a próxima partida', () => {
+    const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
+    const lineup = autoLineupFor(state, 'palmeiras');
+    const input = { playerLineup: lineup, playerTactics: DEFAULT_TACTICS };
+
+    // Joga (e comita) a primeira partida do jogador pra deixar o elenco cansado de verdade.
+    let career = advanceRound(state, input);
+
+    const club = career.world.clubs.find((c) => c.id === 'palmeiras')!;
+    const tiredPlayer = career.world.players.find((p) => p.id === club.squad.find((id) => lineup.starters.includes(id)))!;
+    expect(tiredPlayer.condition).toBeLessThan(100);
+    const conditionBefore = tiredPlayer.condition;
+
+    // Avança só o calendário (sem comitar o próximo jogo do jogador) e mede quantos dias passaram.
+    const calendar = advanceCalendar(career, input);
+    const daysPassed =
+      new Date(calendar.nextState.season.currentDate).getTime() / 86_400_000 -
+      new Date(career.season.currentDate).getTime() / 86_400_000;
+    expect(daysPassed).toBeGreaterThan(0);
+
+    const recoveredPlayer = calendar.nextState.world.players.find((p) => p.id === tiredPlayer.id)!;
+    expect(recoveredPlayer.condition).toBeGreaterThan(conditionBefore);
+    expect(recoveredPlayer.condition).toBeLessThanOrEqual(100);
+  });
 });

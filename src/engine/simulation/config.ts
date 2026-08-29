@@ -9,12 +9,11 @@ export const HOME_ADVANTAGE = 1.06;
 
 /**
  * Energia (`Player.condition`) drenada minuto a minuto durante a partida — degrada a nota
- * efetiva do jogador ao longo do jogo via `effectiveRating`'s `conditionFactor`, que já
- * existia mas até aqui nunca variava dentro de uma partida. Efêmero: a drenagem vive só
- * dentro de `simulateMatch` (ver `matchEnergy` em match.ts) e nunca é gravada de volta em
- * `Player.condition` — sem calendário de verdade ainda (só uma rodada por vez, sem meio de
- * semana), cada partida começa com o jogador 100% recuperado. Persistir fadiga entre
- * partidas é um passo futuro (precisa de calendário com dias de descanso).
+ * efetiva do jogador ao longo do jogo via `effectiveRating`'s `conditionFactor`. A drenagem em
+ * si vive só dentro de `simulateMatch` (ver `matchEnergy` em match.ts), mas o valor FINAL (ver
+ * `MatchResult.finalEnergyByPlayerId`) agora é persistido de volta em `Player.condition` pelo
+ * calendário real (ver `applyFinalEnergy`/`recoverCondition` em season.ts) — um jogador entra em
+ * campo com a condição de verdade que ele acumulou, não mais sempre 100%.
  */
 export const ENERGY_DRAIN_PER_MINUTE_OUTFIELD = 0.35;
 /** Goleiro corre muito menos que um jogador de linha — drena bem mais devagar. */
@@ -29,6 +28,17 @@ export const ENERGY_MIN = 55;
  * não perceber os "degraus" (nenhuma UI mostra o valor minuto a minuto hoje).
  */
 export const ENERGY_RECOMPUTE_INTERVAL_MINUTES = 5;
+
+/**
+ * Recuperação de `Player.condition` por dia de descanso (ver `recoverCondition` em season.ts,
+ * chamada pelo avanço de calendário — `advanceCalendar`). Calibrado pro ritmo semanal atual (uma
+ * partida por rodada, ~6-7 dias de descanso): um titular que joga os 90 minutos inteiros termina
+ * em torno de 100 - 90*ENERGY_DRAIN_PER_MINUTE_OUTFIELD ≈ 68 — a essa taxa, recupera de volta a
+ * 100 em ~5-6 dias, com folga antes da próxima partida semanal. Inspirado no sistema de fitness
+ * do EA FC 26 (energia volta ao normal em poucos dias de descanso), mas sem o "sharpness"/plano
+ * de treino separado do jogo real — só a condição física em si, mantendo o mecanismo simples.
+ */
+export const CONDITION_RECOVERY_PER_DAY = 6;
 
 /**
  * Ajuste de `Club.morale` (0-100) aplicado ao fim de cada partida da rodada, conforme o

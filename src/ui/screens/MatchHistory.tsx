@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import { findClub } from '../utils';
+import { findClub, outcomeFor, OUTCOME_LABEL, OUTCOME_VAR } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Badge, Button, Card, CardButton, IconBall } from '../components';
-import type { ClubId, Fixture, MatchEvent, MatchResult, Player } from '../../engine/types';
+import type { ClubId, MatchEvent, MatchResult, Player } from '../../engine/types';
 import './MatchHistory.css';
 
 interface MatchHistoryProps {
@@ -13,25 +13,6 @@ interface MatchHistoryProps {
 }
 
 type Filter = 'mine' | 'all';
-type Outcome = 'win' | 'draw' | 'loss';
-
-const OUTCOME_LABEL: Record<Outcome, string> = { win: 'Vitória', draw: 'Empate', loss: 'Derrota' };
-/** Mesmas cores usadas no restante da UI (badges de zona na Tabela, outcome no MatchResult). */
-const OUTCOME_VAR: Record<Outcome, string> = {
-  win: 'var(--pitch)',
-  draw: 'var(--floodlight)',
-  loss: 'var(--danger)',
-};
-
-function outcomeFor(fixture: Fixture, playerClubId: ClubId): Outcome | null {
-  const result = fixture.result;
-  if (!result) return null;
-  const isHome = fixture.homeTeamId === playerClubId;
-  if (!isHome && fixture.awayTeamId !== playerClubId) return null;
-  const mine = isHome ? result.homeGoals : result.awayGoals;
-  const theirs = isHome ? result.awayGoals : result.homeGoals;
-  return mine > theirs ? 'win' : mine < theirs ? 'loss' : 'draw';
-}
 
 /** "Fulano 36' 75'" — um gol por minuto, agrupado por autor na ordem em que ele marcou. */
 function scorerLines(events: MatchEvent[], teamId: ClubId, playersById: Map<string, Player>): string[] {

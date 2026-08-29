@@ -5,6 +5,7 @@ import { NewCareer } from './ui/screens/NewCareer';
 import { Home } from './ui/screens/Home';
 import { Squad } from './ui/screens/Squad';
 import { Lineup } from './ui/screens/Lineup';
+import { Calendar } from './ui/screens/Calendar';
 import { Table } from './ui/screens/Table';
 import { Settings } from './ui/screens/Settings';
 import { MatchLive } from './ui/screens/MatchLive';
@@ -88,6 +89,14 @@ function App() {
     >
       {screen === 'squad' && <Squad />}
       {screen === 'lineup' && <Lineup />}
+      {screen === 'calendar' && (
+        <Calendar
+          onSelect={(result) => {
+            setHistoryMatch(result);
+            setScreen('matchResult');
+          }}
+        />
+      )}
       {screen === 'table' && <Table onNavigate={setScreen} />}
       {screen === 'home' && <Home onNavigate={setScreen} />}
       {screen === 'settings' && <Settings />}

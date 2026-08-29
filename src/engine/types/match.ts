@@ -61,6 +61,13 @@ export interface MatchResult {
   explanation: Reason[];
   /** Só presente na partida do jogador — gerado ao vivo e anexado ao fixture pra rever depois no "modo geek". */
   trace?: EngineTraceEntry[];
+  /**
+   * Energia em partida (0-100) de todo mundo que jogou (titulares + substitutos), no momento em
+   * que sua participação terminou — ver `matchEnergy` em match.ts. Quem foi substituído/expulso
+   * fica "congelado" no valor de quando saiu, não continua drenando depois. Fonte pra persistir
+   * fadiga em `Player.condition` entre partidas (ver `season.ts`'s `applyFinalEnergy`).
+   */
+  finalEnergyByPlayerId: Record<PlayerId, number>;
 }
 
 /**

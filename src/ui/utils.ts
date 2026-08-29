@@ -1,5 +1,5 @@
 import { LIBERTADORES_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from '../engine/simulation/config';
-import type { CareerState, Club, ClubId, Player, Position, StandingEntry, TacticalIntensity } from '../engine/types';
+import type { CareerState, Club, ClubId, Fixture, Player, Position, StandingEntry, TacticalIntensity } from '../engine/types';
 
 export const TACTICAL_INTENSITY_COPY: Record<TacticalIntensity, { label: string; hint: string }> = {
   subtle: {
@@ -109,4 +109,26 @@ export function standingsZone(position: number): StandingsZone {
   if (position <= 11) return 'sula';
   if (position >= RELEGATION_CUTOFF_POSITION) return 'relegation';
   return null;
+}
+
+export type Outcome = 'win' | 'draw' | 'loss';
+
+/** Mesmas cores usadas no restante da UI (zonas da Tabela, resultado no MatchResult) — Histórico e Calendário compartilham. */
+export const OUTCOME_VAR: Record<Outcome, string> = {
+  win: 'var(--pitch)',
+  draw: 'var(--floodlight)',
+  loss: 'var(--danger)',
+};
+
+export const OUTCOME_LABEL: Record<Outcome, string> = { win: 'Vitória', draw: 'Empate', loss: 'Derrota' };
+
+/** Resultado de um fixture já resolvido do ponto de vista de `playerClubId` — null se não jogado ou se não é dele. */
+export function outcomeFor(fixture: Fixture, playerClubId: ClubId): Outcome | null {
+  const result = fixture.result;
+  if (!result) return null;
+  const isHome = fixture.homeTeamId === playerClubId;
+  if (!isHome && fixture.awayTeamId !== playerClubId) return null;
+  const mine = isHome ? result.homeGoals : result.awayGoals;
+  const theirs = isHome ? result.awayGoals : result.homeGoals;
+  return mine > theirs ? 'win' : mine < theirs ? 'loss' : 'draw';
 }

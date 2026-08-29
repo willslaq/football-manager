@@ -2,12 +2,13 @@ import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import './AppShell.css';
 
-export type HubScreen = 'home' | 'squad' | 'lineup' | 'table' | 'settings';
+export type HubScreen = 'home' | 'squad' | 'lineup' | 'calendar' | 'table' | 'settings';
 
 const TABS: { id: HubScreen; label: string }[] = [
   { id: 'home', label: 'Início' },
   { id: 'squad', label: 'Elenco' },
   { id: 'lineup', label: 'Escalação' },
+  { id: 'calendar', label: 'Calendário' },
   { id: 'table', label: 'Tabela' },
   { id: 'settings', label: 'Configurações' },
 ];
@@ -49,6 +50,16 @@ function IconLineup() {
   );
 }
 
+function IconCalendar() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <rect x="2" y="3" width="12" height="10.5" rx="1" stroke="currentColor" strokeWidth="1.4" fill="none" />
+      <path d="M2 6.2h12M5 2v2.4M11 2v2.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="8" cy="9.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 function IconTable() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -73,6 +84,7 @@ const TAB_ICONS: Record<HubScreen, () => ReactNode> = {
   home: IconHome,
   squad: IconSquad,
   lineup: IconLineup,
+  calendar: IconCalendar,
   table: IconTable,
   settings: IconSettings,
 };

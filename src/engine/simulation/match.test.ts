@@ -143,6 +143,20 @@ describe('simulateMatch', () => {
     expect(earlyAvg - lateAvg).toBeGreaterThan(earlyAvg * 0.02);
     expect(earlyAvg - lateAvg).toBeLessThan(earlyAvg * 0.25);
   });
+
+  it('finalEnergyByPlayerId traz a energia final de todo mundo que jogou, dentro da faixa 0-100', () => {
+    const result = simulateMatch(home, away, 42);
+    const allStarterIds = [...home.players, ...away.players].map((p) => p.id);
+
+    for (const id of allStarterIds) {
+      const energy = result.finalEnergyByPlayerId[id];
+      expect(energy).toBeDefined();
+      expect(energy).toBeGreaterThanOrEqual(0);
+      expect(energy).toBeLessThanOrEqual(100);
+      // Quem jogou os 90 minutos inteiros gasta energia real, não pode terminar intacto em 100.
+      expect(energy).toBeLessThan(100);
+    }
+  });
 });
 
 describe('simulateMatch com substituições', () => {
@@ -235,5 +249,23 @@ describe('simulateMatch com substituições', () => {
 
     expect(savesForOld).toBe(0);
     expect(savesForNew).toBeGreaterThan(0);
+  });
+
+  it('finalEnergyByPlayerId: quem saiu fica congelado na energia de quando saiu, e quem entrou parte da própria condition (não de 100 fixo)', () => {
+    const outPlayer = home.players.find((p) => p.position !== 'GOL')!;
+    const tiredBenchPlayer: Player = { ...pickBenchPlayer(world, 'palmeiras', home.players), condition: 60 };
+    const subMinute = 20;
+    const sub: MatchSubstitution = { minute: subMinute, teamSide: 'home', playerOutId: outPlayer.id, playerIn: tiredBenchPlayer };
+
+    const result = simulateMatch(home, away, 321, 'subtle', undefined, [sub]);
+
+    // Saiu no minuto 20: drenou só ~19-20 minutos (0.35/min), não os 90 inteiros — congelado bem
+    // acima de quem ficou o jogo todo (que termina perto de 100 - 90*0.35 ≈ 68).
+    expect(result.finalEnergyByPlayerId[outPlayer.id]).toBeGreaterThan(90);
+    expect(result.finalEnergyByPlayerId[outPlayer.id]).toBeLessThan(100);
+
+    // Entrou com condition=60, não com energia cheia — e só drena a partir daí (não pode terminar acima disso).
+    expect(result.finalEnergyByPlayerId[tiredBenchPlayer.id]).toBeLessThanOrEqual(60);
+    expect(result.finalEnergyByPlayerId[tiredBenchPlayer.id]).toBeGreaterThanOrEqual(55);
   });
 });

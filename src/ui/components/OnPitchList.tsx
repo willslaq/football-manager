@@ -21,6 +21,8 @@ export interface OnPitchListProps {
   /** Energia em partida corrente (0-100) de quem está em campo — ver careerStore's liveMatch.energyByPlayerId. */
   energyByPlayerId: Record<PlayerId, number>;
   playerName: (id: PlayerId) => string;
+  /** Condição persistida (0-100) de quem entra em campo — fallback pra antes do 1º tick de energia (ver uso abaixo). */
+  playerCondition: (id: PlayerId) => number;
   onOpen: () => void;
   disabled?: boolean;
 }
@@ -29,7 +31,15 @@ export interface OnPitchListProps {
  * Lista compacta do XI do jogador em campo, com energia/cartão/gol por titular — clicável pra
  * abrir o diálogo de substituição (ver SubstitutionDialog), que pausa a partida ao vivo.
  */
-export function OnPitchList({ pitchRoster, events, energyByPlayerId, playerName, onOpen, disabled }: OnPitchListProps) {
+export function OnPitchList({
+  pitchRoster,
+  events,
+  energyByPlayerId,
+  playerName,
+  playerCondition,
+  onOpen,
+  disabled,
+}: OnPitchListProps) {
   if (pitchRoster.length === 0) return null;
 
   return (
@@ -48,7 +58,9 @@ export function OnPitchList({ pitchRoster, events, energyByPlayerId, playerName,
             <li key={entry.slotId} className="opl__row">
               <span className="opl__pos">{entry.canonicalPosition}</span>
               <span className="opl__name">{playerName(entry.playerId)}</span>
-              <EnergyBar value={energyByPlayerId[entry.playerId] ?? 100} />
+              {/* Antes do 1º tick de energia (minuto 1), ainda não há entrada pra esse jogador — cai pra
+                  `player.condition` (persistido entre partidas), nunca num 100 fixo. */}
+              <EnergyBar value={energyByPlayerId[entry.playerId] ?? playerCondition(entry.playerId)} />
               {goals > 0 && (
                 <span className="opl__goals">
                   <IconBall className="opl__icon" />

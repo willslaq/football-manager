@@ -109,6 +109,7 @@ export function MatchLive() {
   const clubsById = new Map(career.world.clubs.map((c) => [c.id, c]));
   const clubName = (id: string) => clubsById.get(id)?.shortName ?? id;
   const playerName = (id: string) => playersById.get(id)?.name ?? id;
+  const playerCondition = (id: string) => playersById.get(id)?.condition ?? 100;
 
   const homeGoalEvents = liveMatch.events.filter((e) => e.type === 'goal' && e.teamId === liveMatch.homeTeamId);
   const awayGoalEvents = liveMatch.events.filter((e) => e.type === 'goal' && e.teamId === liveMatch.awayTeamId);
@@ -123,6 +124,7 @@ export function MatchLive() {
           events={liveMatch.events}
           energyByPlayerId={liveMatch.energyByPlayerId}
           playerName={playerName}
+          playerCondition={playerCondition}
           onOpen={openSubstitutionDialog}
           disabled={isFullTime}
         />

@@ -241,6 +241,16 @@
   max-width: 100%;
 }
 
+.chip__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.chip__condition .energy-bar__track {
+  width: 1.4rem;
+}
+
 .chip__hint {
   font-size: 0.6rem;
   color: var(--mist);
@@ -292,13 +302,25 @@
 
 .lineup__row {
   display: grid;
-  grid-template-columns: 0.9rem 1fr 2.1rem 1.8rem;
+  grid-template-columns: 0.9rem 1fr 2.1rem 1.8rem 1.8rem;
   align-items: center;
   gap: var(--space-2);
   padding: 0.5rem var(--space-3);
   border-bottom: 1px solid var(--line);
   cursor: grab;
   user-select: none;
+}
+
+.lineup__stat--high {
+  color: var(--pitch);
+}
+
+.lineup__stat--mid {
+  color: var(--floodlight);
+}
+
+.lineup__stat--low {
+  color: var(--danger);
 }
 
 .lineup__row:active {

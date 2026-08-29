@@ -563,9 +563,10 @@ export function simulateMatch(
 
   /**
    * Aplica uma substituição já decidida (ver `MatchSubstitution`): troca o titular pelo suplente
-   * na mesma vaga, zera a energia do recém-entrado (pernas frescas) e recomputa força/taxas — mesmo
-   * padrão de `sendOff`, mas repondo o corpo em vez de só removê-lo (sem penalidade de setor, time
-   * segue 11 contra 11). Precisa ser chamada antes dos sorteios do minuto pra preservar o "prefixo
+   * na mesma vaga, começa a energia do recém-entrado pela condição real dele (persistida entre
+   * partidas — não mais sempre "pernas frescas") e recomputa força/taxas — mesmo padrão de
+   * `sendOff`, mas repondo o corpo em vez de só removê-lo (sem penalidade de setor, time segue 11
+   * contra 11). Precisa ser chamada antes dos sorteios do minuto pra preservar o "prefixo
    * determinístico": nada consumido do RNG até aqui muda por causa de uma troca futura.
    */
   function applySubstitution(state: TeamMatchState, sub: MatchSubstitution): void {
@@ -582,7 +583,10 @@ export function simulateMatch(
       state.slotPositionByPlayerId = nextSlots;
     }
 
-    matchEnergy.set(sub.playerIn.id, 100);
+    // Entra com a própria condição (persistida entre partidas, ver season.ts's applyFinalEnergy/
+    // recoverCondition) — não mais sempre "pernas frescas": um reserva que não recuperou de todo
+    // de uma partida recente entra igual de cansado quanto está de verdade.
+    matchEnergy.set(sub.playerIn.id, sub.playerIn.condition);
 
     if (state.goalkeeper?.id === sub.playerOutId) state.goalkeeper = sub.playerIn;
     if (state.penaltyTakerId === sub.playerOutId) state.penaltyTakerId = undefined;
@@ -869,6 +873,14 @@ export function simulateMatch(
     });
   }
 
+  // Energia de quem jogou (titulares + substitutos), no momento em que sua participação terminou
+  // — quem saiu (substituição/expulsão) fica congelado no valor de quando saiu, não drena mais
+  // depois (drainEnergy só passa por `state.players`, que já não os inclui). Fonte pra persistir
+  // fadiga em Player.condition entre partidas (ver season.ts's applyFinalEnergy).
+  const finalEnergyByPlayerId: Record<PlayerId, number> = Object.fromEntries(
+    [...homeParticipants, ...awayParticipants].map((p) => [p.id, matchEnergy.get(p.id) ?? p.condition]),
+  );
+
   return {
     homeTeamId: home.clubId,
     awayTeamId: away.clubId,
@@ -883,5 +895,6 @@ export function simulateMatch(
     },
     manOfTheMatch: manOfTheMatch.id,
     explanation,
+    finalEnergyByPlayerId,
   };
 }

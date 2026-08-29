@@ -1,4 +1,4 @@
-import { addDays } from '../generation/calendar';
+import { addDays, toEpochDay } from '../generation/calendar';
 import { deriveSeed } from '../rng';
 import type { CareerState } from '../types/career';
 import type { Club, ClubId } from '../types/club';
@@ -7,7 +7,7 @@ import type { EngineTraceEntry, MatchResult } from '../types/match';
 import type { Player, PlayerId } from '../types/player';
 import type { Season } from '../types/season';
 import type { Lineup, Tactics } from '../types/tactics';
-import { CLUB_MORALE_DRAW_DELTA, CLUB_MORALE_LOSS_DELTA, CLUB_MORALE_WIN_DELTA } from './config';
+import { CLUB_MORALE_DRAW_DELTA, CLUB_MORALE_LOSS_DELTA, CLUB_MORALE_WIN_DELTA, CONDITION_RECOVERY_PER_DAY } from './config';
 import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
 import { simulateMatch, type MatchTeamInput } from './match';
 
@@ -163,6 +163,35 @@ function decrementSuspensions(players: Player[], clubSquadIds: Set<PlayerId>): P
     if (!clubSquadIds.has(player.id)) return player;
     const servedSuspension = Math.max(0, player.suspendedMatches - 1);
     return servedSuspension === player.suspendedMatches ? player : { ...player, suspendedMatches: servedSuspension };
+  });
+}
+
+/**
+ * Grava em `Player.condition` a energia com que cada participante terminou a partida (ver
+ * `MatchResult.finalEnergyByPlayerId`) — é assim que a fadiga em campo persiste pra além do jogo em
+ * si. Só toca quem de fato jogou (tem entrada no mapa); quem ficou fora do jogo mantém a condição
+ * de antes, sujeita só à recuperação por descanso (ver `recoverCondition`).
+ */
+function applyFinalEnergy(players: Player[], finalEnergyByPlayerId: Record<PlayerId, number>): Player[] {
+  return players.map((player) => {
+    const energy = finalEnergyByPlayerId[player.id];
+    if (energy === undefined) return player;
+    const rounded = Math.round(energy);
+    return rounded === player.condition ? player : { ...player, condition: rounded };
+  });
+}
+
+/**
+ * Recupera `Player.condition` de todo mundo pelo tempo de descanso (ver `CONDITION_RECOVERY_PER_DAY`),
+ * a cada dia de calendário que passa sem jogo — inspirado no sistema de fitness do EA FC 26 (energia
+ * volta ao normal em poucos dias de folga). Aplica pra todo o elenco, não só quem jogou por último:
+ * quem ficou fora também "descansa" (ainda que já estivesse em 100, o clamp final absorve isso).
+ */
+function recoverCondition(players: Player[], days: number): Player[] {
+  if (days <= 0) return players;
+  return players.map((player) => {
+    const recovered = Math.min(100, Math.round(player.condition + CONDITION_RECOVERY_PER_DAY * days));
+    return recovered === player.condition ? player : { ...player, condition: recovered };
   });
 }
 
@@ -329,13 +358,16 @@ function commitFixturesBatch(
     const homeClub = clubsById.get(fixture.homeTeamId);
     const awayClub = clubsById.get(fixture.awayTeamId);
     const clubSquadIds = new Set<PlayerId>([...(homeClub?.squad ?? []), ...(awayClub?.squad ?? [])]);
-    players = applyParticipantStats(
-      decrementSuspensions(players, clubSquadIds),
-      stats.participantIds,
-      stats.goalsByPlayer,
-      stats.savesByGoalkeeper,
-      stats.yellowCardsByPlayer,
-      stats.redCardsByPlayer,
+    players = applyFinalEnergy(
+      applyParticipantStats(
+        decrementSuspensions(players, clubSquadIds),
+        stats.participantIds,
+        stats.goalsByPlayer,
+        stats.savesByGoalkeeper,
+        stats.yellowCardsByPlayer,
+        stats.redCardsByPlayer,
+      ),
+      result.finalEnergyByPlayerId,
     );
     if (homeClub) {
       const morale = moraleAfterResult(homeClub.morale, result.homeGoals, result.awayGoals);
@@ -391,6 +423,12 @@ export function advanceCalendar(state: CareerState, input: AdvanceRoundInput): A
       seasonFinished = true;
       break;
     }
+
+    const daysPassed = toEpochDay(date) - toEpochDay(workingState.season.currentDate);
+    workingState = {
+      ...workingState,
+      world: { ...workingState.world, players: recoverCondition(workingState.world.players, daysPassed) },
+    };
 
     const onDate = fixturesOnDate(workingState.season.competitions, date);
     const playerRef = onDate.find(
@@ -573,13 +611,16 @@ export function commitPlayerMatchResult(
     ...state,
     world: {
       clubs: state.world.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
-      players: applyParticipantStats(
-        state.world.players,
-        stats.participantIds,
-        stats.goalsByPlayer,
-        stats.savesByGoalkeeper,
-        stats.yellowCardsByPlayer,
-        stats.redCardsByPlayer,
+      players: applyFinalEnergy(
+        applyParticipantStats(
+          state.world.players,
+          stats.participantIds,
+          stats.goalsByPlayer,
+          stats.savesByGoalkeeper,
+          stats.yellowCardsByPlayer,
+          stats.redCardsByPlayer,
+        ),
+        finalResult.finalEnergyByPlayerId,
       ),
     },
     season: { ...nextSeason, currentRound: deriveCurrentRound(nextSeason) },

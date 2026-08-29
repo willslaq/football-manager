@@ -8,8 +8,15 @@ import { positionAtCoord } from '../../engine/simulation/pitchZones';
 import { useCareerStore } from '../../store/careerStore';
 import { POSITION_FILTERS, POSITION_GROUP, resolveSquad, type PlayerListFilter } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
-import { Button, Card, IconCardStack, TextField } from '../components';
+import { Button, Card, EnergyBar, IconCardStack, TextField } from '../components';
 import './Lineup.css';
+
+/** Mesmas faixas de `EnergyBar`/`energyTier` — cor do número de condição na lista lateral e no chip do campo. */
+function conditionClass(value: number): string {
+  if (value >= 70) return 'lineup__stat lineup__stat--high';
+  if (value >= 40) return 'lineup__stat lineup__stat--mid';
+  return 'lineup__stat lineup__stat--low';
+}
 
 /** Cartão acumulado só suspende com 3 (regra CBF/Brasileirão) — 1 ou 2 pendentes só mostram o(s) ícone(s). */
 function pendingCardCount(player: Player): 1 | 2 | null {
@@ -33,7 +40,7 @@ function toTopPercent(line: number): number {
 /** Mesmo limiar usado em match.ts (COHERENCE_NOTE_LOW_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
 const COHERENCE_WARNING_THRESHOLD = 0.95;
 
-type SidebarSortField = 'name' | 'position' | 'strength';
+type SidebarSortField = 'name' | 'position' | 'strength' | 'condition';
 type SortDirection = 'asc' | 'desc';
 
 /** Mesmo padrão de colunas ordenáveis da tela de Elenco, restrito às colunas visíveis na barra lateral. */
@@ -41,6 +48,7 @@ const SIDEBAR_COLUMNS: { field: SidebarSortField; label: string; defaultDirectio
   { field: 'name', label: 'Nome', defaultDirection: 'asc' },
   { field: 'position', label: 'Pos', defaultDirection: 'asc' },
   { field: 'strength', label: 'For', defaultDirection: 'desc' },
+  { field: 'condition', label: 'Cond', defaultDirection: 'desc' },
 ];
 
 function compareSidebar(field: SidebarSortField, a: Player, b: Player): number {
@@ -51,6 +59,8 @@ function compareSidebar(field: SidebarSortField, a: Player, b: Player): number {
       return a.position.localeCompare(b.position);
     case 'strength':
       return a.strength - b.strength;
+    case 'condition':
+      return a.condition - b.condition;
   }
 }
 
@@ -370,6 +380,7 @@ export function Lineup() {
                     </span>
                     <span className="lineup__pos">{player.position}</span>
                     <span className="numeric">{player.strength}</span>
+                    <span className={`numeric ${conditionClass(player.condition)}`}>{player.condition}</span>
                   </div>
                 );
               })}
@@ -421,7 +432,10 @@ export function Lineup() {
                         )}
                       </span>
                       <span className="chip__name">{player.name}</span>
-                      <span className={`chip__overall chip__overall--${fit}`}>{adjustedOverall}</span>
+                      <span className="chip__meta">
+                        <span className={`chip__overall chip__overall--${fit}`}>{adjustedOverall}</span>
+                        <EnergyBar value={player.condition} className="chip__condition" />
+                      </span>
                       {pendingCardCount(player) && (
                         <IconCardStack count={pendingCardCount(player)!} className="chip__cards" />
                       )}

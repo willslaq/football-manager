@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import type { Club, Lineup, Tactics } from '../../engine/types';
+import type { Club, Lineup, Player, Tactics } from '../../engine/types';
 import { TACTIC_STYLE_LABELS } from '../../engine/types';
 import { DEFAULT_AUTO_TACTICS } from '../../engine/simulation/season';
 import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
@@ -34,17 +34,18 @@ function downloadTextFile(filename: string, content: string): void {
   URL.revokeObjectURL(url);
 }
 
-function isLineupValid(
-  lineup: Lineup | null,
-  squadPositionById: Map<string, string>,
-): { valid: boolean; reason?: string } {
+function isLineupValid(lineup: Lineup | null, playersById: Map<string, Player>): { valid: boolean; reason?: string } {
   if (!lineup) return { valid: false, reason: 'Nenhuma escalação definida.' };
   if (lineup.starters.length !== 11) {
     return { valid: false, reason: `Escale exatamente 11 jogadores (atualmente ${lineup.starters.length}).` };
   }
-  const goalkeepers = lineup.starters.filter((id) => squadPositionById.get(id) === 'GOL');
+  const goalkeepers = lineup.starters.filter((id) => playersById.get(id)?.position === 'GOL');
   if (goalkeepers.length !== 1) {
     return { valid: false, reason: 'A escalação precisa de exatamente 1 goleiro.' };
+  }
+  const suspended = lineup.starters.map((id) => playersById.get(id)).find((p) => p && p.suspendedMatches > 0);
+  if (suspended) {
+    return { valid: false, reason: `${suspended.name} está suspenso — ajuste a escalação antes de avançar.` };
   }
   return { valid: true };
 }
@@ -99,8 +100,8 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
 
   const playerClub = findClub(career, career.playerClubId);
   const competition = career.season.competitions[0];
-  const squadPositionById = new Map(career.world.players.map((p) => [p.id, p.position]));
-  const lineupCheck = isLineupValid(lineup, squadPositionById);
+  const playersById = new Map(career.world.players.map((p) => [p.id, p]));
+  const lineupCheck = isLineupValid(lineup, playersById);
   const slotName = defaultSlotName(career);
 
   if (career.season.state === 'finished') {

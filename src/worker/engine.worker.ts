@@ -202,6 +202,8 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         // todo cálculo de falta (simulation/fouls.ts) vira NaN silenciosamente (chance(rng, NaN) é
         // sempre falso) e faltas/cartões somem pro resto da carreira sem erro nenhum. Completa com 50
         // (neutro — mesmo "jogador médio" usado pra calibrar o motor).
+        // Saves de antes da suspensão por cartão não têm pendingYellowCards/suspendedMatches — sem
+        // isso, o decremento em updatePlayerStats (season.ts) vira NaN silenciosamente. Completa com 0.
         const incoming = request.payload.state;
         const normalized: CareerState = {
           ...incoming,
@@ -215,6 +217,8 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
                   ? player.attributes
                   : { ...player.attributes, aggression: 50 },
               seasonStats: { ...player.seasonStats, saves: player.seasonStats.saves ?? 0 },
+              pendingYellowCards: player.pendingYellowCards ?? 0,
+              suspendedMatches: player.suspendedMatches ?? 0,
             })),
           },
         };

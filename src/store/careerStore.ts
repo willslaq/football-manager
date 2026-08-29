@@ -6,6 +6,7 @@ import type {
   Lineup,
   MatchEvent,
   MatchResult,
+  Player,
   TacticalIntensity,
   Tactics,
 } from '../engine/types';
@@ -18,6 +19,36 @@ import type { ClubSummary, EngineRequest, EngineResponse } from '../worker/proto
 
 /** Tempo de debounce do autosave após uma mudança de escalação/tática — evita gravar a cada clique. */
 const AUTO_SAVE_DEBOUNCE_MS = 1000;
+
+/**
+ * Remove da escalação salva qualquer titular que ficou suspenso nessa rodada (cartão
+ * acumulado ou expulsão — ver season.ts `updatePlayerStats`) — sem isso o jogador
+ * suspenso continuaria "escalado" até o usuário notar manualmente. Devolve a mesma
+ * referência de `lineup` quando nada muda, pra não disparar re-render à toa.
+ */
+export function removeSuspendedStarters(lineup: Lineup, players: Player[]): Lineup {
+  const suspendedIds = new Set(players.filter((p) => p.suspendedMatches > 0).map((p) => p.id));
+  if (!lineup.starters.some((id) => suspendedIds.has(id))) return lineup;
+
+  const starters = lineup.starters.filter((id) => !suspendedIds.has(id));
+  const slotAssignments = lineup.slotAssignments
+    ? Object.fromEntries(
+        Object.entries(lineup.slotAssignments).map(([slotId, playerId]) => [
+          slotId,
+          playerId && suspendedIds.has(playerId) ? null : playerId,
+        ]),
+      )
+    : undefined;
+
+  return {
+    ...lineup,
+    starters,
+    slotAssignments,
+    captain: suspendedIds.has(lineup.captain) ? (starters[0] ?? '') : lineup.captain,
+    penaltyTaker: suspendedIds.has(lineup.penaltyTaker) ? (starters[0] ?? '') : lineup.penaltyTaker,
+    freeKickTaker: suspendedIds.has(lineup.freeKickTaker) ? (starters[0] ?? '') : lineup.freeKickTaker,
+  };
+}
 
 /** Estado da partida do jogador sendo transmitida ao vivo, minuto a minuto. */
 export interface LiveMatchState {
@@ -158,10 +189,13 @@ export const useCareerStore = create<CareerStore>((set, get) => {
             : {},
         );
         break;
-      case 'roundResult':
+      case 'roundResult': {
         liveMatchRequestId = null;
+        const state = response.payload.state;
+        const currentLineup = get().lineup;
         set({
-          career: response.payload.state,
+          career: state,
+          lineup: currentLineup ? removeSuspendedStarters(currentLineup, state.world.players) : currentLineup,
           lastMatch: response.payload.playerMatch,
           liveMatch: null,
           loading: false,
@@ -169,6 +203,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
         });
         scheduleAutoSave();
         break;
+      }
       case 'settingsUpdated':
         set({ career: response.payload.state });
         break;

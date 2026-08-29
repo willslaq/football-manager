@@ -73,6 +73,14 @@ export interface Player {
   /** 0-100. Oculto da UI voltada ao jogador (SRS §8). */
   potential: number;
   seasonStats: PlayerSeasonStats;
+  /**
+   * Amarelos acumulados desde a última suspensão cumprida (ou início da temporada) —
+   * zera ao cumprir a suspensão. Distinto de seasonStats.yellowCards (total da
+   * temporada, nunca zera). Regra CBF/Brasileirão: 3 acumulados suspendem 1 jogo.
+   */
+  pendingYellowCards: number;
+  /** Partidas de suspensão automática ainda a cumprir (cartão acumulado ou expulsão). >0 = indisponível pra escalação. */
+  suspendedMatches: number;
   /** Altura em cm. Só disponível para jogadores com dado real (ver TODO.md). Exibição apenas. */
   height?: number;
   /** Peso em kg. Só disponível para jogadores com dado real. Exibição apenas. */

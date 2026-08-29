@@ -54,7 +54,10 @@ function buildTeamInput(
 
   const club = clubsById.get(clubId);
   if (!club) throw new Error(`advanceRound: clube inexistente (${clubId})`);
-  const squad = resolvePlayers(club.squad, playersById);
+  // Jogador suspenso (cartão acumulado ou expulsão — ver updatePlayerStats) não entra
+  // na auto-escalação da CPU, mesma regra aplicada à escalação manual do jogador
+  // (ver Lineup.tsx).
+  const squad = resolvePlayers(club.squad, playersById).filter((p) => p.suspendedMatches === 0);
   // Times sem escalação manual (SRS M4) usam a mesma auto-escalação gulosa por
   // vaga da tela de Escalação (não a mais simples pickAutoLineup) — assim o
   // encaixe posicional (bônus de posição principal, penalidade fora de
@@ -101,6 +104,39 @@ function applyResultToStandings(standings: StandingEntry[], fixture: Fixture): S
   });
 }
 
+/**
+ * Regra CBF/Brasileirão: 3 cartões amarelos acumulados suspendem 1 jogo; cartão
+ * vermelho (direto ou 2º amarelo) também suspende 1 jogo. A suspensão só zera o
+ * contador de amarelos quando é de fato cumprida (ver decremento abaixo) — sem
+ * "limpeza" no meio da temporada.
+ *
+ * Os amarelos que geram uma expulsão (2º amarelo na partida, ou um vermelho direto
+ * na mesma partida em que o jogador já tinha levado amarelo — caso raro) NÃO contam
+ * pro acúmulo: "esses cartões não contam pro total, já que o jogador já vai cumprir
+ * a suspensão pela expulsão". `MatchEvent` não distingue vermelho direto de 2º
+ * amarelo (ambos viram só `red_card` — a distinção só existe efêmera dentro de
+ * match.ts), então tratamos os dois casos igual: qualquer jogador com vermelho na
+ * partida tem TODOS os amarelos daquela partida ignorados pro acúmulo.
+ */
+export function applyCardSuspension(
+  player: Pick<Player, 'pendingYellowCards' | 'suspendedMatches'>,
+  yellowCards: number,
+  redCards: number,
+): Pick<Player, 'pendingYellowCards' | 'suspendedMatches'> {
+  let pendingYellowCards = player.pendingYellowCards;
+  let newSuspensions = redCards;
+
+  if (yellowCards > 0 && redCards === 0) {
+    pendingYellowCards += yellowCards;
+    while (pendingYellowCards >= 3) {
+      pendingYellowCards -= 3;
+      newSuspensions += 1;
+    }
+  }
+
+  return { pendingYellowCards, suspendedMatches: player.suspendedMatches + newSuspensions };
+}
+
 function updatePlayerStats(
   players: Player[],
   starterIds: Set<string>,
@@ -110,11 +146,24 @@ function updatePlayerStats(
   redCardsByPlayer: Map<string, number>,
 ): Player[] {
   return players.map((player) => {
-    if (!starterIds.has(player.id)) return player;
+    // Suspensão em cumprimento decrementa pra todo mundo, tenha jogado essa rodada
+    // ou não — é assim que o jogador volta a ficar disponível na rodada seguinte.
+    const servedSuspension = Math.max(0, player.suspendedMatches - 1);
+
+    if (!starterIds.has(player.id)) {
+      return servedSuspension === player.suspendedMatches ? player : { ...player, suspendedMatches: servedSuspension };
+    }
+
     const goals = goalsByPlayer.get(player.id) ?? 0;
     const saves = savesByGoalkeeper.get(player.id) ?? 0;
     const yellowCards = yellowCardsByPlayer.get(player.id) ?? 0;
     const redCards = redCardsByPlayer.get(player.id) ?? 0;
+    const { pendingYellowCards, suspendedMatches } = applyCardSuspension(
+      { ...player, suspendedMatches: servedSuspension },
+      yellowCards,
+      redCards,
+    );
+
     return {
       ...player,
       seasonStats: {
@@ -125,6 +174,8 @@ function updatePlayerStats(
         yellowCards: player.seasonStats.yellowCards + yellowCards,
         redCards: player.seasonStats.redCards + redCards,
       },
+      pendingYellowCards,
+      suspendedMatches,
     };
   });
 }

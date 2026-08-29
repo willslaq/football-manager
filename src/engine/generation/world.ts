@@ -67,6 +67,8 @@ export function generateWorld(seed: number): World {
         morale: derived.morale,
         potential: derived.potential,
         seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 },
+        pendingYellowCards: 0,
+        suspendedMatches: 0,
         height: rawPlayer.height,
         weight: rawPlayer.weight,
         preferredFoot: rawPlayer.preferredFoot,

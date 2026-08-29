@@ -705,7 +705,19 @@ export function simulateMatch(
 
     drainEnergy(homeState);
     drainEnergy(awayState);
-    if (minute === 1 || minute % ENERGY_RECOMPUTE_INTERVAL_MINUTES === 0) recomputeStrengthForFatigue();
+    if (minute === 1 || minute % ENERGY_RECOMPUTE_INTERVAL_MINUTES === 0) {
+      recomputeStrengthForFatigue();
+      // Snapshot pro "modo geek"/UI só nos mesmos minutos em que a força já é recomputada — emitir
+      // todo minuto custava demais em simulações de alto volume (mesmo raciocínio de
+      // ENERGY_RECOMPUTE_INTERVAL_MINUTES; ver RNF-001 em season.test.ts).
+      onChance?.({
+        kind: 'energy',
+        minute,
+        energyByPlayerId: Object.fromEntries(
+          [...homeState.players, ...awayState.players].map((p) => [p.id, matchEnergy.get(p.id) ?? p.condition]),
+        ),
+      });
+    }
 
     const drift = scorelineDrift(homeState.goals, awayState.goals, minute);
     const minuteTarget = clamp(possessionTargetHome + drift, POSSESSION_MINUTE_CLAMP[0], POSSESSION_MINUTE_CLAMP[1]);

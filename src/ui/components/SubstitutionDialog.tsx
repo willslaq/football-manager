@@ -5,6 +5,7 @@ import { positionFit } from '../positionFit';
 import { applyPendingSwaps, type PendingSwap, type PitchRosterEntry } from '../../store/careerStore';
 import { Badge } from './Badge';
 import { Button } from './Button';
+import { EnergyBar } from './EnergyBar';
 import './SubstitutionDialog.css';
 
 export interface SubstitutionDialogProps {
@@ -15,6 +16,8 @@ export interface SubstitutionDialogProps {
   selectedPitchSlotId: string | null;
   subCount: number;
   players: Player[];
+  /** Energia em partida corrente (0-100) de quem está em campo — ver careerStore's liveMatch.energyByPlayerId. */
+  energyByPlayerId: Record<PlayerId, number>;
   onSelectSlot: (slotId: string | null) => void;
   onQueueSwap: (benchPlayerId: PlayerId) => void;
   onRemovePendingSwap: (index: number) => void;
@@ -36,6 +39,7 @@ export function SubstitutionDialog({
   selectedPitchSlotId,
   subCount,
   players,
+  energyByPlayerId,
   onSelectSlot,
   onQueueSwap,
   onRemovePendingSwap,
@@ -103,6 +107,7 @@ export function SubstitutionDialog({
                     >
                       <span className="sub-row__pos">{entry.canonicalPosition}</span>
                       <span className="sub-row__name">{player?.name ?? entry.playerId}</span>
+                      <EnergyBar value={energyByPlayerId[entry.playerId] ?? 100} />
                       {changed && <Badge tone="pitch">Entrou</Badge>}
                     </button>
                   </li>

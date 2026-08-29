@@ -75,6 +75,12 @@ function formatTraceEntry(
       entry.card === 'none' ? 'sem cartão' : entry.card === 'second_yellow' ? '2º amarelo → vermelho' : entry.card;
     return `#${i} [${entry.minute}'] FALTA ${clubName(entry.teamId)} · ${fouler} em ${victim} · zona=${entry.zone} → ${cardLabel}`;
   }
+  if (entry.kind === 'energy') {
+    const parts = Object.entries(entry.energyByPlayerId)
+      .map(([id, energy]) => `${playerName(id)}=${fmt(energy, 0)}`)
+      .join(' ');
+    return `#${i} [${entry.minute}'] ENERGIA ${parts}`;
+  }
   const outcome = entry.isGoal ? 'GOL' : entry.isOnTarget ? 'no alvo (defendido)' : 'fora';
   const shooter = entry.shooterId ? playerName(entry.shooterId) : '?';
   return `#${i} [${entry.minute}'] ${clubName(entry.teamId)} · ${shooter}  atk=${fmt(entry.attackStrength)} vs def=${fmt(entry.defenseStrength)} → quality=${fmt(entry.quality, 3)} → prob=${fmt(entry.goalProbability * 100, 0)}% → ${outcome}`;
@@ -115,6 +121,7 @@ export function MatchLive() {
         <OnPitchList
           pitchRoster={liveMatch.pitchRoster}
           events={liveMatch.events}
+          energyByPlayerId={liveMatch.energyByPlayerId}
           playerName={playerName}
           onOpen={openSubstitutionDialog}
           disabled={isFullTime}
@@ -265,6 +272,7 @@ export function MatchLive() {
         selectedPitchSlotId={liveMatch.selectedPitchSlotId}
         subCount={liveMatch.subCount}
         players={career.world.players}
+        energyByPlayerId={liveMatch.energyByPlayerId}
         onSelectSlot={selectPitchSlot}
         onQueueSwap={queueSwap}
         onRemovePendingSwap={removePendingSwap}

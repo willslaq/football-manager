@@ -1,13 +1,15 @@
 import type { CSSProperties } from 'react';
-import type { ClubId, MatchResult } from '../../engine/types';
+import type { ClubId } from '../../engine/types';
 import { CLUB_CRESTS } from '../clubCrests';
 import './RoundResultsList.css';
 
 export interface RoundResultsListEntry {
   homeTeamId: ClubId;
   awayTeamId: ClubId;
-  /** null = ainda não revelado (transmissão ao vivo em andamento) — mostra um placeholder. */
-  result: MatchResult | null;
+  homeGoals: number;
+  awayGoals: number;
+  /** false = partida em andamento (placar cresce gol a gol); true = tempo cheio, placar definitivo. */
+  finished: boolean;
 }
 
 interface RoundResultsListProps {
@@ -52,10 +54,10 @@ export function RoundResultsList({ entries, playerClubId, clubName, emptyMessage
             </span>
 
             <span
-              key={entry.result ? 'revealed' : 'pending'}
-              className={`rrl-score numeric${entry.result ? ' rrl-score--revealed' : ' rrl-score--pending'}`}
+              key={`${entry.homeGoals}-${entry.awayGoals}-${entry.finished}`}
+              className={`rrl-score numeric rrl-score--revealed${entry.finished ? '' : ' rrl-score--pending'}`}
             >
-              {entry.result ? `${entry.result.homeGoals} — ${entry.result.awayGoals}` : '—'}
+              {entry.homeGoals} — {entry.awayGoals}
             </span>
 
             <span className="rrl-team rrl-team--away">

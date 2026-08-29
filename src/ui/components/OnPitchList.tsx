@@ -1,6 +1,7 @@
 import type { MatchEvent, PlayerId } from '../../engine/types';
 import type { PitchRosterEntry } from '../../store/careerStore';
 import { CardButton } from './Card';
+import { EnergyBar } from './EnergyBar';
 import { IconBall, IconCard } from './Icons';
 import './OnPitchList.css';
 
@@ -17,16 +18,18 @@ function goalCountForPlayer(events: MatchEvent[], playerId: PlayerId): number {
 export interface OnPitchListProps {
   pitchRoster: PitchRosterEntry[];
   events: MatchEvent[];
+  /** Energia em partida corrente (0-100) de quem está em campo — ver careerStore's liveMatch.energyByPlayerId. */
+  energyByPlayerId: Record<PlayerId, number>;
   playerName: (id: PlayerId) => string;
   onOpen: () => void;
   disabled?: boolean;
 }
 
 /**
- * Lista compacta do XI do jogador em campo, com ícone de cartão/gol por titular — clicável pra
+ * Lista compacta do XI do jogador em campo, com energia/cartão/gol por titular — clicável pra
  * abrir o diálogo de substituição (ver SubstitutionDialog), que pausa a partida ao vivo.
  */
-export function OnPitchList({ pitchRoster, events, playerName, onOpen, disabled }: OnPitchListProps) {
+export function OnPitchList({ pitchRoster, events, energyByPlayerId, playerName, onOpen, disabled }: OnPitchListProps) {
   if (pitchRoster.length === 0) return null;
 
   return (
@@ -45,6 +48,7 @@ export function OnPitchList({ pitchRoster, events, playerName, onOpen, disabled 
             <li key={entry.slotId} className="opl__row">
               <span className="opl__pos">{entry.canonicalPosition}</span>
               <span className="opl__name">{playerName(entry.playerId)}</span>
+              <EnergyBar value={energyByPlayerId[entry.playerId] ?? 100} />
               {goals > 0 && (
                 <span className="opl__goals">
                   <IconBall className="opl__icon" />

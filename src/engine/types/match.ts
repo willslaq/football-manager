@@ -104,4 +104,10 @@ export type EngineTraceEntry =
       victimId?: PlayerId;
       zone: 'own_box' | 'danger_zone' | 'midfield';
       card: 'none' | 'yellow' | 'second_yellow' | 'red';
+    }
+  | {
+      kind: 'energy';
+      minute: number;
+      /** Energia em partida (0-100, ver `matchEnergy` em match.ts) de quem está em campo nesse minuto, dos dois times. */
+      energyByPlayerId: Record<PlayerId, number>;
     };

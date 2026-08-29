@@ -4,13 +4,10 @@
 import {
   commitPlayerMatchResult,
   createBrasileiraoCareer,
-  deriveSeed,
   generateSeason,
   generateWorld,
   MAX_SUBSTITUTIONS_PER_TEAM,
-  mulberry32,
   pickAutoLineup,
-  roll,
   setTacticalIntensity,
   simulateMatch,
   simulateRound,
@@ -22,6 +19,7 @@ import type { CareerState, EngineTraceEntry, Fixture, Lineup, MatchResult, Tacti
 import {
   runLiveMatch,
   type ChanceTraceEntry,
+  type EnergyTraceEntry,
   type LiveMatchController,
   type OtherRoundResult,
   type PossessionTraceEntry,
@@ -126,7 +124,6 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
 
       case 'advanceRound': {
         if (!career) throw new Error('Nenhuma carreira iniciada');
-        const previousRound = career.season.currentRound;
         const engineTrace: EngineTraceEntry[] = [];
         const { nextState, roundIndex, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, seed } =
           simulateRound(career, {
@@ -147,15 +144,11 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
 
         // Os demais confrontos da rodada já foram comitados por completo dentro de `simulateRound`
         // (mesmo motor, ver season.ts) — só a entrega ao vivo do jogo do jogador é escalonada no
-        // tempo; os outros "chegam" aos poucos, em minutos sorteados de forma determinística (mesma
-        // seed da carreira), pra dar a sensação de estarem acontecendo ao mesmo tempo.
+        // tempo; os outros "chegam" aos poucos, gol a gol, no mesmo minuto em que aconteceram na
+        // simulação deles (mesma linha do tempo — todos os jogos da rodada acontecem "ao mesmo tempo").
         const playedRound = career.season.competitions[0].fixtures[roundIndex];
         const otherFixtures = playedRound.filter((f) => f !== playerFixture);
-        const revealRng = mulberry32(deriveSeed(career.seed, `roundReveal:${previousRound}`));
-        const otherResults: OtherRoundResult[] = otherFixtures.map((fixture) => ({
-          fixture,
-          revealMinute: roll(revealRng, 5, 90),
-        }));
+        const otherResults: OtherRoundResult[] = otherFixtures.map((fixture) => ({ fixture }));
 
         respond({
           type: 'liveMatchStarted',
@@ -175,25 +168,30 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         }
         const chanceTrace = engineTrace.filter((entry): entry is ChanceTraceEntry => entry.kind === 'chance');
         const possessionTrace = engineTrace.filter((entry): entry is PossessionTraceEntry => entry.kind === 'possession');
+        const energyTrace = engineTrace.filter((entry): entry is EnergyTraceEntry => entry.kind === 'energy');
 
         const controller = runLiveMatch(
           playerMatchResult,
-          { chances: chanceTrace, possession: possessionTrace },
+          { chances: chanceTrace, possession: possessionTrace, energy: energyTrace },
           {
             onEvent: (event, homeGoals, awayGoals) =>
               respond({ type: 'liveMatchEvent', requestId: request.requestId, payload: { event, homeGoals, awayGoals } }),
             onTrace: (entry) => respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry } }),
-            onTick: (minute, homeGoals, awayGoals, possessionHome) => {
+            onTick: (minute, homeGoals, awayGoals, possessionHome, energyByPlayerId) => {
               const session = liveSessions.get(request.requestId);
               if (session) session.currentMinute = minute;
               respond({
                 type: 'liveMatchTick',
                 requestId: request.requestId,
-                payload: { minute, homeGoals, awayGoals, possessionHome },
+                payload: { minute, homeGoals, awayGoals, possessionHome, energyByPlayerId },
               });
             },
-            onOtherResult: (fixture: Fixture) =>
-              respond({ type: 'liveMatchOtherResult', requestId: request.requestId, payload: { fixture } }),
+            onOtherResult: (fixture: Fixture, homeGoals: number, awayGoals: number, finished: boolean) =>
+              respond({
+                type: 'liveMatchOtherResult',
+                requestId: request.requestId,
+                payload: { fixture, homeGoals, awayGoals, finished },
+              }),
           },
           otherResults,
         );
@@ -277,7 +275,12 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
 
         const newChanceTrace = newTrace.filter((entry): entry is ChanceTraceEntry => entry.kind === 'chance');
         const newPossessionTrace = newTrace.filter((entry): entry is PossessionTraceEntry => entry.kind === 'possession');
-        session.controller.applyNewResult(newResult, { chances: newChanceTrace, possession: newPossessionTrace }, fromMinute);
+        const newEnergyTrace = newTrace.filter((entry): entry is EnergyTraceEntry => entry.kind === 'energy');
+        session.controller.applyNewResult(
+          newResult,
+          { chances: newChanceTrace, possession: newPossessionTrace, energy: newEnergyTrace },
+          fromMinute,
+        );
         session.latestResult = newResult;
         session.latestTrace = newTrace;
         session.subCount += newSubs.length;

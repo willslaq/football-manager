@@ -206,7 +206,13 @@ export function MatchResult({ onNavigate, result: resultProp }: MatchResultProps
         <Card className="mr-round">
           <span className="eyebrow">Resultado da rodada {roundPlayed}</span>
           <RoundResultsList
-            entries={roundFixtures.map((f) => ({ homeTeamId: f.homeTeamId, awayTeamId: f.awayTeamId, result: f.result ?? null }))}
+            entries={roundFixtures.map((f) => ({
+              homeTeamId: f.homeTeamId,
+              awayTeamId: f.awayTeamId,
+              homeGoals: f.result?.homeGoals ?? 0,
+              awayGoals: f.result?.awayGoals ?? 0,
+              finished: !!f.result,
+            }))}
             playerClubId={career.playerClubId}
             clubName={clubName}
           />

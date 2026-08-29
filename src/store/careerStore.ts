@@ -54,11 +54,17 @@ export function removeSuspendedStarters(lineup: Lineup, players: Player[]): Line
   };
 }
 
-/** Um confronto da rodada fora o do jogador — `result: null` até chegar via liveMatchOtherResult. */
+/**
+ * Um confronto da rodada fora o do jogador — placar começa em 0-0 (todos os jogos da rodada
+ * "começam" junto) e cresce gol a gol conforme `liveMatchOtherResult` chega, na mesma linha do
+ * tempo da partida do jogador. `finished` vira `true` no tempo cheio (minuto 90).
+ */
 export interface OtherMatchState {
   homeTeamId: ClubId;
   awayTeamId: ClubId;
-  result: MatchResult | null;
+  homeGoals: number;
+  awayGoals: number;
+  finished: boolean;
 }
 
 /** Um titular do time do jogador em campo, na vaga exata da escalação — fonte pra substituição ao vivo. */
@@ -85,6 +91,8 @@ export interface LiveMatchState {
   events: MatchEvent[];
   /** Posse do mandante no minuto corrente, 0-100 — atualizada a cada liveMatchTick. */
   possessionHome: number;
+  /** Energia em partida corrente (0-100) de quem está em campo no time do jogador, por PlayerId — atualizada a cada liveMatchTick. */
+  energyByPlayerId: Record<PlayerId, number>;
   /** Ritmo de reprodução: 1x = tempo padrão, 2x = duas vezes mais rápido. */
   speed: 1 | 2;
   paused: boolean;
@@ -266,12 +274,15 @@ export const useCareerStore = create<CareerStore>((set, get) => {
             awayGoals: 0,
             events: [],
             possessionHome: 50,
+            energyByPlayerId: {},
             speed: 1,
             paused: false,
             otherMatches: response.payload.otherFixtures.map((f) => ({
               homeTeamId: f.homeTeamId,
               awayTeamId: f.awayTeamId,
-              result: null,
+              homeGoals: 0,
+              awayGoals: 0,
+              finished: false,
             })),
             pitchRoster: buildPitchRoster(lineup, currentCareer),
             benchIds: buildBenchIds(lineup, currentCareer),
@@ -293,7 +304,12 @@ export const useCareerStore = create<CareerStore>((set, get) => {
                   ...state.liveMatch,
                   otherMatches: state.liveMatch.otherMatches.map((m) =>
                     m.homeTeamId === response.payload.fixture.homeTeamId && m.awayTeamId === response.payload.fixture.awayTeamId
-                      ? { ...m, result: response.payload.fixture.result ?? null }
+                      ? {
+                          ...m,
+                          homeGoals: response.payload.homeGoals,
+                          awayGoals: response.payload.awayGoals,
+                          finished: response.payload.finished,
+                        }
                       : m,
                   ),
                 },
@@ -314,6 +330,7 @@ export const useCareerStore = create<CareerStore>((set, get) => {
                   homeGoals: response.payload.homeGoals,
                   awayGoals: response.payload.awayGoals,
                   possessionHome: response.payload.possessionHome,
+                  energyByPlayerId: response.payload.energyByPlayerId,
                 },
               }
             : {},

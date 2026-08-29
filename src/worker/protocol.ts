@@ -134,27 +134,40 @@ export interface LiveMatchStartedResponse {
     homeTeamId: ClubId;
     awayTeamId: ClubId;
     /**
-     * Os demais confrontos da rodada (já simulados internamente, mas enviados sem `result`) —
-     * a UI mostra "a jogar" até cada um chegar via `liveMatchOtherResult`, revelado aos poucos
-     * ao longo da transmissão pra parecer que estão acontecendo "ao mesmo tempo".
+     * Os demais confrontos da rodada (já simulados internamente, placar 0-0 até o primeiro gol) —
+     * a UI atualiza o placar gol a gol via `liveMatchOtherResult`, no mesmo minuto em que aconteceu
+     * na simulação de cada um, pra parecer que estão acontecendo "ao mesmo tempo".
      */
     otherFixtures: { homeTeamId: ClubId; awayTeamId: ClubId }[];
   };
 }
 
-/** Um confronto da rodada (fora o do jogador) tendo seu resultado revelado durante a transmissão ao vivo. */
+/** O placar de outro confronto da rodada (fora o do jogador) mudando ao vivo, gol a gol. */
 export interface LiveMatchOtherResultResponse {
   type: 'liveMatchOtherResult';
   requestId: string;
-  payload: { fixture: Fixture };
+  payload: {
+    fixture: Fixture;
+    homeGoals: number;
+    awayGoals: number;
+    /** true no minuto 90 (tempo cheio) — placar passa a ser definitivo. */
+    finished: boolean;
+  };
 }
 
 /** Batida de relógio periódica pra UI animar o minuto corrente mesmo sem evento novo. */
 export interface LiveMatchTickResponse {
   type: 'liveMatchTick';
   requestId: string;
-  /** possessionHome: posse do mandante no minuto corrente, 0-100 (mesma convenção de MatchStats.possession). */
-  payload: { minute: number; homeGoals: number; awayGoals: number; possessionHome: number };
+  payload: {
+    minute: number;
+    homeGoals: number;
+    awayGoals: number;
+    /** possessionHome: posse do mandante no minuto corrente, 0-100 (mesma convenção de MatchStats.possession). */
+    possessionHome: number;
+    /** Energia em partida corrente (0-100) de quem está em campo no time do jogador, por PlayerId. */
+    energyByPlayerId: Record<PlayerId, number>;
+  };
 }
 
 /** Um evento da partida (gol, chute defendido, chute pra fora) chegando em tempo real. */

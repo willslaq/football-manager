@@ -2,19 +2,23 @@
 // Único lugar com estado mutável de carreira — o motor em si continua puro.
 
 import {
-  advanceRound,
+  commitPlayerMatchResult,
   createBrasileiraoCareer,
   deriveSeed,
   generateSeason,
   generateWorld,
+  MAX_SUBSTITUTIONS_PER_TEAM,
   mulberry32,
   pickAutoLineup,
   roll,
   setTacticalIntensity,
+  simulateMatch,
+  simulateRound,
   startNewSeason,
   validateCareerState,
 } from '../engine';
-import type { CareerState, EngineTraceEntry, Fixture, Lineup, Tactics } from '../engine/types';
+import type { MatchSubstitution, MatchTeamInput } from '../engine';
+import type { CareerState, EngineTraceEntry, Fixture, Lineup, MatchResult, Tactics } from '../engine/types';
 import {
   runLiveMatch,
   type ChanceTraceEntry,
@@ -24,8 +28,31 @@ import {
 } from './liveMatch';
 import type { ClubSummary, EngineRequest, EngineResponse } from './protocol';
 
+/**
+ * Sessão de uma partida do jogador em transmissão ao vivo — guarda tudo que
+ * `requestSubstitution` precisa pra rerodar `simulateMatch` do zero com a mesma seed (ver
+ * match.ts's determinismo de prefixo) e, no fim, comitar o resultado final via
+ * `commitPlayerMatchResult` (ver season.ts).
+ */
+interface LiveMatchSession {
+  controller: LiveMatchController;
+  homeTeamInput: MatchTeamInput;
+  awayTeamInput: MatchTeamInput;
+  seed: number;
+  playerFixture: Fixture;
+  roundIndex: number;
+  playerTeamSide: 'home' | 'away';
+  /** Substituições confirmadas até agora, acumuladas — reenviadas por inteiro a cada nova rodada de `simulateMatch`. */
+  substitutions: MatchSubstitution[];
+  latestResult: MatchResult;
+  latestTrace: EngineTraceEntry[];
+  subCount: number;
+  /** Último minuto "batido" pelo relógio ao vivo (ver onTick) — ponto de corte de uma nova substituição. */
+  currentMinute: number;
+}
+
 let career: CareerState | null = null;
-const liveSessions = new Map<string, LiveMatchController>();
+const liveSessions = new Map<string, LiveMatchSession>();
 
 const DEFAULT_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
 
@@ -101,63 +128,30 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         if (!career) throw new Error('Nenhuma carreira iniciada');
         const previousRound = career.season.currentRound;
         const engineTrace: EngineTraceEntry[] = [];
-        const simulatedState = advanceRound(career, {
-          playerLineup: request.payload.playerLineup,
-          playerTactics: request.payload.playerTactics,
-          onPlayerChance: (entry) => engineTrace.push(entry),
-        });
-
-        // Anexa o rastro técnico bruto (gerado só pro fixture do jogador, acima) ao result desse
-        // fixture antes de persistir — sem isso ele existiria só na transmissão ao vivo e se perderia.
-        const roundIndex = previousRound - 1;
-        const simulatedRound = simulatedState.season.competitions[0].fixtures[roundIndex];
-        const enrichedRound = simulatedRound.map((fixture) => {
-          const isPlayerFixture =
-            fixture.homeTeamId === simulatedState.playerClubId || fixture.awayTeamId === simulatedState.playerClubId;
-          if (!isPlayerFixture || !fixture.result || engineTrace.length === 0) return fixture;
-          return { ...fixture, result: { ...fixture.result, trace: engineTrace } };
-        });
-        const nextState: CareerState = {
-          ...simulatedState,
-          season: {
-            ...simulatedState.season,
-            competitions: [
-              {
-                ...simulatedState.season.competitions[0],
-                fixtures: simulatedState.season.competitions[0].fixtures.map((round, i) =>
-                  i === roundIndex ? enrichedRound : round,
-                ),
-              },
-            ],
-          },
-        };
+        const { nextState, roundIndex, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, seed } =
+          simulateRound(career, {
+            playerLineup: request.payload.playerLineup,
+            playerTactics: request.payload.playerTactics,
+            onPlayerChance: (entry) => engineTrace.push(entry),
+          });
         career = nextState;
 
-        const playedRound = nextState.season.competitions[0].fixtures[roundIndex];
-        const playerFixture = playedRound.find(
-          (f) => f.homeTeamId === nextState.playerClubId || f.awayTeamId === nextState.playerClubId,
-        );
-        const playerMatch = playerFixture?.result ?? null;
-
-        const sendRoundResult = (): void => {
-          respond({
-            type: 'roundResult',
-            requestId: request.requestId,
-            payload: { state: nextState, playerMatch },
-          });
+        const sendRoundResult = (state: CareerState, playerMatch: MatchResult | null): void => {
+          respond({ type: 'roundResult', requestId: request.requestId, payload: { state, playerMatch } });
         };
 
-        if (!playerMatch) {
-          sendRoundResult();
+        if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput || seed === undefined) {
+          sendRoundResult(career, null);
           break;
         }
 
-        // Os demais confrontos da rodada já foram simulados por completo dentro de `advanceRound`
+        // Os demais confrontos da rodada já foram comitados por completo dentro de `simulateRound`
         // (mesmo motor, ver season.ts) — só a entrega ao vivo do jogo do jogador é escalonada no
         // tempo; os outros "chegam" aos poucos, em minutos sorteados de forma determinística (mesma
         // seed da carreira), pra dar a sensação de estarem acontecendo ao mesmo tempo.
+        const playedRound = career.season.competitions[0].fixtures[roundIndex];
         const otherFixtures = playedRound.filter((f) => f !== playerFixture);
-        const revealRng = mulberry32(deriveSeed(nextState.seed, `roundReveal:${previousRound}`));
+        const revealRng = mulberry32(deriveSeed(career.seed, `roundReveal:${previousRound}`));
         const otherResults: OtherRoundResult[] = otherFixtures.map((fixture) => ({
           fixture,
           revealMinute: roll(revealRng, 5, 90),
@@ -167,8 +161,8 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           type: 'liveMatchStarted',
           requestId: request.requestId,
           payload: {
-            homeTeamId: playerMatch.homeTeamId,
-            awayTeamId: playerMatch.awayTeamId,
+            homeTeamId: playerMatchResult.homeTeamId,
+            awayTeamId: playerMatchResult.awayTeamId,
             otherFixtures: otherFixtures.map((f) => ({ homeTeamId: f.homeTeamId, awayTeamId: f.awayTeamId })),
           },
         });
@@ -183,27 +177,118 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         const possessionTrace = engineTrace.filter((entry): entry is PossessionTraceEntry => entry.kind === 'possession');
 
         const controller = runLiveMatch(
-          playerMatch,
+          playerMatchResult,
           { chances: chanceTrace, possession: possessionTrace },
           {
             onEvent: (event, homeGoals, awayGoals) =>
               respond({ type: 'liveMatchEvent', requestId: request.requestId, payload: { event, homeGoals, awayGoals } }),
             onTrace: (entry) => respond({ type: 'liveMatchTrace', requestId: request.requestId, payload: { entry } }),
-            onTick: (minute, homeGoals, awayGoals, possessionHome) =>
+            onTick: (minute, homeGoals, awayGoals, possessionHome) => {
+              const session = liveSessions.get(request.requestId);
+              if (session) session.currentMinute = minute;
               respond({
                 type: 'liveMatchTick',
                 requestId: request.requestId,
                 payload: { minute, homeGoals, awayGoals, possessionHome },
-              }),
+              });
+            },
             onOtherResult: (fixture: Fixture) =>
               respond({ type: 'liveMatchOtherResult', requestId: request.requestId, payload: { fixture } }),
           },
           otherResults,
         );
-        liveSessions.set(request.requestId, controller);
+        liveSessions.set(request.requestId, {
+          controller,
+          homeTeamInput,
+          awayTeamInput,
+          seed,
+          playerFixture,
+          roundIndex,
+          playerTeamSide: playerFixture.homeTeamId === career.playerClubId ? 'home' : 'away',
+          substitutions: [],
+          latestResult: playerMatchResult,
+          latestTrace: engineTrace,
+          subCount: 0,
+          currentMinute: 0,
+        });
         controller.done.then(() => {
+          const session = liveSessions.get(request.requestId);
           liveSessions.delete(request.requestId);
-          sendRoundResult();
+          if (!session || !career) return;
+
+          // Anexa o rastro técnico bruto da última simulação (com ou sem substituições) ao
+          // result final antes de persistir — sem isso ele existiria só na transmissão ao vivo.
+          const finalResult: MatchResult =
+            session.latestTrace.length > 0 ? { ...session.latestResult, trace: session.latestTrace } : session.latestResult;
+
+          career = commitPlayerMatchResult(
+            career,
+            { playerFixture: session.playerFixture, roundIndex: session.roundIndex, homeTeamInput, awayTeamInput },
+            finalResult,
+          );
+          sendRoundResult(career, finalResult);
+        });
+        break;
+      }
+
+      case 'requestSubstitution': {
+        if (!career) throw new Error('Nenhuma carreira iniciada');
+        const session = liveSessions.get(request.payload.liveRequestId);
+        if (!session) throw new Error('Sessão de partida ao vivo não encontrada');
+
+        const { substitutions: requested } = request.payload;
+        if (session.subCount + requested.length > MAX_SUBSTITUTIONS_PER_TEAM) {
+          throw new Error(`Limite de ${MAX_SUBSTITUTIONS_PER_TEAM} substituições por partida excedido`);
+        }
+        const alreadyOut = new Set(session.substitutions.map((s) => s.playerOutId));
+        const alreadyIn = new Set(session.substitutions.map((s) => s.playerIn.id));
+        for (const { playerOutId, playerInId } of requested) {
+          if (alreadyOut.has(playerOutId) || alreadyIn.has(playerInId)) {
+            throw new Error('Substituição repetida: jogador já saiu ou já entrou nessa partida');
+          }
+        }
+
+        const playersById = new Map(career.world.players.map((p) => [p.id, p]));
+        const teamInput = session.playerTeamSide === 'home' ? session.homeTeamInput : session.awayTeamInput;
+        const fromMinute = session.currentMinute;
+        const newSubs: MatchSubstitution[] = requested.map(({ playerOutId, playerInId }) => {
+          const playerIn = playersById.get(playerInId);
+          if (!playerIn) throw new Error(`Jogador reserva não encontrado (${playerInId})`);
+          return {
+            minute: fromMinute + 1,
+            teamSide: session.playerTeamSide,
+            playerOutId,
+            playerIn,
+            slotPosition: teamInput.slotPositionByPlayerId?.[playerOutId],
+          };
+        });
+
+        session.substitutions.push(...newSubs);
+
+        const newTrace: EngineTraceEntry[] = [];
+        const newResult = simulateMatch(
+          session.homeTeamInput,
+          session.awayTeamInput,
+          session.seed,
+          career.settings.tacticalIntensity,
+          (entry) => newTrace.push(entry),
+          session.substitutions,
+        );
+
+        const newChanceTrace = newTrace.filter((entry): entry is ChanceTraceEntry => entry.kind === 'chance');
+        const newPossessionTrace = newTrace.filter((entry): entry is PossessionTraceEntry => entry.kind === 'possession');
+        session.controller.applyNewResult(newResult, { chances: newChanceTrace, possession: newPossessionTrace }, fromMinute);
+        session.latestResult = newResult;
+        session.latestTrace = newTrace;
+        session.subCount += newSubs.length;
+
+        respond({
+          type: 'liveMatchSubstitutionApplied',
+          requestId: request.requestId,
+          payload: {
+            substitutions: newSubs.map((s) => ({ playerOutId: s.playerOutId, playerInId: s.playerIn.id })),
+            subCount: session.subCount,
+          },
         });
         break;
       }
@@ -224,17 +309,17 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
       }
 
       case 'skipLiveMatch': {
-        liveSessions.get(request.payload.liveRequestId)?.skip();
+        liveSessions.get(request.payload.liveRequestId)?.controller.skip();
         break;
       }
 
       case 'setLiveMatchSpeed': {
-        liveSessions.get(request.payload.liveRequestId)?.setSpeed(request.payload.speed);
+        liveSessions.get(request.payload.liveRequestId)?.controller.setSpeed(request.payload.speed);
         break;
       }
 
       case 'setLiveMatchPaused': {
-        liveSessions.get(request.payload.liveRequestId)?.setPaused(request.payload.paused);
+        liveSessions.get(request.payload.liveRequestId)?.controller.setPaused(request.payload.paused);
         break;
       }
 

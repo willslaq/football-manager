@@ -66,6 +66,21 @@ export interface MatchTeamInput {
 }
 
 /**
+ * Substituição a aplicar durante o loop minuto a minuto (ver `applySubstitution`). Quem chama
+ * (season.ts/worker) acumula essa lista partida a partida e reroda `simulateMatch` do zero com a
+ * mesma seed a cada substituição confirmada — como o RNG é consumido sequencialmente e nada antes
+ * do minuto da troca depende dela, os eventos de minutos anteriores saem bit-a-bit idênticos.
+ */
+export interface MatchSubstitution {
+  minute: number;
+  teamSide: 'home' | 'away';
+  playerOutId: PlayerId;
+  playerIn: Player;
+  /** Vaga (LD, ZAG...) que o titular substituído ocupava — o substituto assume a mesma. */
+  slotPosition?: Position;
+}
+
+/**
  * Estado mutável de um time durante o loop minuto a minuto: quem ainda está em campo,
  * a força de setor corrente e as taxas por minuto (chance/falta) derivadas dela — tudo
  * recomputado após uma expulsão (ver `sendOff`), já que o resto do módulo trata força e
@@ -182,13 +197,13 @@ function scorelineDrift(homeGoals: number, awayGoals: number, minute: number): n
 }
 
 function pickManOfTheMatch(
-  home: MatchTeamInput,
-  away: MatchTeamInput,
+  homePlayers: Player[],
+  awayPlayers: Player[],
   goalsByPlayer: Map<string, number>,
   homeGoals: number,
   awayGoals: number,
 ): Player {
-  const allPlayers = [...home.players, ...away.players];
+  const allPlayers = [...homePlayers, ...awayPlayers];
   let topScorers = allPlayers.filter((p) => (goalsByPlayer.get(p.id) ?? 0) > 0);
   if (topScorers.length > 0) {
     const maxGoals = Math.max(...topScorers.map((p) => goalsByPlayer.get(p.id) ?? 0));
@@ -196,7 +211,7 @@ function pickManOfTheMatch(
     return topScorers.sort((a, b) => b.strength - a.strength)[0];
   }
 
-  const pool = homeGoals === awayGoals ? allPlayers : homeGoals > awayGoals ? home.players : away.players;
+  const pool = homeGoals === awayGoals ? allPlayers : homeGoals > awayGoals ? homePlayers : awayPlayers;
   return [...pool].sort((a, b) => b.strength - a.strength)[0];
 }
 
@@ -331,9 +346,17 @@ export function simulateMatch(
   seed: number,
   tacticalIntensity: TacticalIntensity = 'subtle',
   onChance?: (entry: EngineTraceEntry) => void,
+  substitutions: MatchSubstitution[] = [],
 ): MatchResult {
   assertValidLineup(home);
   assertValidLineup(away);
+
+  const substitutionsByMinute = new Map<number, MatchSubstitution[]>();
+  for (const sub of substitutions) {
+    const list = substitutionsByMinute.get(sub.minute) ?? [];
+    list.push(sub);
+    substitutionsByMinute.set(sub.minute, list);
+  }
 
   const rng = mulberry32(seed);
 
@@ -405,6 +428,12 @@ export function simulateMatch(
 
   const events: MatchEvent[] = [];
   const goalsByPlayer = new Map<string, number>();
+
+  // Todo mundo que efetivamente jogou (titulares + qualquer substituto que entrou), pra melhor
+  // jogador em campo — diferente de `homeState.players`/`awayState.players`, que só têm quem
+  // está em campo NAQUELE instante (encolhe com expulsão, troca de nome com substituição).
+  const homeParticipants: Player[] = [...home.players];
+  const awayParticipants: Player[] = [...away.players];
 
   // Estado mutável por time (jogadores em campo, força de setor, taxas por minuto) — encolhe e
   // se recalcula a cada expulsão (ver sendOff/recomputeRates logo abaixo). home/awayStrength
@@ -532,6 +561,50 @@ export function simulateMatch(
     recomputeRates();
   }
 
+  /**
+   * Aplica uma substituição já decidida (ver `MatchSubstitution`): troca o titular pelo suplente
+   * na mesma vaga, zera a energia do recém-entrado (pernas frescas) e recomputa força/taxas — mesmo
+   * padrão de `sendOff`, mas repondo o corpo em vez de só removê-lo (sem penalidade de setor, time
+   * segue 11 contra 11). Precisa ser chamada antes dos sorteios do minuto pra preservar o "prefixo
+   * determinístico": nada consumido do RNG até aqui muda por causa de uma troca futura.
+   */
+  function applySubstitution(state: TeamMatchState, sub: MatchSubstitution): void {
+    const stillOnPitch = state.players.some((p) => p.id === sub.playerOutId);
+    if (!stillOnPitch) return; // já saiu (expulsão) — nada a substituir
+
+    state.players = state.players.map((p) => (p.id === sub.playerOutId ? sub.playerIn : p));
+
+    if (state.slotPositionByPlayerId) {
+      const nextSlots = { ...state.slotPositionByPlayerId };
+      const slot = sub.slotPosition ?? nextSlots[sub.playerOutId] ?? sub.playerIn.position;
+      delete nextSlots[sub.playerOutId];
+      nextSlots[sub.playerIn.id] = slot;
+      state.slotPositionByPlayerId = nextSlots;
+    }
+
+    matchEnergy.set(sub.playerIn.id, 100);
+
+    if (state.goalkeeper?.id === sub.playerOutId) state.goalkeeper = sub.playerIn;
+    if (state.penaltyTakerId === sub.playerOutId) state.penaltyTakerId = undefined;
+    if (state.freeKickTakerId === sub.playerOutId) state.freeKickTakerId = undefined;
+
+    state.strength = applyFormationShape(
+      computeSectorStrengths(state.players, state.isHome, state.slotPositionByPlayerId, matchEnergy),
+      state.tactics.formation,
+      tacticalIntensity,
+    );
+    recomputeRates();
+
+    (state.isHome ? homeParticipants : awayParticipants).push(sub.playerIn);
+    events.push({
+      minute: sub.minute,
+      type: 'substitution',
+      teamId: state.clubId,
+      playerId: sub.playerOutId,
+      playerInId: sub.playerIn.id,
+    });
+  }
+
   /** Cobrança de pênalti ou falta direta gerada por uma falta na área/zona de perigo — mesmo formato de evento de um chute normal, só marcando `setPiece`. */
   function resolveSetPiece(
     minute: number,
@@ -625,6 +698,11 @@ export function simulateMatch(
   let possessionSum = 0;
 
   for (let minute = 1; minute <= MATCH_MINUTES; minute++) {
+    const scheduledSubs = substitutionsByMinute.get(minute);
+    if (scheduledSubs) {
+      for (const sub of scheduledSubs) applySubstitution(sub.teamSide === 'home' ? homeState : awayState, sub);
+    }
+
     drainEnergy(homeState);
     drainEnergy(awayState);
     if (minute === 1 || minute % ENERGY_RECOMPUTE_INTERVAL_MINUTES === 0) recomputeStrengthForFatigue();
@@ -755,7 +833,7 @@ export function simulateMatch(
 
   events.sort((a, b) => a.minute - b.minute);
 
-  const manOfTheMatch = pickManOfTheMatch(home, away, goalsByPlayer, homeState.goals, awayState.goals);
+  const manOfTheMatch = pickManOfTheMatch(homeParticipants, awayParticipants, goalsByPlayer, homeState.goals, awayState.goals);
 
   const explanation = buildExplanation(
     homeStrength,

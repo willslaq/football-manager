@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { generateWorld } from '../generation/world';
 import type { World } from '../types/career';
+import type { Player, Position } from '../types/player';
 import type { Formation, TacticStyle } from '../types/tactics';
 import { pickAutoLineup } from './autoLineup';
-import { simulateMatch, type MatchTeamInput } from './match';
+import { simulateMatch, type MatchSubstitution, type MatchTeamInput } from './match';
 
 function buildTeam(
   world: World,
@@ -17,6 +18,19 @@ function buildTeam(
   const squad = club.squad.map((id) => playersById.get(id)!);
   const starters = pickAutoLineup(squad, formation);
   return { clubId, players: starters, tactics: { formation, style } };
+}
+
+/** Jogador do elenco do clube que não está entre os titulares — pra testes de substituição. */
+function pickBenchPlayer(world: World, clubId: string, starters: Player[], position?: Position): Player {
+  const club = world.clubs.find((c) => c.id === clubId);
+  if (!club) throw new Error(`clube não encontrado: ${clubId}`);
+  const playersById = new Map(world.players.map((p) => [p.id, p]));
+  const starterIds = new Set(starters.map((p) => p.id));
+  const candidate = club.squad
+    .map((id) => playersById.get(id)!)
+    .find((p) => !starterIds.has(p.id) && (!position || p.position === position));
+  if (!candidate) throw new Error(`sem reserva disponível pra ${clubId} (posição ${position ?? 'qualquer'})`);
+  return candidate;
 }
 
 describe('simulateMatch', () => {
@@ -128,5 +142,98 @@ describe('simulateMatch', () => {
     expect(lateAvg).toBeLessThan(earlyAvg);
     expect(earlyAvg - lateAvg).toBeGreaterThan(earlyAvg * 0.02);
     expect(earlyAvg - lateAvg).toBeLessThan(earlyAvg * 0.25);
+  });
+});
+
+describe('simulateMatch com substituições', () => {
+  const world = generateWorld(99);
+  const home = buildTeam(world, 'palmeiras');
+  const away = buildTeam(world, 'chapecoense');
+
+  it('não muda os eventos dos minutos anteriores à troca (prefixo determinístico da mesma seed)', () => {
+    const outPlayer = home.players.find((p) => p.position !== 'GOL')!;
+    const benchPlayer = pickBenchPlayer(world, 'palmeiras', home.players);
+    const sub: MatchSubstitution = { minute: 46, teamSide: 'home', playerOutId: outPlayer.id, playerIn: benchPlayer };
+
+    for (let seed = 0; seed < 20; seed++) {
+      const base = simulateMatch(home, away, seed);
+      const withSub = simulateMatch(home, away, seed, 'subtle', undefined, [sub]);
+      expect(withSub.events.filter((e) => e.minute <= 45)).toEqual(base.events.filter((e) => e.minute <= 45));
+    }
+  });
+
+  it('gera um evento substitution com minuto, playerId (saiu) e playerInId (entrou) corretos', () => {
+    const outPlayer = home.players.find((p) => p.position !== 'GOL')!;
+    const benchPlayer = pickBenchPlayer(world, 'palmeiras', home.players);
+    const sub: MatchSubstitution = { minute: 46, teamSide: 'home', playerOutId: outPlayer.id, playerIn: benchPlayer };
+
+    const result = simulateMatch(home, away, 777, 'subtle', undefined, [sub]);
+    const subEvent = result.events.find((e) => e.type === 'substitution');
+    expect(subEvent).toMatchObject({
+      minute: 46,
+      teamId: home.clubId,
+      playerId: outPlayer.id,
+      playerInId: benchPlayer.id,
+    });
+  });
+
+  it('o jogador substituído não gera mais nenhum evento de jogo depois de sair', () => {
+    const outPlayer = home.players.find((p) => p.position !== 'GOL')!;
+    const benchPlayer = pickBenchPlayer(world, 'palmeiras', home.players);
+    const subMinute = 46;
+    const sub: MatchSubstitution = { minute: subMinute, teamSide: 'home', playerOutId: outPlayer.id, playerIn: benchPlayer };
+
+    for (let seed = 0; seed < 150; seed++) {
+      const result = simulateMatch(home, away, seed, 'subtle', undefined, [sub]);
+      const eventsAfterExit = result.events.filter(
+        (e) => e.playerId === outPlayer.id && e.type !== 'substitution' && e.minute >= subMinute,
+      );
+      expect(eventsAfterExit).toHaveLength(0);
+    }
+  });
+
+  it('substituto com atributos extremos altera a produção ofensiva de forma perceptível (não é cosmético)', () => {
+    const outPlayer = home.players.find((p) => p.position !== 'GOL')!;
+    const superStriker: Player = {
+      ...outPlayer,
+      id: 'super-striker-test',
+      attributes: { ...outPlayer.attributes, finishing: 99, heading: 99 },
+    };
+    const sub: MatchSubstitution = { minute: 1, teamSide: 'home', playerOutId: outPlayer.id, playerIn: superStriker };
+
+    const N = 400;
+    let baselineGoals = 0;
+    let subGoals = 0;
+    for (let seed = 0; seed < N; seed++) {
+      const baseline = simulateMatch(home, away, seed);
+      baselineGoals += baseline.events.filter((e) => e.type === 'goal' && e.playerId === outPlayer.id).length;
+
+      const withSub = simulateMatch(home, away, seed, 'subtle', undefined, [sub]);
+      subGoals += withSub.events.filter((e) => e.type === 'goal' && e.playerId === superStriker.id).length;
+    }
+
+    expect(subGoals).toBeGreaterThan(baselineGoals * 1.3);
+  });
+
+  it('substituição do goleiro: defesas após a troca são creditadas ao novo goleiro, não ao antigo', () => {
+    const outGoalkeeper = home.players.find((p) => p.position === 'GOL')!;
+    const benchGoalkeeper = pickBenchPlayer(world, 'palmeiras', home.players, 'GOL');
+    const sub: MatchSubstitution = {
+      minute: 1,
+      teamSide: 'home',
+      playerOutId: outGoalkeeper.id,
+      playerIn: benchGoalkeeper,
+    };
+
+    let savesForOld = 0;
+    let savesForNew = 0;
+    for (let seed = 0; seed < 300; seed++) {
+      const result = simulateMatch(home, away, seed, 'subtle', undefined, [sub]);
+      savesForOld += result.events.filter((e) => e.type === 'shot_saved' && e.goalkeeperId === outGoalkeeper.id).length;
+      savesForNew += result.events.filter((e) => e.type === 'shot_saved' && e.goalkeeperId === benchGoalkeeper.id).length;
+    }
+
+    expect(savesForOld).toBe(0);
+    expect(savesForNew).toBeGreaterThan(0);
   });
 });

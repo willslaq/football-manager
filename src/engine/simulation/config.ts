@@ -266,3 +266,6 @@ export const RED_CARD_SECTOR_PENALTY: Record<Sector, number> = {
   midfield: 0.9,
   attack: 0.92,
 };
+
+/** Máximo de substituições por time por partida (ver match.ts's MatchSubstitution/applySubstitution). */
+export const MAX_SUBSTITUTIONS_PER_TEAM = 5;

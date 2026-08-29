@@ -1,6 +1,6 @@
 import type { ClubId, MatchEvent, MatchEventType } from '../../engine/types';
 import { Badge } from './Badge';
-import { IconBall, IconCard } from './Icons';
+import { IconBall, IconCard, IconSub } from './Icons';
 import './MatchEventFeed.css';
 
 const FEED_META: Partial<Record<MatchEventType, { label: string; tone: 'pitch' | 'floodlight' | 'neutral'; verb: string; suffix: string }>> = {
@@ -9,6 +9,8 @@ const FEED_META: Partial<Record<MatchEventType, { label: string; tone: 'pitch' |
   shot_missed: { label: 'PRA FORA', tone: 'neutral', verb: 'Chute de', suffix: ', pra fora' },
   yellow_card: { label: 'AMARELO', tone: 'neutral', verb: 'Cartão amarelo para', suffix: '' },
   red_card: { label: 'VERMELHO', tone: 'floodlight', verb: 'Cartão vermelho para', suffix: '' },
+  // verb/suffix não usados aqui — substituição tem texto próprio (dois nomes, ver FeedItem).
+  substitution: { label: 'SUBSTITUIÇÃO', tone: 'neutral', verb: '', suffix: '' },
 };
 
 /** Cor do cartão gráfico por tipo de evento — só yellow_card/red_card usam IconCard, o resto usa Badge. */
@@ -22,11 +24,14 @@ function FeedItem({
   teamName,
   crestSrc,
   playerName,
+  playerInName,
 }: {
   event: MatchEvent;
   teamName?: string;
   crestSrc?: string;
   playerName: string;
+  /** Só em eventos 'substitution': nome de quem entrou (playerName acima é quem saiu). */
+  playerInName?: string;
 }) {
   const meta = FEED_META[event.type];
   if (!meta) return null;
@@ -36,15 +41,25 @@ function FeedItem({
       <span className="match-event-feed__minute numeric">{event.minute}&apos;</span>
       {event.type === 'goal' ? (
         <IconBall className="match-event-feed__ball" />
+      ) : event.type === 'substitution' ? (
+        <IconSub className="match-event-feed__sub" />
       ) : cardColor ? (
         <IconCard color={cardColor} className="match-event-feed__card" />
       ) : (
         <Badge tone={meta.tone}>{meta.label}</Badge>
       )}
       <span className="match-event-feed__text">
-        {meta.verb} {playerName}
-        {meta.suffix}
-        {event.setPiece === 'penalty' ? ' (pênalti)' : event.setPiece === 'free_kick' ? ' (falta)' : ''}{' '}
+        {event.type === 'substitution' ? (
+          <>
+            {playerInName} entra no lugar de {playerName}
+          </>
+        ) : (
+          <>
+            {meta.verb} {playerName}
+            {meta.suffix}
+            {event.setPiece === 'penalty' ? ' (pênalti)' : event.setPiece === 'free_kick' ? ' (falta)' : ''}
+          </>
+        )}{' '}
         {crestSrc ? (
           <img className="match-event-feed__team-crest" src={crestSrc} alt={teamName ?? ''} title={teamName} />
         ) : (
@@ -106,6 +121,7 @@ export function MatchEventFeed({
             teamName={isHome ? homeTeamName : awayTeamName}
             crestSrc={isHome ? homeCrestSrc : awayCrestSrc}
             playerName={playerName(event.playerId)}
+            playerInName={event.playerInId ? playerName(event.playerInId) : undefined}
           />
         );
       })}

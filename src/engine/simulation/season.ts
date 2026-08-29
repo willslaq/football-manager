@@ -2,7 +2,7 @@ import { deriveSeed } from '../rng';
 import type { CareerState } from '../types/career';
 import type { Club, ClubId } from '../types/club';
 import type { Competition, Fixture, StandingEntry } from '../types/competition';
-import type { EngineTraceEntry } from '../types/match';
+import type { EngineTraceEntry, MatchResult } from '../types/match';
 import type { Player } from '../types/player';
 import type { Lineup, Tactics } from '../types/tactics';
 import { CLUB_MORALE_DRAW_DELTA, CLUB_MORALE_LOSS_DELTA, CLUB_MORALE_WIN_DELTA } from './config';
@@ -149,32 +149,78 @@ export function applyCardSuspension(
   return { pendingYellowCards, suspendedMatches: player.suspendedMatches + newSuspensions };
 }
 
-function updatePlayerStats(
+/**
+ * Suspensão em cumprimento decrementa pra todo mundo do elenco, tenha jogado essa rodada ou
+ * não — é assim que o jogador volta a ficar disponível na rodada seguinte. Roda uma única vez
+ * por rodada (ver `simulateRound`), separado de `applyParticipantStats` porque a partida do
+ * jogador só tem seu resultado final conhecido depois da transmissão ao vivo (e possíveis
+ * substituições) terminar — mas a liberação de suspensão de TODO o elenco não pode esperar isso.
+ */
+function decrementSuspensions(players: Player[]): Player[] {
+  return players.map((player) => {
+    const servedSuspension = Math.max(0, player.suspendedMatches - 1);
+    return servedSuspension === player.suspendedMatches ? player : { ...player, suspendedMatches: servedSuspension };
+  });
+}
+
+interface MatchStatMaps {
+  /** Todo mundo que efetivamente entrou em campo nessa partida (titulares + substitutos). */
+  participantIds: Set<string>;
+  goalsByPlayer: Map<string, number>;
+  savesByGoalkeeper: Map<string, number>;
+  yellowCardsByPlayer: Map<string, number>;
+  redCardsByPlayer: Map<string, number>;
+}
+
+/** Extrai os mapas de estatística de uma partida já resolvida — titulares dos dois lados + qualquer substituto que entrou (evento 'substitution'). */
+function collectMatchStatMaps(homeStarters: Player[], awayStarters: Player[], result: MatchResult): MatchStatMaps {
+  const participantIds = new Set<string>();
+  for (const player of [...homeStarters, ...awayStarters]) participantIds.add(player.id);
+
+  const goalsByPlayer = new Map<string, number>();
+  const savesByGoalkeeper = new Map<string, number>();
+  const yellowCardsByPlayer = new Map<string, number>();
+  const redCardsByPlayer = new Map<string, number>();
+
+  for (const event of result.events) {
+    if (event.type === 'goal') {
+      goalsByPlayer.set(event.playerId, (goalsByPlayer.get(event.playerId) ?? 0) + 1);
+    } else if (event.type === 'shot_saved' && event.goalkeeperId) {
+      savesByGoalkeeper.set(event.goalkeeperId, (savesByGoalkeeper.get(event.goalkeeperId) ?? 0) + 1);
+    } else if (event.type === 'yellow_card') {
+      yellowCardsByPlayer.set(event.playerId, (yellowCardsByPlayer.get(event.playerId) ?? 0) + 1);
+    } else if (event.type === 'red_card') {
+      redCardsByPlayer.set(event.playerId, (redCardsByPlayer.get(event.playerId) ?? 0) + 1);
+    } else if (event.type === 'substitution' && event.playerInId) {
+      participantIds.add(event.playerInId);
+    }
+  }
+
+  return { participantIds, goalsByPlayer, savesByGoalkeeper, yellowCardsByPlayer, redCardsByPlayer };
+}
+
+/**
+ * Aplica estatísticas/cartões de uma (ou mais) partida(s) já resolvida(s) só a quem jogou
+ * (`participantIds`) — quem não jogou fica intocado. Assume que `decrementSuspensions` já
+ * rodou sobre `players` antes: pode ser chamada mais de uma vez por rodada com conjuntos de
+ * `participantIds` disjuntos (partidas de CPU, depois a do jogador) sem decrementar suspensão em dobro.
+ */
+function applyParticipantStats(
   players: Player[],
-  starterIds: Set<string>,
+  participantIds: Set<string>,
   goalsByPlayer: Map<string, number>,
   savesByGoalkeeper: Map<string, number>,
   yellowCardsByPlayer: Map<string, number>,
   redCardsByPlayer: Map<string, number>,
 ): Player[] {
   return players.map((player) => {
-    // Suspensão em cumprimento decrementa pra todo mundo, tenha jogado essa rodada
-    // ou não — é assim que o jogador volta a ficar disponível na rodada seguinte.
-    const servedSuspension = Math.max(0, player.suspendedMatches - 1);
-
-    if (!starterIds.has(player.id)) {
-      return servedSuspension === player.suspendedMatches ? player : { ...player, suspendedMatches: servedSuspension };
-    }
+    if (!participantIds.has(player.id)) return player;
 
     const goals = goalsByPlayer.get(player.id) ?? 0;
     const saves = savesByGoalkeeper.get(player.id) ?? 0;
     const yellowCards = yellowCardsByPlayer.get(player.id) ?? 0;
     const redCards = redCardsByPlayer.get(player.id) ?? 0;
-    const { pendingYellowCards, suspendedMatches } = applyCardSuspension(
-      { ...player, suspendedMatches: servedSuspension },
-      yellowCards,
-      redCards,
-    );
+    const { pendingYellowCards, suspendedMatches } = applyCardSuspension(player, yellowCards, redCards);
 
     return {
       ...player,
@@ -192,49 +238,67 @@ function updatePlayerStats(
   });
 }
 
+export interface SimulateRoundResult {
+  nextState: CareerState;
+  /** Índice da rodada simulada em `competition.fixtures` — precisa ser guardado por quem chama pra achar o fixture de novo em `commitPlayerMatchResult` (currentRound já avançou nesse meio-tempo). */
+  roundIndex: number;
+  /** Ausentes quando a rodada não tem confronto do time do jogador (defensivo — não deveria acontecer no calendário atual). */
+  playerFixture?: Fixture;
+  playerMatchResult?: MatchResult;
+  homeTeamInput?: MatchTeamInput;
+  awayTeamInput?: MatchTeamInput;
+  seed?: number;
+}
+
 /**
- * Avança a rodada atual da temporada: simula todos os confrontos, atualiza a
- * tabela (incremental — não recomputa do zero, pois rodadas importadas de uma
- * situação real não têm placar jogo a jogo) e as estatísticas de temporada
- * dos jogadores que entraram em campo. Função pura: recebe o estado e
- * devolve um novo estado, sem mutar o original.
+ * Simula todos os confrontos da rodada atual e já comita tabela/estatísticas/moral de TODOS
+ * eles, exceto o do time do jogador: esse é entregue ao vivo pra UI (com possíveis
+ * substituições no meio, ver match.ts's `MatchSubstitution`), então seu resultado ainda pode
+ * mudar — só é definitivo quando `commitPlayerMatchResult` for chamado com o resultado final.
+ * Função pura: recebe o estado e devolve um novo estado, sem mutar o original.
  */
-export function advanceRound(state: CareerState, input: AdvanceRoundInput): CareerState {
+export function simulateRound(state: CareerState, input: AdvanceRoundInput): SimulateRoundResult {
   if (state.season.state === 'finished') {
-    throw new Error('advanceRound: a temporada já terminou');
+    throw new Error('simulateRound: a temporada já terminou');
   }
   if (input.playerLineup.starters.length !== 11) {
-    throw new Error('advanceRound: escalação do jogador precisa ter exatamente 11 titulares');
+    throw new Error('simulateRound: escalação do jogador precisa ter exatamente 11 titulares');
   }
 
   const competition = state.season.competitions[0];
   const roundIndex = state.season.currentRound - 1;
   const round = competition.fixtures[roundIndex];
   if (!round) {
-    throw new Error(`advanceRound: rodada ${state.season.currentRound} não existe nesta competição`);
+    throw new Error(`simulateRound: rodada ${state.season.currentRound} não existe nesta competição`);
   }
 
   const playersById = new Map(state.world.players.map((p) => [p.id, p]));
   const clubsById = new Map(state.world.clubs.map((c) => [c.id, c]));
 
-  const starterIds = new Set<string>();
-  const goalsByPlayer = new Map<string, number>();
-  const savesByGoalkeeper = new Map<string, number>();
-  const yellowCardsByPlayer = new Map<string, number>();
-  const redCardsByPlayer = new Map<string, number>();
+  const cpuParticipantIds = new Set<string>();
+  const cpuGoalsByPlayer = new Map<string, number>();
+  const cpuSavesByGoalkeeper = new Map<string, number>();
+  const cpuYellowCardsByPlayer = new Map<string, number>();
+  const cpuRedCardsByPlayer = new Map<string, number>();
   let standings = competition.standings;
   const playedRound: Fixture[] = [];
   const moraleByClub = new Map<ClubId, number>();
 
+  let playerFixture: Fixture | undefined;
+  let playerMatchResult: MatchResult | undefined;
+  let playerHomeTeamInput: MatchTeamInput | undefined;
+  let playerAwayTeamInput: MatchTeamInput | undefined;
+  let playerSeed: number | undefined;
+
   for (const fixture of round) {
     const isPlayerHome = fixture.homeTeamId === state.playerClubId;
     const isPlayerAway = fixture.awayTeamId === state.playerClubId;
+    const isPlayerFixture = isPlayerHome || isPlayerAway;
 
     const home = buildTeamInput(fixture.homeTeamId, isPlayerHome, input, clubsById, playersById);
     const away = buildTeamInput(fixture.awayTeamId, isPlayerAway, input, clubsById, playersById);
 
     const seed = deriveSeed(state.seed, `round${state.season.currentRound}:${fixture.homeTeamId}:${fixture.awayTeamId}`);
-    const isPlayerFixture = isPlayerHome || isPlayerAway;
     const result = simulateMatch(
       home,
       away,
@@ -243,18 +307,25 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
       isPlayerFixture ? input.onPlayerChance : undefined,
     );
 
-    for (const player of [...home.players, ...away.players]) starterIds.add(player.id);
-    for (const event of result.events) {
-      if (event.type === 'goal') {
-        goalsByPlayer.set(event.playerId, (goalsByPlayer.get(event.playerId) ?? 0) + 1);
-      } else if (event.type === 'shot_saved' && event.goalkeeperId) {
-        savesByGoalkeeper.set(event.goalkeeperId, (savesByGoalkeeper.get(event.goalkeeperId) ?? 0) + 1);
-      } else if (event.type === 'yellow_card') {
-        yellowCardsByPlayer.set(event.playerId, (yellowCardsByPlayer.get(event.playerId) ?? 0) + 1);
-      } else if (event.type === 'red_card') {
-        redCardsByPlayer.set(event.playerId, (redCardsByPlayer.get(event.playerId) ?? 0) + 1);
-      }
+    if (isPlayerFixture) {
+      // Ainda sem resultado definitivo — a UI transmite ao vivo (e pode pedir substituições,
+      // que reroda `simulateMatch`); o fixture entra "como está" na rodada, e `commitPlayerMatchResult`
+      // troca por `{ ...fixture, result }` quando o resultado final estiver pronto.
+      playerFixture = fixture;
+      playerMatchResult = result;
+      playerHomeTeamInput = home;
+      playerAwayTeamInput = away;
+      playerSeed = seed;
+      playedRound.push(fixture);
+      continue;
     }
+
+    const stats = collectMatchStatMaps(home.players, away.players, result);
+    for (const id of stats.participantIds) cpuParticipantIds.add(id);
+    for (const [id, n] of stats.goalsByPlayer) cpuGoalsByPlayer.set(id, (cpuGoalsByPlayer.get(id) ?? 0) + n);
+    for (const [id, n] of stats.savesByGoalkeeper) cpuSavesByGoalkeeper.set(id, (cpuSavesByGoalkeeper.get(id) ?? 0) + n);
+    for (const [id, n] of stats.yellowCardsByPlayer) cpuYellowCardsByPlayer.set(id, (cpuYellowCardsByPlayer.get(id) ?? 0) + n);
+    for (const [id, n] of stats.redCardsByPlayer) cpuRedCardsByPlayer.set(id, (cpuRedCardsByPlayer.get(id) ?? 0) + n);
 
     const playedFixture: Fixture = { ...fixture, result };
     standings = applyResultToStandings(standings, playedFixture);
@@ -275,17 +346,17 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
   const totalRounds = competition.fixtures.length;
   const nextRound = state.season.currentRound + 1;
 
-  return {
+  const nextState: CareerState = {
     ...state,
     world: {
       clubs: state.world.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
-      players: updatePlayerStats(
-        state.world.players,
-        starterIds,
-        goalsByPlayer,
-        savesByGoalkeeper,
-        yellowCardsByPlayer,
-        redCardsByPlayer,
+      players: applyParticipantStats(
+        decrementSuspensions(state.world.players),
+        cpuParticipantIds,
+        cpuGoalsByPlayer,
+        cpuSavesByGoalkeeper,
+        cpuYellowCardsByPlayer,
+        cpuRedCardsByPlayer,
       ),
     },
     season: {
@@ -295,4 +366,87 @@ export function advanceRound(state: CareerState, input: AdvanceRoundInput): Care
       competitions: [updatedCompetition],
     },
   };
+
+  return {
+    nextState,
+    roundIndex,
+    playerFixture,
+    playerMatchResult,
+    homeTeamInput: playerHomeTeamInput,
+    awayTeamInput: playerAwayTeamInput,
+    seed: playerSeed,
+  };
+}
+
+/**
+ * Comita o resultado FINAL (pós-substituições, se houve) da partida do jogador: tabela, moral
+ * dos dois clubes envolvidos e estatísticas de quem participou (titulares + qualquer
+ * substituto que entrou — ver `collectMatchStatMaps`). Chamado depois que a transmissão ao
+ * vivo termina (ver engine.worker.ts). Função pura.
+ */
+export function commitPlayerMatchResult(
+  state: CareerState,
+  ctx: { playerFixture: Fixture; roundIndex: number; homeTeamInput: MatchTeamInput; awayTeamInput: MatchTeamInput },
+  finalResult: MatchResult,
+): CareerState {
+  const competition = state.season.competitions[0];
+  const round = competition.fixtures[ctx.roundIndex];
+  if (!round) {
+    throw new Error(`commitPlayerMatchResult: rodada de índice ${ctx.roundIndex} não existe nesta competição`);
+  }
+
+  const playedFixture: Fixture = { ...ctx.playerFixture, result: finalResult };
+  const updatedRound = round.map((f) => (f === ctx.playerFixture ? playedFixture : f));
+  const standings = applyResultToStandings(competition.standings, playedFixture);
+
+  const homeClub = state.world.clubs.find((c) => c.id === ctx.playerFixture.homeTeamId);
+  const awayClub = state.world.clubs.find((c) => c.id === ctx.playerFixture.awayTeamId);
+  const moraleByClub = new Map<ClubId, number>();
+  if (homeClub) moraleByClub.set(homeClub.id, moraleAfterResult(homeClub.morale, finalResult.homeGoals, finalResult.awayGoals));
+  if (awayClub) moraleByClub.set(awayClub.id, moraleAfterResult(awayClub.morale, finalResult.awayGoals, finalResult.homeGoals));
+
+  const stats = collectMatchStatMaps(ctx.homeTeamInput.players, ctx.awayTeamInput.players, finalResult);
+
+  return {
+    ...state,
+    world: {
+      clubs: state.world.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
+      players: applyParticipantStats(
+        state.world.players,
+        stats.participantIds,
+        stats.goalsByPlayer,
+        stats.savesByGoalkeeper,
+        stats.yellowCardsByPlayer,
+        stats.redCardsByPlayer,
+      ),
+    },
+    season: {
+      ...state.season,
+      competitions: [
+        {
+          ...competition,
+          standings,
+          fixtures: competition.fixtures.map((r, i) => (i === ctx.roundIndex ? updatedRound : r)),
+        },
+      ],
+    },
+  };
+}
+
+/**
+ * Avança a rodada atual da temporada de uma vez só: simula todos os confrontos e já comita
+ * tudo (tabela, moral, estatísticas), incluindo a partida do jogador — sem transmissão ao vivo
+ * nem chance de substituição. É `simulateRound` + `commitPlayerMatchResult` compostos; usado
+ * pelos testes e por qualquer fluxo que só queira o resultado final da rodada de uma vez
+ * (ver engine.worker.ts pro fluxo ao vivo, que chama os dois separadamente).
+ */
+export function advanceRound(state: CareerState, input: AdvanceRoundInput): CareerState {
+  const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, roundIndex } = simulateRound(
+    state,
+    input,
+  );
+  if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput) {
+    return nextState;
+  }
+  return commitPlayerMatchResult(nextState, { playerFixture, roundIndex, homeTeamInput, awayTeamInput }, playerMatchResult);
 }

@@ -45,3 +45,30 @@ export function IconCardStack({ count, className }: { count: 1 | 2; className?: 
     </span>
   );
 }
+
+/**
+ * Par de setas de substituição (entra/sai) — reaproveitado no feed de eventos (MatchLive/MatchResult)
+ * e na lista de jogadores em campo, pra não divergir o "ícone de substituição" entre as telas.
+ */
+export function IconSub({ className, style }: IconProps) {
+  return (
+    <svg width="13" height="15" viewBox="0 0 13 16" aria-hidden="true" className={className} style={style}>
+      <path
+        d="M3.5 1 L3.5 11 M1 8.5 L3.5 11 L6 8.5"
+        stroke="var(--pitch)"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.5 15 L9.5 5 M7 7.5 L9.5 5 L12 7.5"
+        stroke="var(--danger)"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

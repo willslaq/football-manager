@@ -3,7 +3,7 @@ import { useCareerStore } from '../../store/careerStore';
 import type { EngineTraceEntry } from '../../engine/types';
 import { findClub } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Button, Card, IconBall, MatchEventFeed, RoundResultsList } from '../components';
+import { Button, Card, IconBall, MatchEventFeed, OnPitchList, RoundResultsList, SubstitutionDialog } from '../components';
 import './MatchLive.css';
 
 function IconPlay() {
@@ -87,6 +87,12 @@ export function MatchLive() {
   const skipLiveMatch = useCareerStore((s) => s.skipLiveMatch);
   const setLiveMatchSpeed = useCareerStore((s) => s.setLiveMatchSpeed);
   const toggleLiveMatchPause = useCareerStore((s) => s.toggleLiveMatchPause);
+  const openSubstitutionDialog = useCareerStore((s) => s.openSubstitutionDialog);
+  const closeSubstitutionDialog = useCareerStore((s) => s.closeSubstitutionDialog);
+  const selectPitchSlot = useCareerStore((s) => s.selectPitchSlot);
+  const queueSwap = useCareerStore((s) => s.queueSwap);
+  const removePendingSwap = useCareerStore((s) => s.removePendingSwap);
+  const confirmSubstitutions = useCareerStore((s) => s.confirmSubstitutions);
   const [geekOpen, setGeekOpen] = useState(false);
 
   if (!career || !liveMatch) return null;
@@ -106,6 +112,14 @@ export function MatchLive() {
   return (
     <>
       <div className="match-live-layout">
+        <OnPitchList
+          pitchRoster={liveMatch.pitchRoster}
+          events={liveMatch.events}
+          playerName={playerName}
+          onOpen={openSubstitutionDialog}
+          disabled={isFullTime}
+        />
+
         <main className="match-live">
           <div className="ml-header">
             <span className="ml-live-badge">
@@ -242,6 +256,21 @@ export function MatchLive() {
           />
         </Card>
       </div>
+
+      <SubstitutionDialog
+        open={liveMatch.substitutionDialogOpen}
+        pitchRoster={liveMatch.pitchRoster}
+        benchIds={liveMatch.benchIds}
+        pendingSwaps={liveMatch.pendingSwaps}
+        selectedPitchSlotId={liveMatch.selectedPitchSlotId}
+        subCount={liveMatch.subCount}
+        players={career.world.players}
+        onSelectSlot={selectPitchSlot}
+        onQueueSwap={queueSwap}
+        onRemovePendingSwap={removePendingSwap}
+        onConfirm={confirmSubstitutions}
+        onClose={closeSubstitutionDialog}
+      />
 
       {/* Fora de .match-live-layout de propósito: esse container tem transform pra animação de
           entrada, e um ancestral com transform vira containing block de position:fixed —

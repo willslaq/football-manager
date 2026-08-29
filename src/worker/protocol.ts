@@ -9,6 +9,7 @@ import type {
   Lineup,
   MatchEvent,
   MatchResult,
+  PlayerId,
   TacticalIntensity,
   Tactics,
 } from '../engine/types';
@@ -83,6 +84,18 @@ export interface SetLiveMatchPausedRequest {
   payload: { liveRequestId: string; paused: boolean };
 }
 
+/**
+ * Confirma um lote de substituições (uma sessão de diálogo pode acumular mais de uma antes de
+ * confirmar) no time do jogador, na partida ao vivo em andamento — o motor reroda a simulação
+ * com a mesma seed a partir do minuto corrente (ver match.ts's `MatchSubstitution` e
+ * engine.worker.ts). Só o lado do jogador é substituível nessa v1 (times de CPU não têm banco na UI).
+ */
+export interface RequestSubstitutionRequest {
+  type: 'requestSubstitution';
+  requestId: string;
+  payload: { liveRequestId: string; substitutions: { playerOutId: PlayerId; playerInId: PlayerId }[] };
+}
+
 export type EngineRequest =
   | ListClubsRequest
   | StartCareerRequest
@@ -92,7 +105,8 @@ export type EngineRequest =
   | SkipLiveMatchRequest
   | SetLiveMatchSpeedRequest
   | SetLiveMatchPausedRequest
-  | SetTacticalIntensityRequest;
+  | SetTacticalIntensityRequest
+  | RequestSubstitutionRequest;
 
 export interface ClubsListResponse {
   type: 'clubsList';
@@ -164,6 +178,17 @@ export interface SettingsUpdatedResponse {
   payload: { state: CareerState };
 }
 
+/** Confirma que o lote de substituições pedido foi aplicado — o resto da partida a partir daqui já reflete o novo time. */
+export interface LiveMatchSubstitutionAppliedResponse {
+  type: 'liveMatchSubstitutionApplied';
+  requestId: string;
+  payload: {
+    substitutions: { playerOutId: PlayerId; playerInId: PlayerId }[];
+    /** Total de substituições já confirmadas nessa partida pro time do jogador (ver MAX_SUBSTITUTIONS_PER_TEAM). */
+    subCount: number;
+  };
+}
+
 export interface ErrorResponse {
   type: 'error';
   requestId: string;
@@ -179,5 +204,6 @@ export type EngineResponse =
   | LiveMatchTickResponse
   | LiveMatchEventResponse
   | LiveMatchTraceResponse
+  | LiveMatchSubstitutionAppliedResponse
   | SettingsUpdatedResponse
   | ErrorResponse;

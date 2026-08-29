@@ -24,6 +24,8 @@ export interface MatchEvent {
   goalkeeperId?: PlayerId;
   /** Em eventos 'goal'/'shot_saved'/'shot_missed' nascidos de uma falta: qual bola parada gerou a cobrança. */
   setPiece?: 'penalty' | 'free_kick';
+  /** Só em eventos 'substitution': quem entrou (playerId acima é quem saiu). */
+  playerInId?: PlayerId;
 }
 
 export interface TeamStat {

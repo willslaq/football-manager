@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { MAX_SUBSTITUTIONS_PER_TEAM } from '../engine';
+import { assignToSlots, buildSlots } from '../engine/simulation/formation';
 import type {
   CareerState,
   ClubId,
@@ -7,6 +9,8 @@ import type {
   MatchEvent,
   MatchResult,
   Player,
+  PlayerId,
+  Position,
   TacticalIntensity,
   Tactics,
 } from '../engine/types';
@@ -57,6 +61,20 @@ export interface OtherMatchState {
   result: MatchResult | null;
 }
 
+/** Um titular do time do jogador em campo, na vaga exata da escalação — fonte pra substituição ao vivo. */
+export interface PitchRosterEntry {
+  slotId: string;
+  playerId: PlayerId;
+  canonicalPosition: Position;
+}
+
+/** Uma troca ainda não confirmada, montada na sessão corrente do diálogo de substituição. */
+export interface PendingSwap {
+  slotId: string;
+  playerOutId: PlayerId;
+  playerInId: PlayerId;
+}
+
 /** Estado da partida do jogador sendo transmitida ao vivo, minuto a minuto. */
 export interface LiveMatchState {
   homeTeamId: ClubId;
@@ -72,6 +90,80 @@ export interface LiveMatchState {
   paused: boolean;
   /** Os demais confrontos da rodada, revelados aos poucos (ver worker/liveMatch.ts). */
   otherMatches: OtherMatchState[];
+  /**
+   * XI do time do jogador realmente em campo NESSA partida — só CONFIRMADO (ver
+   * `pendingSwaps` pra troca ainda não confirmada). Some um titular quando ele é expulso (sem
+   * reposição, ver `liveMatchEvent`); vira o suplente na mesma vaga quando uma substituição é
+   * confirmada (ver `liveMatchSubstitutionApplied`). Só o time do jogador tem banco na UI — CPU não é substituível.
+   */
+  pitchRoster: PitchRosterEntry[];
+  /** Reservas disponíveis do time do jogador (elenco menos titulares menos suspensos), confirmados. */
+  benchIds: PlayerId[];
+  /** Substituições já confirmadas nessa partida (ver MAX_SUBSTITUTIONS_PER_TEAM). */
+  subCount: number;
+  substitutionDialogOpen: boolean;
+  /** Vaga do titular "elevado"/selecionado no diálogo — null = nada selecionado. */
+  selectedPitchSlotId: string | null;
+  /** Trocas montadas nessa sessão do diálogo, ainda não enviadas — some ao fechar sem confirmar. */
+  pendingSwaps: PendingSwap[];
+}
+
+/**
+ * Deriva a escalação/banco do time do jogador a partir da `Lineup` salva (mesma fonte da tela
+ * de Escalação) — sem `slotAssignments` (saves antigos/sugestão inicial), reconstrói via
+ * `assignToSlots`, igual a Lineup.tsx sempre fez.
+ */
+function buildPitchRoster(lineup: Lineup | null, career: CareerState | null): PitchRosterEntry[] {
+  if (!lineup || !career) return [];
+  const playersById = new Map(career.world.players.map((p) => [p.id, p]));
+  const slots = buildSlots(lineup.formation);
+  const assignments =
+    lineup.slotAssignments ??
+    assignToSlots(
+      slots,
+      lineup.starters.map((id) => playersById.get(id)).filter((p): p is Player => !!p),
+    );
+  return slots
+    .map((slot) => {
+      const playerId = assignments[slot.id];
+      return playerId ? { slotId: slot.id, playerId, canonicalPosition: slot.canonical } : null;
+    })
+    .filter((entry): entry is PitchRosterEntry => entry !== null);
+}
+
+/** Elenco do time do jogador menos titulares menos suspensos — mesmo critério de disponibilidade da Escalação. */
+function buildBenchIds(lineup: Lineup | null, career: CareerState | null): PlayerId[] {
+  if (!lineup || !career) return [];
+  const club = career.world.clubs.find((c) => c.id === career.playerClubId);
+  if (!club) return [];
+  const playersById = new Map(career.world.players.map((p) => [p.id, p]));
+  const starterSet = new Set(lineup.starters);
+  return club.squad.filter((id) => {
+    if (starterSet.has(id)) return false;
+    const player = playersById.get(id);
+    return !!player && player.suspendedMatches === 0;
+  });
+}
+
+/**
+ * Aplica uma lista de trocas (pendentes ou recém-confirmadas) sobre um par escalação/banco —
+ * pura, usada tanto pra derivar o "preview" do diálogo (aplicada por cima do estado confirmado,
+ * sem persistir) quanto, com só as trocas confirmadas, pra atualizar o estado confirmado de fato
+ * (ver `liveMatchSubstitutionApplied`). Trocas encadeadas na mesma vaga na mesma sessão (ex.:
+ * A sai/B entra, depois B sai/C entra) resolvem corretamente aplicando em ordem.
+ */
+export function applyPendingSwaps(
+  pitchRoster: PitchRosterEntry[],
+  benchIds: PlayerId[],
+  swaps: PendingSwap[],
+): { pitchRoster: PitchRosterEntry[]; benchIds: PlayerId[] } {
+  let pitch = pitchRoster;
+  let bench = benchIds;
+  for (const swap of swaps) {
+    pitch = pitch.map((entry) => (entry.slotId === swap.slotId ? { ...entry, playerId: swap.playerInId } : entry));
+    bench = [...bench.filter((id) => id !== swap.playerInId), swap.playerOutId];
+  }
+  return { pitchRoster: pitch, benchIds: bench };
 }
 
 interface CareerStore {
@@ -100,6 +192,18 @@ interface CareerStore {
   skipLiveMatch: () => void;
   setLiveMatchSpeed: (speed: 1 | 2) => void;
   toggleLiveMatchPause: () => void;
+  /** Abre o diálogo de substituição e pausa a partida ao vivo (ver LiveMatchState.pitchRoster). */
+  openSubstitutionDialog: () => void;
+  /** Fecha o diálogo sem confirmar — descarta as trocas ainda pendentes; não retoma a partida sozinho. */
+  closeSubstitutionDialog: () => void;
+  /** Seleciona (ou desmarca, com null) o titular "elevado" no diálogo — próximo clique num reserva monta a troca. */
+  selectPitchSlot: (slotId: string | null) => void;
+  /** Monta uma troca com o reserva clicado e a vaga selecionada — só na sessão local, ver `confirmSubstitutions`. */
+  queueSwap: (benchPlayerId: string) => void;
+  /** Remove uma troca ainda não confirmada da sessão local do diálogo. */
+  removePendingSwap: (index: number) => void;
+  /** Envia todas as trocas pendentes da sessão de uma vez ao motor; a partida retoma quando o motor confirmar. */
+  confirmSubstitutions: () => void;
   setLineup: (lineup: Lineup) => void;
   setTactics: (tactics: Tactics) => void;
   setAutoSaveEnabled: (enabled: boolean) => void;
@@ -151,7 +255,8 @@ export const useCareerStore = create<CareerStore>((set, get) => {
         });
         break;
       }
-      case 'liveMatchStarted':
+      case 'liveMatchStarted': {
+        const { lineup, career: currentCareer } = get();
         set({
           liveMatch: {
             homeTeamId: response.payload.homeTeamId,
@@ -168,11 +273,18 @@ export const useCareerStore = create<CareerStore>((set, get) => {
               awayTeamId: f.awayTeamId,
               result: null,
             })),
+            pitchRoster: buildPitchRoster(lineup, currentCareer),
+            benchIds: buildBenchIds(lineup, currentCareer),
+            subCount: 0,
+            substitutionDialogOpen: false,
+            selectedPitchSlotId: null,
+            pendingSwaps: [],
           },
           engineLog: [],
           loading: false,
         });
         break;
+      }
       case 'liveMatchOtherResult':
         set((state) =>
           state.liveMatch
@@ -208,19 +320,54 @@ export const useCareerStore = create<CareerStore>((set, get) => {
         );
         break;
       case 'liveMatchEvent':
-        set((state) =>
-          state.liveMatch
-            ? {
-                liveMatch: {
-                  ...state.liveMatch,
-                  events: [...state.liveMatch.events, response.payload.event],
-                  homeGoals: response.payload.homeGoals,
-                  awayGoals: response.payload.awayGoals,
-                },
-              }
-            : {},
-        );
+        set((state) => {
+          if (!state.liveMatch) return {};
+          const event = response.payload.event;
+          // Expulsão tira o titular de campo sem repor — mesma regra do motor (sendOff, match.ts):
+          // sem substituição possível pra quem já saiu assim (ver applySubstitution's no-op).
+          const pitchRoster =
+            event.type === 'red_card'
+              ? state.liveMatch.pitchRoster.filter((entry) => entry.playerId !== event.playerId)
+              : state.liveMatch.pitchRoster;
+          return {
+            liveMatch: {
+              ...state.liveMatch,
+              events: [...state.liveMatch.events, event],
+              homeGoals: response.payload.homeGoals,
+              awayGoals: response.payload.awayGoals,
+              pitchRoster,
+            },
+          };
+        });
         break;
+      case 'liveMatchSubstitutionApplied': {
+        set((state) => {
+          if (!state.liveMatch) return {};
+          const appliedKeys = new Set(response.payload.substitutions.map((s) => `${s.playerOutId}→${s.playerInId}`));
+          const confirmed = state.liveMatch.pendingSwaps.filter((s) => appliedKeys.has(`${s.playerOutId}→${s.playerInId}`));
+          const { pitchRoster, benchIds } = applyPendingSwaps(state.liveMatch.pitchRoster, state.liveMatch.benchIds, confirmed);
+          return {
+            liveMatch: {
+              ...state.liveMatch,
+              pitchRoster,
+              benchIds,
+              subCount: response.payload.subCount,
+              pendingSwaps: [],
+              selectedPitchSlotId: null,
+              substitutionDialogOpen: false,
+              paused: false,
+            },
+          };
+        });
+        if (liveMatchRequestId) {
+          send({
+            type: 'setLiveMatchPaused',
+            requestId: crypto.randomUUID(),
+            payload: { liveRequestId: liveMatchRequestId, paused: false },
+          });
+        }
+        break;
+      }
       case 'roundResult': {
         liveMatchRequestId = null;
         const state = response.payload.state;
@@ -319,6 +466,73 @@ export const useCareerStore = create<CareerStore>((set, get) => {
         type: 'setLiveMatchPaused',
         requestId: crypto.randomUUID(),
         payload: { liveRequestId: liveMatchRequestId, paused },
+      });
+    },
+
+    openSubstitutionDialog: () => {
+      const { liveMatch } = get();
+      if (!liveMatchRequestId || !liveMatch || liveMatch.pitchRoster.length === 0) return;
+      set({ liveMatch: { ...liveMatch, paused: true, substitutionDialogOpen: true } });
+      send({
+        type: 'setLiveMatchPaused',
+        requestId: crypto.randomUUID(),
+        payload: { liveRequestId: liveMatchRequestId, paused: true },
+      });
+    },
+
+    closeSubstitutionDialog: () => {
+      const { liveMatch } = get();
+      if (!liveMatch) return;
+      set({
+        liveMatch: { ...liveMatch, substitutionDialogOpen: false, selectedPitchSlotId: null, pendingSwaps: [] },
+      });
+    },
+
+    selectPitchSlot: (slotId) => {
+      const { liveMatch } = get();
+      if (!liveMatch) return;
+      set({ liveMatch: { ...liveMatch, selectedPitchSlotId: slotId } });
+    },
+
+    queueSwap: (benchPlayerId) => {
+      const { liveMatch } = get();
+      if (!liveMatch || !liveMatch.selectedPitchSlotId) return;
+      if (liveMatch.subCount + liveMatch.pendingSwaps.length >= MAX_SUBSTITUTIONS_PER_TEAM) return;
+
+      const { pitchRoster: effectivePitch, benchIds: effectiveBench } = applyPendingSwaps(
+        liveMatch.pitchRoster,
+        liveMatch.benchIds,
+        liveMatch.pendingSwaps,
+      );
+      if (!effectiveBench.includes(benchPlayerId)) return;
+      const slot = effectivePitch.find((entry) => entry.slotId === liveMatch.selectedPitchSlotId);
+      if (!slot) return;
+
+      set({
+        liveMatch: {
+          ...liveMatch,
+          pendingSwaps: [...liveMatch.pendingSwaps, { slotId: slot.slotId, playerOutId: slot.playerId, playerInId: benchPlayerId }],
+          selectedPitchSlotId: null,
+        },
+      });
+    },
+
+    removePendingSwap: (index) => {
+      const { liveMatch } = get();
+      if (!liveMatch) return;
+      set({ liveMatch: { ...liveMatch, pendingSwaps: liveMatch.pendingSwaps.filter((_, i) => i !== index) } });
+    },
+
+    confirmSubstitutions: () => {
+      const { liveMatch } = get();
+      if (!liveMatchRequestId || !liveMatch || liveMatch.pendingSwaps.length === 0) return;
+      send({
+        type: 'requestSubstitution',
+        requestId: crypto.randomUUID(),
+        payload: {
+          liveRequestId: liveMatchRequestId,
+          substitutions: liveMatch.pendingSwaps.map((s) => ({ playerOutId: s.playerOutId, playerInId: s.playerInId })),
+        },
       });
     },
 

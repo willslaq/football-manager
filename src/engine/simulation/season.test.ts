@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { createBrasileiraoCareer } from '../generation/career';
+import type { CareerState } from '../types/career';
 import type { Lineup, Tactics } from '../types/tactics';
-import { advanceRound } from './season';
+import { advanceRound, commitPlayerMatchResult, simulateRound } from './season';
 import { pickAutoLineup } from './autoLineup';
+import { simulateMatch, type MatchSubstitution } from './match';
 
 const DEFAULT_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
 
@@ -129,5 +131,85 @@ describe('advanceRound', () => {
     const champion = [...competition.standings].sort((a, b) => b.points - a.points)[0];
     console.log('Campeão simulado:', champion.clubId, 'com', champion.points, 'pontos');
     expect(champion.points).toBeGreaterThan(0);
+  });
+
+  it('decrementa suspensão de quem não jogou uma única vez, mesmo com o commit em duas etapas (simulateRound + commitPlayerMatchResult)', () => {
+    const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
+    const lineup = autoLineupFor(state, 'palmeiras');
+    const palmeirasSquad = new Set(state.world.clubs.find((c) => c.id === 'palmeiras')!.squad);
+    const outsidePlayer = state.world.players.find((p) => !palmeirasSquad.has(p.id))!;
+
+    const stateWithSuspension: CareerState = {
+      ...state,
+      world: {
+        ...state.world,
+        players: state.world.players.map((p) => (p.id === outsidePlayer.id ? { ...p, suspendedMatches: 2 } : p)),
+      },
+    };
+
+    const next = advanceRound(stateWithSuspension, { playerLineup: lineup, playerTactics: DEFAULT_TACTICS });
+    const after = next.world.players.find((p) => p.id === outsidePlayer.id)!;
+    expect(after.suspendedMatches).toBe(1);
+  });
+});
+
+describe('simulateRound + commitPlayerMatchResult (partida do jogador entregue ao vivo, com possível substituição)', () => {
+  it('simulateRound comita as partidas de CPU na hora, mas deixa a do jogador sem resultado até commitPlayerMatchResult', () => {
+    const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
+    const lineup = autoLineupFor(state, 'palmeiras');
+    const { nextState, playerFixture, playerMatchResult, roundIndex } = simulateRound(state, {
+      playerLineup: lineup,
+      playerTactics: DEFAULT_TACTICS,
+    });
+
+    expect(playerFixture).toBeDefined();
+    expect(playerMatchResult).toBeDefined();
+
+    const round = nextState.season.competitions[0].fixtures[roundIndex];
+    const playerFixtureInRound = round.find(
+      (f) => f.homeTeamId === playerFixture!.homeTeamId && f.awayTeamId === playerFixture!.awayTeamId,
+    )!;
+    expect(playerFixtureInRound.result).toBeUndefined();
+    expect(round.filter((f) => f !== playerFixtureInRound).every((f) => f.result !== undefined)).toBe(true);
+  });
+
+  it('commitPlayerMatchResult grava o resultado final e credita estatísticas a quem entrou como substituto', () => {
+    const state = createBrasileiraoCareer(11, { id: 't1', name: 'X' }, 'palmeiras');
+    const lineup = autoLineupFor(state, 'palmeiras');
+    const { nextState, playerFixture, playerMatchResult, homeTeamInput, awayTeamInput, roundIndex, seed } = simulateRound(
+      state,
+      { playerLineup: lineup, playerTactics: DEFAULT_TACTICS },
+    );
+    if (!playerFixture || !playerMatchResult || !homeTeamInput || !awayTeamInput || seed === undefined) {
+      throw new Error('rodada de teste sem partida do jogador');
+    }
+
+    const isHome = playerFixture.homeTeamId === 'palmeiras';
+    const playerTeamInput = isHome ? homeTeamInput : awayTeamInput;
+    const outPlayer = playerTeamInput.players.find((p) => p.position !== 'GOL')!;
+    const club = nextState.world.clubs.find((c) => c.id === 'palmeiras')!;
+    const benchPlayerId = club.squad.find((id) => !lineup.starters.includes(id))!;
+    const benchPlayer = nextState.world.players.find((p) => p.id === benchPlayerId)!;
+
+    const sub: MatchSubstitution = {
+      minute: 60,
+      teamSide: isHome ? 'home' : 'away',
+      playerOutId: outPlayer.id,
+      playerIn: benchPlayer,
+    };
+    const finalResult = simulateMatch(homeTeamInput, awayTeamInput, seed, state.settings.tacticalIntensity, undefined, [sub]);
+
+    const committed = commitPlayerMatchResult(nextState, { playerFixture, roundIndex, homeTeamInput, awayTeamInput }, finalResult);
+
+    const committedFixture = committed.season.competitions[0].fixtures[roundIndex].find(
+      (f) => f.homeTeamId === playerFixture.homeTeamId && f.awayTeamId === playerFixture.awayTeamId,
+    )!;
+    expect(committedFixture.result).toEqual(finalResult);
+
+    const benchPlayerAfter = committed.world.players.find((p) => p.id === benchPlayer.id)!;
+    expect(benchPlayerAfter.seasonStats.appearances).toBe(1);
+
+    const outPlayerAfter = committed.world.players.find((p) => p.id === outPlayer.id)!;
+    expect(outPlayerAfter.seasonStats.appearances).toBe(1);
   });
 });

@@ -60,6 +60,10 @@
   flex-shrink: 0;
 }
 
+.match-event-feed__sub {
+  flex-shrink: 0;
+}
+
 .match-event-feed__team-crest {
   width: 0.9rem;
   height: 0.9rem;

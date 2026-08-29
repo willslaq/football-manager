@@ -8,8 +8,15 @@ import { positionAtCoord } from '../../engine/simulation/pitchZones';
 import { useCareerStore } from '../../store/careerStore';
 import { POSITION_FILTERS, POSITION_GROUP, resolveSquad, type PlayerListFilter } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
-import { Button, Card, TextField } from '../components';
+import { Button, Card, IconCardStack, TextField } from '../components';
 import './Lineup.css';
+
+/** Cartão acumulado só suspende com 3 (regra CBF/Brasileirão) — 1 ou 2 pendentes só mostram o(s) ícone(s). */
+function pendingCardCount(player: Player): 1 | 2 | null {
+  if (player.pendingYellowCards === 1) return 1;
+  if (player.pendingYellowCards === 2) return 2;
+  return null;
+}
 
 /**
  * Converte a coordenada da vaga (mesmo sistema de `pitchZones.ts`: `side`
@@ -100,7 +107,11 @@ export function Lineup() {
       const restored: Record<string, string | null> = {};
       for (const slot of slots) {
         const playerId = lineup.slotAssignments[slot.id];
-        restored[slot.id] = playerId && playersById.has(playerId) ? playerId : null;
+        // Defesa extra: o careerStore já limpa titular suspenso do lineup assim que a
+        // suspensão é decretada (ver removeSuspendedStarters), mas um save antigo
+        // carregado só agora pode não ter passado por isso.
+        restored[slot.id] =
+          playerId && playersById.get(playerId)?.suspendedMatches === 0 ? playerId : null;
       }
       const allSlotsKnown = Object.keys(lineup.slotAssignments).every((id) => validSlotIds.has(id));
       if (allSlotsKnown) return restored;
@@ -168,6 +179,9 @@ export function Lineup() {
   const isValid = assignedIds.size === 11 && hasGoalkeeper;
 
   function assignPlayerToSlot(playerId: string, targetSlotId: string) {
+    // Jogador suspenso não pode ser escalado — nem por clique, nem por arrastar (handleDrop
+    // e handleSidebarClick passam por aqui, então a checagem aqui cobre os dois).
+    if ((playersById.get(playerId)?.suspendedMatches ?? 0) > 0) return;
     setAssignments((prev) => {
       if (prev[targetSlotId] === playerId) return prev;
       const sourceSlotId = Object.keys(prev).find((k) => prev[k] === playerId);
@@ -185,6 +199,7 @@ export function Lineup() {
   }
 
   function handleSidebarClick(player: Player) {
+    if (player.suspendedMatches > 0) return;
     const currentSlotId = Object.keys(assignments).find((k) => assignments[k] === player.id);
     if (currentSlotId) {
       clearSlot(currentSlotId);
@@ -210,7 +225,7 @@ export function Lineup() {
   }
 
   function handleAutoAssign() {
-    setAssignments(autoAssign(slots, squad));
+    setAssignments(autoAssign(slots, squad.filter((p) => p.suspendedMatches === 0)));
   }
 
   async function handleSaveFormation() {
@@ -327,20 +342,31 @@ export function Lineup() {
               {visibleSquad.length === 0 && <p className="lineup__search-empty">Nenhum jogador encontrado.</p>}
               {visibleSquad.map((player) => {
                 const selected = assignedIds.has(player.id);
+                const suspended = player.suspendedMatches > 0;
+                const cardCount = pendingCardCount(player);
                 return (
                   <div
                     key={player.id}
-                    className={`lineup__row${selected ? ' lineup__row--selected' : ''}`}
-                    draggable
+                    className={`lineup__row${selected ? ' lineup__row--selected' : ''}${suspended ? ' lineup__row--suspended' : ''}`}
+                    draggable={!suspended}
                     onDragStart={(e) => {
+                      if (suspended) return;
                       e.dataTransfer.setData('text/plain', player.id);
                       e.dataTransfer.effectAllowed = 'move';
                     }}
                     onClick={() => handleSidebarClick(player)}
+                    title={suspended ? `${player.name} está suspenso — cumpre ${player.suspendedMatches} jogo(s)` : undefined}
                   >
                     <span className={`lineup__dot${selected ? ' lineup__dot--on' : ''}`} />
-                    <span className="lineup__name" title={player.name}>
-                      {player.name}
+                    <span className="lineup__name">
+                      <span className="lineup__name-text" title={player.name}>
+                        {player.name}
+                      </span>
+                      {suspended ? (
+                        <span className="lineup__suspended-label">Suspenso</span>
+                      ) : (
+                        cardCount && <IconCardStack count={cardCount} className="lineup__card-icon" />
+                      )}
                     </span>
                     <span className="lineup__pos">{player.position}</span>
                     <span className="numeric">{player.strength}</span>
@@ -396,6 +422,9 @@ export function Lineup() {
                       </span>
                       <span className="chip__name">{player.name}</span>
                       <span className={`chip__overall chip__overall--${fit}`}>{adjustedOverall}</span>
+                      {pendingCardCount(player) && (
+                        <IconCardStack count={pendingCardCount(player)!} className="chip__cards" />
+                      )}
                     </button>
                   ) : (
                     <div className="chip chip--empty" title={slot.sectorLabel}>

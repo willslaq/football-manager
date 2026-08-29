@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#E4002B",
       "secondary": "#FFFFFF"
-    }
+    },
+    "formation": "3-4-3",
+    "style": "pressing"
   },
   "squad": [
     {
@@ -1585,5 +1587,5 @@
       }
     }
   ],
-  "sourceNotes": "Coletado em 27/08/2026 via site oficial do clube cruzado com Transfermarkt e agregadores. Valores de marketValue em euros, armazenados como números inteiros, com base nos valores de mercado do Transfermarkt disponíveis em agosto/2026. Jogadores sem valor de mercado informado pelo Transfermarkt recebem 0."
+  "sourceNotes": "Coletado em 27/08/2026 via site oficial do clube cruzado com Transfermarkt e agregadores. Valores de marketValue em euros, armazenados como números inteiros, com base nos valores de mercado do Transfermarkt disponíveis em agosto/2026. Jogadores sem valor de mercado informado pelo Transfermarkt recebem 0. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesma política dos outros clubes já pesquisados). Último jogo confirmado via ESPN Brasil (espn.com.br/futebol/time/resultados, id 1936): Internacional 0x0 Grêmio em 27/08/2026 (Gre-Nal, ida das quartas da Copa do Brasil, Beira-Rio), técnico Paulo Pezzolano. Titulares (terra.com.br): Matheus Cunha; Bruno Gomes, Mercado e Maripán; Vitinho, Bruno Henrique, Villagra e Matheus Bahia; Alan Patrick, Bernabei e Carbonero — checado contra as posições reais do elenco (Bruno Gomes=LD, Mercado/Maripán=ZAG, Matheus Bahia/Bernabei=LE, Vitinho/Carbonero=PE, Villagra=VOL, Bruno Henrique=MC, Alan Patrick=MEA), dá defesa de 3 + meio de 4 (dois alas/laterais avançados) + trio ofensivo = 3-4-3, confirmado por fonte tática independente (somoscolorados.com) que descreve Pezzolano recorrendo ao 3-4-3 especificamente 'pra pressionar com mais segurança defensiva' — mesmo esquema, não coincidência. Estilo 'pressing' (não 'possession', apesar de fontes também citarem posse/construção curta): a descrição mais repetida e enfática do Pezzolano é intensidade/agressividade sem a bola, pressão alta e recuperação rápida — bate com STYLE_FOUL_MODIFIERS.pressing (maior propensão a falta do motor) e o volume alto (ataque e concessão) de STYLE_MODIFIERS.pressing em engine/simulation/config.ts, mais do que com o perfil mais contido de 'possession'."
 }

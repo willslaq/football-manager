@@ -1,12 +1,28 @@
 import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import type { Lineup } from '../../engine/types';
+import type { Club, Lineup, Tactics } from '../../engine/types';
+import { TACTIC_STYLE_LABELS } from '../../engine/types';
+import { DEFAULT_AUTO_TACTICS } from '../../engine/simulation/season';
 import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
 import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Badge, Button, Card, TextField } from '../components';
 import type { Screen } from '../../App';
 import './Home.css';
+
+/**
+ * Tática exibida no card do confronto: o time do jogador mostra a tática atual salva
+ * (Escalação), não um "padrão" — o adversário (CPU) mostra a tática real que o motor vai
+ * usar contra ele: a pesquisada pro clube (Club.formation/style) ou, na falta dela, o mesmo
+ * DEFAULT_AUTO_TACTICS que season.ts realmente aplica (não um valor inventado à parte).
+ */
+function matchupTactics(club: Club | undefined, isPlayerClub: boolean, playerTactics: Tactics): Tactics {
+  if (isPlayerClub) return playerTactics;
+  return {
+    formation: club?.formation ?? DEFAULT_AUTO_TACTICS.formation,
+    style: club?.style ?? DEFAULT_AUTO_TACTICS.style,
+  };
+}
 
 function downloadTextFile(filename: string, content: string): void {
   const blob = new Blob([content], { type: 'application/json' });
@@ -74,6 +90,7 @@ function SaveExportControls({ defaultSlotName }: { defaultSlotName: string }) {
 export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const career = useCareerStore((s) => s.career);
   const lineup = useCareerStore((s) => s.lineup);
+  const tactics = useCareerStore((s) => s.tactics);
   const loading = useCareerStore((s) => s.loading);
   const error = useCareerStore((s) => s.error);
   const advanceRound = useCareerStore((s) => s.advanceRound);
@@ -121,6 +138,8 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const awayTeam = isHome ? opponent : playerClub;
   const homePosition = homeTeam ? standingPosition(competition.standings, homeTeam.id) : null;
   const awayPosition = awayTeam ? standingPosition(competition.standings, awayTeam.id) : null;
+  const homeTactics = matchupTactics(homeTeam, isHome, tactics);
+  const awayTactics = matchupTactics(awayTeam, !isHome, tactics);
 
   return (
     <div className="home">
@@ -139,6 +158,9 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
                 {homeTeam.name}
                 {homePosition && <span className="matchup__name-position numeric">{homePosition}º</span>}
               </p>
+              <p className="matchup__tactics">
+                {homeTactics.formation} · {TACTIC_STYLE_LABELS[homeTactics.style]}
+              </p>
               <Badge tone={isHome ? 'pitch' : 'neutral'}>Mandante</Badge>
             </div>
 
@@ -151,6 +173,9 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
               <p className="matchup__name" title={awayTeam.name}>
                 {awayTeam.name}
                 {awayPosition && <span className="matchup__name-position numeric">{awayPosition}º</span>}
+              </p>
+              <p className="matchup__tactics">
+                {awayTactics.formation} · {TACTIC_STYLE_LABELS[awayTactics.style]}
               </p>
               <Badge tone={!isHome ? 'pitch' : 'neutral'}>Visitante</Badge>
             </div>

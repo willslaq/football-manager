@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#ffffff",
       "secondary": "#000000"
-    }
+    },
+    "formation": "4-2-3-1",
+    "style": "counter"
   },
   "squad": [
     {
@@ -1603,5 +1605,5 @@
       }
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Os valores são armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-' para o valor de mercado, marketValue foi definido como 0. Posições secundárias foram convertidas para os códigos do sistema: GOL (Goalkeeper), ZAG (Centre-Back), LE (Left-Back), LD (Right-Back), VOL (Defensive Midfield), MC (Central Midfield), MEA (Attacking Midfield), ME (Left Midfield), MD (Right Midfield), PE (Left Winger), PD (Right Winger), CA (Centre-Forward), SA (Second Striker)."
+  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Os valores são armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-' para o valor de mercado, marketValue foi definido como 0. Posições secundárias foram convertidas para os códigos do sistema: GOL (Goalkeeper), ZAG (Centre-Back), LE (Left-Back), LD (Right-Back), VOL (Defensive Midfield), MC (Central Midfield), MEA (Attacking Midfield), ME (Left Midfield), MD (Right Midfield), PE (Left Winger), PD (Right Winger), CA (Centre-Forward), SA (Second Striker). formation/style pesquisados em 29/08/2026 — CONFIANÇA MÉDIA/BAIXA, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesma política dos demais clubes já pesquisados). Técnico confirmado por múltiplas fontes independentes e datadas (CNN Brasil, Exame, Band, Diário da Manhã) como Cuca desde 19/03/2026 (sua quarta passagem pelo Santos, contrato até fim de 2026), após demissão de Juan Pablo Vojvoda na 7ª rodada do Brasileirão. ATENÇÃO — inconsistência de dados encontrada: essa mesma pesquisa (sessão de 29/08/2026) também confirmou, de forma independente e igualmente bem corroborada, que Cuca foi demitido do Atlético-MG em 29/08/2026 após 7 meses no cargo (\"quarta passagem pelo Galo\") — as duas histórias não fecham numa linha do tempo só (um treinador não comanda dois clubes ao mesmo tempo o ano inteiro), o que sugere que a busca web está misturando fatos reais de passagens de Cuca em anos diferentes da vida real dentro do enredo fictício de 2026; tratar a informação de técnico/estilo aqui com ceticismo e reconferir se possível. Último jogo confirmado via ESPN (ida das quartas da Copa do Brasil, Palmeiras 3x0 Santos, 26/08/2026, Nubank Parque) — fontes específicas sobre esse jogo (palmeiras.com.br, cnnbrasil.com.br, ogol.com.br) descrevem o Santos jogando \"mais defensivo\" sem Neymar/Gabigol (poupados visando o jogo de volta), mas não detalharam a formação exata; formation/style aqui foram herdados da identidade tática já pesquisada pra esse MESMO técnico real em atletico-mg.json (4-2-3-1 \"praticamente padronizado nos times de Cuca\"; estilo 'counter' por gols concentrados em transições rápidas explorando espaço nas costas da defesa, batendo com STYLE_MODIFIERS.counter em engine/simulation/config.ts — attackVolume mais baixo mas qualityMultiplier bem mais alto, cede posse de propósito), não de uma pesquisa tática específica pro Santos em si."
 }

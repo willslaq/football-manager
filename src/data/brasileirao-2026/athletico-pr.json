@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#E31E24",
       "secondary": "#000000"
-    }
+    },
+    "formation": "3-4-3",
+    "style": "counter"
   },
   "squad": [
     {
@@ -1722,5 +1724,5 @@
       }
     }
   ],
-  "sourceNotes": "Dados de posições, posições secundárias e valores de mercado baseados no Transfermarkt, consultado em 27/08/2026. Os valores de mercado correspondem à atualização indicada pelo Transfermarkt em 26/05/2026. Jogadores sem valor de mercado disponível foram representados como null. Riquelme é uma exceção: o Transfermarkt o registra como volante do Athletico-PR U20, com valor de €1,00 milhão, embora esteja incluído no elenco fornecido como jogador do grupo principal."
+  "sourceNotes": "Dados de posições, posições secundárias e valores de mercado baseados no Transfermarkt, consultado em 27/08/2026. Os valores de mercado correspondem à atualização indicada pelo Transfermarkt em 26/05/2026. Jogadores sem valor de mercado disponível foram representados como null. Riquelme é uma exceção: o Transfermarkt o registra como volante do Athletico-PR U20, com valor de €1,00 milhão, embora esteja incluído no elenco fornecido como jogador do grupo principal. formation/style pesquisados em 29/08/2026, com confiança alta no formato/estilo mas NÃO nos nomes exatos dos titulares (ver detalhe abaixo) — jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida (não fixados). Formato: times de Odair Hellmann em 2026 usaram consistentemente uma linha de 3 zagueiros com apoio de alas (3-4-2-1 em 29/03 vs Botafogo, formato equivalente no jogo de 24/08/2026 vs Botafogo — Botafogo 2x3 Athletico-PR, Brasileirão), o que mapeia para 3-4-3 no nosso motor (defesa de 3, meio de 4 com 2 alas + 2 centrais, trio ofensivo). Estilo 'counter' com base em análises táticas de Odair Hellmann (ex.: playmakerbrasil.com.br, footure.com.br): time pragmático, defesa sólida e compacta, cede a posse ao adversário e busca contra-ataques rápidos e diretos em vez de construção com posse. Titulares exatos do jogo de 24/08/2026: três fontes consultadas (resumo de busca, crônica do ogol.com.br, nota da Yahoo/OneFootball sobre 'uma troca: Dantas na vaga de Gilberto') divergiram em 3-4 dos 11 nomes (ex.: Terán vs. Aguirre vs. Dantas numa vaga de zaga) — não dá pra confirmar a escalação exata com uma fonte estruturada única (a página da CBF encontrada era de outro jogo, round 5, e o Flashscore não retornou dados renderizados), por isso optamos por não fixar jogadores específicos, só formação e estilo."
 }

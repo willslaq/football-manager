@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#e30613",
       "secondary": "#000000"
-    }
+    },
+    "formation": "4-3-3",
+    "style": "pressing"
   },
   "squad": [
     {
@@ -1839,5 +1841,5 @@
       "notes": ""
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Valores armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-', marketValue foi definido como 0. Posições principais foram ajustadas conforme a posição principal indicada pelo Transfermarkt e posições secundárias foram preenchidas somente quando indicadas pelo Transfermarkt. O elenco fornecido pelo usuário foi mantido sem adicionar jogadores que não estavam no JSON."
+  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Valores armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-', marketValue foi definido como 0. Posições principais foram ajustadas conforme a posição principal indicada pelo Transfermarkt e posições secundárias foram preenchidas somente quando indicadas pelo Transfermarkt. O elenco fornecido pelo usuário foi mantido sem adicionar jogadores que não estavam no JSON. formation/style pesquisados em 29/08/2026 — CONFIANÇA ALTA, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesma política dos demais clubes já pesquisados). Técnico: Jair Ventura (contrato renovado pra 2026). Último jogo confirmado via ESPN: Vasco 1x0 Vitória, Copa do Brasil (ida das quartas), 26/08/2026, São Januário, derrota fora de casa — titulares (mesma fonte usada em vasco.json: gazetaesportiva.com/metropoles.com): Lucas Arcanjo; Brítez, Cacá, Luan Cândido e Ramon; Caíque Gonçalves, Zé Vitor e Emmanuel Martínez; Marinho, Matheuzinho e Renato Kayzer, formato 4-3-3 — conferido contra o elenco (Cacá=ZAG, Luan Cândido=LE, Zé Vitor=MC, Renato Kayzer=CA todos batendo com a posição natural no JSON). Estilo 'pressing' com base em descrição específica e repetida do próprio estilo de Jair Ventura (portaldeprefeitura.com.br/futebolinterior.com.br): \"pressão alta com os atacantes pressionando desde a frente, marcando alto e jogando alto\", \"intensidade na marcação\" — bate com STYLE_MODIFIERS.pressing em engine/simulation/config.ts (volume alto de chance criada E concedida) e principalmente com STYLE_FOUL_MODIFIERS.pressing (1.35, de longe o maior multiplicador de falta), coerente com uma marcação tão intensa/alta. Descartamos 'direct' (também mencionado como \"estilo direto\") porque a característica mais específica e repetida na cobertura foi a pressão alta em si, não o volume de bola longa/direta."
 }

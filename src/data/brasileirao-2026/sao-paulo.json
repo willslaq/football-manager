@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#ffffff",
       "secondary": "#e30613"
-    }
+    },
+    "formation": "4-2-3-1",
+    "style": "possession"
   },
   "squad": [
     {
@@ -2141,5 +2143,5 @@
       "notes": ""
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Valores armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-' para o valor de mercado, marketValue foi definido como 0. As posições principais foram ajustadas para corresponder à posição principal indicada pelo Transfermarkt; as posições secundárias foram preenchidas com as posições adicionais explicitamente indicadas nos perfis dos jogadores. O elenco fornecido pelo usuário foi mantido sem adicionar jogadores que não estavam no JSON."
+  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Valores armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-' para o valor de mercado, marketValue foi definido como 0. As posições principais foram ajustadas para corresponder à posição principal indicada pelo Transfermarkt; as posições secundárias foram preenchidas com as posições adicionais explicitamente indicadas nos perfis dos jogadores. O elenco fornecido pelo usuário foi mantido sem adicionar jogadores que não estavam no JSON. formation/style pesquisados em 29/08/2026 — CONFIANÇA MÉDIA, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesma política dos demais clubes já pesquisados). Temporada 2026 com 3 técnicos diferentes (Hernán Crespo até 09/03, depois Roger Machado, depois Dorival Júnior — confirmado atual em 29/08/2026 por cnnbrasil.com.br/lance.com.br/sportbuzz.com.br), time em má fase (10 jogos sem vencer no Brasileirão, 13º lugar, só 3 pontos acima do Z4), mas diretoria descartou demissão nesse momento, então Dorival segue. Último jogo confirmado via ESPN: Chapecoense 1x0 São Paulo, Brasileirão, 23/08/2026, Arena Condá (gol de Bruno Pacheco) — fontes específicas desse jogo não detalharam a escalação/formação exata do São Paulo. Formation '4-2-3-1' com base numa declaração direta e mais recente do próprio Dorival (arqtricolor.com, intertemporada 2026): apesar de gostar historicamente de um 4-4-2 em losango, sinalizou manutenção do \"tradicional esquema 4-2-3-1\" pro meio da temporada — usamos essa por ser a mais recente e explícita. Estilo 'possession' com base na caracterização do jogo de Dorival (toques curtos, construção de jogadas elaborada pelo meio em vez das laterais, movimentação constante pra abrir espaço, linhas compactas na defesa) — bate com POSSESSION_STYLE_AFFINITY.possession em engine/simulation/config.ts (maior afinidade de posse) mais do que com 'offensive' (uma tendência pontual de time com 4 atacantes foi mencionada como notável/recente, não como identidade de base, e o time está em crise de resultados o que não sustenta uma leitura de time \"solto\" ofensivamente por escolha)."
 }

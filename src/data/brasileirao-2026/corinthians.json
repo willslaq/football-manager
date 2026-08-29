@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#000000",
       "secondary": "#ffffff"
-    }
+    },
+    "formation": "4-4-2",
+    "style": "possession"
   },
   "squad": [
     {
@@ -1791,5 +1793,5 @@
       }
     }
   ],
-  "sourceNotes": "Dados baseados no Transfermarkt, snapshot do elenco 2025/26 consultado em 27/08/2026. marketValue representa o valor de mercado em euros. Valores sem avaliação disponível são null."
+  "sourceNotes": "Dados baseados no Transfermarkt, snapshot do elenco 2025/26 consultado em 27/08/2026. marketValue representa o valor de mercado em euros. Valores sem avaliação disponível são null. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga seguem decididos pelo autoAssign de cada partida, mesma política dos demais clubes). Último jogo: Coritiba 2x1 Corinthians, 23/08/2026 (24ª rodada, Brasileirão, Couto Pereira) — titulares Kauê; Pedro Milans, Gabriel Paulista, Gustavo Henrique e Angileri; Raniele, Allan, Carrillo e Breno Bidon; Kaio César e Pedro Raul (meutimao.com.br), formato 4-4-2 (defesa de 4, meio de 4, dupla de ataque). Técnico Fernando Diniz, contrato até fim de 2026, situação estável. Estilo 'possession' com confiança alta: Diniz é a referência mais conhecida do futebol brasileiro em posse de bola/jogo relacional ('Dinizismo', comparado ao tiki-taka de Guardiola por múltiplas fontes independentes, inclusive Wikipedia) — bate diretamente com POSSESSION_STYLE_AFFINITY.possession (maior afinidade de posse entre todos os estilos) em engine/simulation/config.ts, mesmo critério usado pro Bahia de Rogério Ceni."
 }

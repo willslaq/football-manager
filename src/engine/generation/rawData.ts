@@ -1,4 +1,5 @@
 import type { Position } from '../types/player';
+import type { Formation, TacticStyle } from '../types/tactics';
 
 /**
  * Atributos FIFA (0-99) extraídos do squad file do EA FC 26 via engenharia
@@ -73,6 +74,9 @@ export interface RawClubFile {
     stadium: string;
     stadiumCapacity: number;
     colors: { primary: string; secondary: string };
+    /** Formação/estilo real do time no último jogo disputado, quando pesquisado (ver sourceNotes) — ausente = usa DEFAULT_AUTO_TACTICS em season.ts. */
+    formation?: Formation;
+    style?: TacticStyle;
   };
   squad: RawSquadPlayer[];
   sourceNotes: string;

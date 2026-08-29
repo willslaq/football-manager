@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#000000",
       "secondary": "#ffffff"
-    }
+    },
+    "formation": "4-3-3",
+    "style": "counter"
   },
   "squad": [
     {
@@ -1271,5 +1273,5 @@
       "notes": ""
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Valores armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-', marketValue foi definido como 0. O elenco fornecido pelo usuário foi mantido sem adicionar jogadores que não estavam no JSON. Há duas movimentações muito recentes que ainda não aparecem de forma sincronizada no elenco principal do Transfermarkt: Santiago Sosa, cujo valor atual no Transfermarkt é €8.000.000 e cuja transferência para o Vasco ainda não aparece na página do clube, e Facundo Colidio, contratado oficialmente pelo Vasco em agosto de 2026, mas ainda sem valor de mercado disponível no elenco do Vasco no Transfermarkt. Para não inventar valores, Colidio recebeu marketValue 0."
+  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Valores armazenados como inteiros em euro. Quando o Transfermarkt apresenta '-', marketValue foi definido como 0. O elenco fornecido pelo usuário foi mantido sem adicionar jogadores que não estavam no JSON. Há duas movimentações muito recentes que ainda não aparecem de forma sincronizada no elenco principal do Transfermarkt: Santiago Sosa, cujo valor atual no Transfermarkt é €8.000.000 e cuja transferência para o Vasco ainda não aparece na página do clube, e Facundo Colidio, contratado oficialmente pelo Vasco em agosto de 2026, mas ainda sem valor de mercado disponível no elenco do Vasco no Transfermarkt. Para não inventar valores, Colidio recebeu marketValue 0. formation/style pesquisados em 29/08/2026 — CONFIANÇA ALTA, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesma política dos demais clubes já pesquisados). Técnico: Pedro Emanuel. Último jogo confirmado via ESPN: Vasco 1x0 Vitória, Copa do Brasil (ida das quartas), 26/08/2026, São Januário (gol de Andrés Gómez, Vasco terminou com 10 por expulsão de Barros aos 18min do 1º tempo) — titulares (gazetaesportiva.com/metropoles.com, convergentes): Léo Jardim; Puma Rodríguez, Robert Renan, Cuesta e Lucas Piton; Barros, Ramon Rique e Thiago Mendes; Colídio, Andrés Gómez e Spinelli, formato 4-3-3 — conferido contra o elenco (Léo Jardim=GOL, Robert Renan=ZAG, Lucas Piton=LE, Thiago Mendes=VOL, Andrés Gómez=PE, todos batendo com a posição natural no JSON). Estilo 'counter' com base em descrição explícita e específica do próprio estilo de Pedro Emanuel (diariodorio.com/vascaino.net): \"prioriza o contra-ataque rápido... atrai o rival pro seu campo... contra-ataque em velocidade é a principal arma pra fazer gol\" — bate exatamente com STYLE_MODIFIERS.counter em engine/simulation/config.ts (cede posse de propósito, menos chances criadas mas conversão bem mais clínica). Mesma fonte confirma que ele alterna entre 4-2-3-1, 4-3-3 e linha de 3 zagueiros conforme o jogo — usamos 4-3-3 por ser o que ele escalou de fato no último jogo real."
 }

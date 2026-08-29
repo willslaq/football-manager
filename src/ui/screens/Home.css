@@ -49,6 +49,15 @@
   max-width: 100%;
 }
 
+.matchup__tactics {
+  margin: -0.4rem 0 0;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mist);
+}
+
 .matchup__name-position {
   font-family: var(--font-body);
   font-size: 0.6em;

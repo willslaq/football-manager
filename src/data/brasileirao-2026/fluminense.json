@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#8B1538",
       "secondary": "#046A38"
-    }
+    },
+    "formation": "4-2-3-1",
+    "style": "possession"
   },
   "squad": [
     {
@@ -1674,5 +1676,5 @@
       }
     }
   ],
-  "sourceNotes": "Coleta atualizada em 27/08/2026 com base no plantel 2025/26 do Transfermarkt. Valores de mercado registrados como números inteiros em euros. O Transfermarkt apresenta valor total de mercado de €113,63 milhões e 34 jogadores no plantel no momento da consulta. Jhonny foi mantido com €350.000, embora não estivesse valorizado no JSON original. Yago Ferreira e Matheus Reis permanecem com marketValue 0 porque o Transfermarkt atualmente não atribui valor de mercado a eles. As posições principais seguem as categorias do Transfermarkt; posições secundárias foram adicionadas quando aplicáveis."
+  "sourceNotes": "Coleta atualizada em 27/08/2026 com base no plantel 2025/26 do Transfermarkt. Valores de mercado registrados como números inteiros em euros. O Transfermarkt apresenta valor total de mercado de €113,63 milhões e 34 jogadores no plantel no momento da consulta. Jhonny foi mantido com €350.000, embora não estivesse valorizado no JSON original. Yago Ferreira e Matheus Reis permanecem com marketValue 0 porque o Transfermarkt atualmente não atribui valor de mercado a eles. As posições principais seguem as categorias do Transfermarkt; posições secundárias foram adicionadas quando aplicáveis. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesmo critério dos demais clubes já pesquisados). Último jogo: Fluminense 2x1 Remo em 22/08/2026 (Maracanã, Brasileirão), técnico Marcão — titulares Fábio; Samuel Xavier, Ignácio, Thiago Silva e Renê; Martinelli e Hércules; Canobbio, Ganso e Soteldo; Hulk (fonte específica e detalhada do próprio confronto, citando o esquema explicitamente), formato 4-2-3-1 confirmado diretamente pela cobertura da partida. Estilo 'possession' com confiança moderada: Marcão descreve DNA ofensivo ('um Fluminense que joga futebol') combinado com defesa sólida, e reescalou Ganso (armador clássico) especificamente pra 'diminuir o ritmo das transições' — controle de posse deliberado bate com POSSESSION_STYLE_AFFINITY.possession + baixo concedeVolume (0.85) em engine/simulation/config.ts; descartei 'offensive' porque esse estilo no motor implica também alto concedeVolume (1.2, solto defensivamente), o que contradiz a 'defesa sólida' citada nas fontes."
 }

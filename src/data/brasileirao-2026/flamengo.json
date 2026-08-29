@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#E30613",
       "secondary": "#000000"
-    }
+    },
+    "formation": "4-2-3-1",
+    "style": "possession"
   },
   "squad": [
     {
@@ -1555,5 +1557,5 @@
       }
     }
   ],
-  "sourceNotes": "Coletado em 27/08/2026 via Transfermarkt. Valores de mercado registrados como números inteiros em euros, sem separadores ou casas decimais. O Transfermarkt indica valor total de mercado de €217,95 milhões para o elenco de 28 jogadores. Posições principais e secundárias seguem a classificação do Transfermarkt; quando não há posição secundária registrada, secondaryPositions permanece vazio. Valores individuais conferidos no plantel detalhado e nas páginas de perfil dos jogadores."
+  "sourceNotes": "Coletado em 27/08/2026 via Transfermarkt. Valores de mercado registrados como números inteiros em euros, sem separadores ou casas decimais. O Transfermarkt indica valor total de mercado de €217,95 milhões para o elenco de 28 jogadores. Posições principais e secundárias seguem a classificação do Transfermarkt; quando não há posição secundária registrada, secondaryPositions permanece vazio. Valores individuais conferidos no plantel detalhado e nas páginas de perfil dos jogadores. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesmo critério dos demais clubes já pesquisados). Último jogo: Cruzeiro 2x1 Flamengo em 22/08/2026 (Mineirão, Brasileirão, derrota), técnico Leonardo Jardim — titulares Rossi; Varela, Léo Ortiz, Danilo e Ayrton Lucas; Pulgar, Paquetá, Arrascaeta e Carrascal; Samuel Lino e Pedro (múltiplas fontes convergentes: gazetaesportiva.com, vavel.com, lance.com.br), formato 4-2-3-1 (defesa de 4, dupla de volantes, trinca ofensiva, Pedro como referência). Confirmado como esquema padrão de Jardim (não coincidência pontual) por artigo específico (futebolnaweb.com.br): '4-2-3-1 que se transforma em 4-4-2', com mobilidade dos atacantes. Estilo 'possession' com confiança MODERADA (não tão explícita quanto o caso do Bahia): baseado em dado estatístico concreto — 53,1% de posse média sob Jardim (7º maior do Brasileirão) — favorecendo levemente 'possession' (POSSESSION_STYLE_AFFINITY mais alta) sobre 'balanced', mas a comparação do técnico com o Monaco 2016/17 de Mbappé/Lemar (um time mais reconhecido por velocidade/verticalidade que posse pura) enfraquece um pouco a certeza; vale reconferir se surgir uma fonte mais direta sobre a filosofia declarada do próprio Jardim."
 }

@@ -83,6 +83,8 @@ export function generateWorld(seed: number): World {
       colors: raw.club.colors,
       stadiumCapacity: raw.club.stadiumCapacity,
       squad,
+      formation: raw.club.formation,
+      style: raw.club.style,
     });
   }
 

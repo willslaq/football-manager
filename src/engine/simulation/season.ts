@@ -8,8 +8,12 @@ import type { Lineup, Tactics } from '../types/tactics';
 import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
 import { simulateMatch, type MatchTeamInput } from './match';
 
-/** Escalação/tática usada para todo clube que não é o do jogador (SRS M4: "escalação automática"). */
-const DEFAULT_AUTO_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
+/**
+ * Escalação/tática usada pra clube CPU sem formação/estilo pesquisados (ver `Club.formation`/`style`)
+ * — também exportada pra UI mostrar a mesma tática "padrão" que o motor realmente usaria contra esse
+ * adversário (ver Home.tsx), não um valor inventado à parte.
+ */
+export const DEFAULT_AUTO_TACTICS: Tactics = { formation: '4-4-2', style: 'balanced' };
 
 export interface AdvanceRoundInput {
   playerLineup: Lineup;
@@ -54,14 +58,20 @@ function buildTeamInput(
   // Times sem escalação manual (SRS M4) usam a mesma auto-escalação gulosa por
   // vaga da tela de Escalação (não a mais simples pickAutoLineup) — assim o
   // encaixe posicional (bônus de posição principal, penalidade fora de
-  // posição) também vale pra CPU, não só pro time do jogador.
-  const slots = buildSlots(DEFAULT_AUTO_TACTICS.formation);
+  // posição) também vale pra CPU, não só pro time do jogador. Clube com
+  // formação/estilo real pesquisado (ver Club.formation/style) usa o próprio;
+  // sem isso, cai no DEFAULT_AUTO_TACTICS genérico.
+  const tactics: Tactics = {
+    formation: club.formation ?? DEFAULT_AUTO_TACTICS.formation,
+    style: club.style ?? DEFAULT_AUTO_TACTICS.style,
+  };
+  const slots = buildSlots(tactics.formation);
   const slotAssignments = autoAssign(slots, squad);
   const starterIds = Object.values(slotAssignments).filter((id): id is string => !!id);
   return {
     clubId,
     players: resolvePlayers(starterIds, playersById),
-    tactics: DEFAULT_AUTO_TACTICS,
+    tactics,
     slotPositionByPlayerId: slotPositionsByPlayer(slots, slotAssignments),
   };
 }

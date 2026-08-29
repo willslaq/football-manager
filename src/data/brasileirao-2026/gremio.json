@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#0032A0",
       "secondary": "#000000"
-    }
+    },
+    "formation": "4-3-3",
+    "style": "possession"
   },
   "squad": [
     {
@@ -1865,5 +1867,5 @@
       }
     }
   ],
-  "sourceNotes": "Coletado em 27/08/2026 via cruzamento de Transfermarkt, reportagens sobre a reformulação de numeração de camisas de agosto/2026 e agregadores. Os valores de marketValue foram normalizados para números inteiros em euros, usando como referência principal os valores de mercado do Transfermarkt disponíveis em agosto/2026. Jogadores sem valor de mercado registrado no Transfermarkt receberam marketValue: 0. O valor total do elenco atual exibido pelo Transfermarkt é de aproximadamente €99.85 milhões, considerando seu elenco de 36 atletas. Alguns jogadores do JSON original não aparecem no elenco atual do Transfermarkt ou possuem identificação divergente; nesses casos o valor foi mantido como 0 para evitar estimativa inventada."
+  "sourceNotes": "Coletado em 27/08/2026 via cruzamento de Transfermarkt, reportagens sobre a reformulação de numeração de camisas de agosto/2026 e agregadores. Os valores de marketValue foram normalizados para números inteiros em euros, usando como referência principal os valores de mercado do Transfermarkt disponíveis em agosto/2026. Jogadores sem valor de mercado registrado no Transfermarkt receberam marketValue: 0. O valor total do elenco atual exibido pelo Transfermarkt é de aproximadamente €99.85 milhões, considerando seu elenco de 36 atletas. Alguns jogadores do JSON original não aparecem no elenco atual do Transfermarkt ou possuem identificação divergente; nesses casos o valor foi mantido como 0 para evitar estimativa inventada. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesmo critério dos demais clubes já pesquisados). Último jogo: Internacional 0x0 Grêmio em 27/08/2026 (Beira-Rio, Gre-Nal, ida das quartas da Copa do Brasil), técnico Luís Castro — titulares Weverton; Caito, Wallace, Kanneman e Marlon; Noriega, Villasanti e Krovinovic; Jovane Cabral, Pavón e Carlos Vinícius (lance.com.br, vavel.com), formato 4-3-3 nessa partida específica. NOTA: Luís Castro varia entre linha de 3 e 4 zagueiros conforme o adversário/momento (br.bolavip.com, portaldogremista.com.br) — usamos o formato do último jogo, mas ele não é fixo em todas as partidas, pode valer reconferir periodicamente. Estilo 'possession' com confiança alta: descrição direta e específica do próprio esquema de Castro (portaldogremista.com.br) — 'sustentar posse, trabalhar jogadas por dentro e chegar ao ataque com MENOS dependência de transições rápidas', abandonando a figura do camisa 10 tradicional em favor de um trio de meio-campo mais posicional — contraste explícito com estilo de contra-ataque, bate direto com POSSESSION_STYLE_AFFINITY.possession em engine/simulation/config.ts."
 }

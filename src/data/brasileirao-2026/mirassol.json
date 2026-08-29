@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#1c8a42",
       "secondary": "#ffd400"
-    }
+    },
+    "formation": "4-3-3",
+    "style": "possession"
   },
   "squad": [
     {
@@ -1525,5 +1527,5 @@
       "notes": "Confirmado pelo site oficial e por template da Wikipédia; não constava na lista da ESPN consultada"
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Fontes: Wikipédia em português, site oficial do Mirassol, ESPN Brasil e Transfermarkt. Valores de marketValue expressos em euros como números inteiros, utilizando o valor de mercado do Transfermarkt como referência. Para jogadores jovens ou sem valor de mercado confiável confirmado, foi utilizado 0."
+  "sourceNotes": "Coleta em 27/08/2026. Fontes: Wikipédia em português, site oficial do Mirassol, ESPN Brasil e Transfermarkt. Valores de marketValue expressos em euros como números inteiros, utilizando o valor de mercado do Transfermarkt como referência. Para jogadores jovens ou sem valor de mercado confiável confirmado, foi utilizado 0. formation/style pesquisados em 29/08/2026 — CONFIANÇA MÉDIA, clube pequeno com cobertura tática mais rasa que os grandes. Só formato/estilo fixados, jogadores específicos por vaga continuam com o autoAssign (mesma política dos outros clubes). Último jogo confirmado via ESPN Brasil (id 9169): Santos 1x1 Mirassol em 23/08/2026 (Vila Belmiro, Brasileirão), técnico Rafael Guanaes. Titulares (crônica do ogol.com.br): Walter; Igor Formiga (=Igor Marques), João Victor, William Machado e Reinaldo; Neto Moura, José Aldo e Lucas Mugni; Negueba, Alesson e Nathan Fogaça — conferido contra o elenco (Igor Formiga=LD, João Victor/William Machado=ZAG, Reinaldo=LE: back four limpo; Neto Moura/José Aldo=VOL; Negueba=PE, Alesson=PD), dá defesa de 4 + meio de 3 + trio ofensivo = 4-3-3 (Mugni e Nathan Fogaça não constam no elenco do JSON, possíveis contratações recentes ainda não capturadas). Note-se divergência: uma fonte genérica (trivela.com.br) descreve a 'formação preferida' de Guanaes como 4-2-3-1, mas priorizamos o esquema realmente usado no último jogo, conforme pedido. Estilo 'possession' com confiança média: única evidência concreta encontrada foi um dado pontual de 74% de posse de bola numa partida, mais descrições genéricas de 'futebol moderno/organizado' — não há nada tão explícito quanto o caso do Bahia, mas o dado de posse é consistente com POSSESSION_STYLE_AFFINITY.possession em engine/simulation/config.ts."
 }

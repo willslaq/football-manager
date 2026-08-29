@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#1E4D9B",
       "secondary": "#FFFFFF"
-    }
+    },
+    "formation": "4-3-3",
+    "style": "possession"
   },
   "squad": [
     {
@@ -1711,5 +1713,5 @@
       }
     }
   ],
-  "sourceNotes": "Dados consultados no Transfermarkt em 27/08/2026. A página detalhada do elenco registra 31 jogadores e valor total de mercado de aproximadamente €115,3 milhões. Posições secundárias foram convertidas a partir da página 'Squad by position' do Transfermarkt. Valores sem avaliação foram representados como null, preservando a distinção entre ausência de avaliação e valor zero. O elenco atual utilizado pelo Transfermarkt inclui Guido Herrera e não inclui Marcos Felipe no grupo principal atual. Luciano Juba é atualmente o jogador mais valioso do elenco, com €14 milhões, seguido por Jean Lucas (€13 milhões), Santiago Ramos Mingo (€12 milhões) e Erick Pulga (€11 milhões)."
+  "sourceNotes": "Dados consultados no Transfermarkt em 27/08/2026. A página detalhada do elenco registra 31 jogadores e valor total de mercado de aproximadamente €115,3 milhões. Posições secundárias foram convertidas a partir da página 'Squad by position' do Transfermarkt. Valores sem avaliação foram representados como null, preservando a distinção entre ausência de avaliação e valor zero. O elenco atual utilizado pelo Transfermarkt inclui Guido Herrera e não inclui Marcos Felipe no grupo principal atual. Luciano Juba é atualmente o jogador mais valioso do elenco, com €14 milhões, seguido por Jean Lucas (€13 milhões), Santiago Ramos Mingo (€12 milhões) e Erick Pulga (€11 milhões). formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, mesmo critério do athletico-pr.json/atletico-mg.json — apesar da escalação exata do último jogo aqui ter saído bem mais limpa/consistente que nos times anteriores, mantivemos o mesmo padrão por consistência). Último jogo: clássico Ba-Vi em 23/08/2026 (Barradão), técnico Rogério Ceni — titulares Ronaldo; Roman Gomez, David Duarte, Ramos Mingo e Luciano Juba; Acevedo, Jean Lucas e Rodrigo Nestor; Kike Olivera (=Cristian Olivera), Alejo Veliz e Erick Pulga (ecbahia.com/bahiaco.net.br), formação 4-3-3 — mesmo formato de um jogo bem anterior na temporada (22/03 vs Remo), reforçando que é o esquema padrão do Ceni, não coincidência pontual. Estilo 'possession' com base em declaração direta e repetida do próprio Ceni, citada por 5+ veículos independentes (bahia.ba, goal.com, bnews.com.br, todabahia.com.br, galaticosonline.com): time montado pra controlar a posse, construir desde a defesa e dominar o território, numa comparação explícita com a Espanha campeã do mundo — bate com POSSESSION_STYLE_AFFINITY.possession (maior afinidade de posse entre todos os estilos) em engine/simulation/config.ts."
 }

@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#000000",
       "secondary": "#FFFFFF"
-    }
+    },
+    "formation": "4-2-3-1",
+    "style": "counter"
   },
   "squad": [
     {
@@ -1706,5 +1708,5 @@
       }
     }
   ],
-  "sourceNotes": "Dados de posição principal, posições secundárias e valores de mercado conferidos no Transfermarkt em 27/08/2026. O Transfermarkt apresenta atualmente o Atlético-MG com 34 jogadores e €98,65 milhões em valor total de mercado. Os valores individuais utilizados são os exibidos na atualização mais recente disponível para cada jogador. Jogadores sem valor atribuído pelo Transfermarkt foram representados como null. O JSON mantém os 35 jogadores fornecidos pelo usuário, mesmo quando há diferença entre essa lista e o elenco atualmente exibido pelo Transfermarkt."
+  "sourceNotes": "Dados de posição principal, posições secundárias e valores de mercado conferidos no Transfermarkt em 27/08/2026. O Transfermarkt apresenta atualmente o Atlético-MG com 34 jogadores e €98,65 milhões em valor total de mercado. Os valores individuais utilizados são os exibidos na atualização mais recente disponível para cada jogador. Jogadores sem valor atribuído pelo Transfermarkt foram representados como null. O JSON mantém os 35 jogadores fornecidos pelo usuário, mesmo quando há diferença entre essa lista e o elenco atualmente exibido pelo Transfermarkt. formation/style pesquisados em 29/08/2026, só formato/estilo (jogadores específicos por vaga continuam decididos pelo autoAssign de cada partida, não fixados — mesmo critério do athletico-pr.json, já que fontes sobre a escalação titular exata do último jogo também divergiram aqui). CUIDADO — dado de treinador recém-desatualizado: Cuca foi demitido do Atlético-MG em 29/08/2026 (dois dias após derrota por 2x0 pro Cruzeiro, Mineirão, ida das quartas da Copa do Brasil — seu último jogo no comando), então 4-2-3-1/counter descreve o esquema do técnico QUE SAIU, não necessariamente o que o próximo técnico vai usar; vale reconferir quando um sucessor for anunciado e assentar. Formação 4-2-3-1 é descrita como praticamente padronizada nos times de Cuca (substituindo o 3-4-3 do técnico anterior, Milito) em múltiplas fontes (lance.com.br, br.bolavip.com). Estilo 'counter' (não 'offensive'/'pressing') escolhido cruzando a descrição tática com os modificadores reais do motor (STYLE_MODIFIERS em engine/simulation/config.ts): o time de Cuca é descrito com ataque ao espaço nas costas da defesa e gols concentrados em transições/contra-ataques em velocidade (ex.: 'seis gols por transições ofensivas' citado em br.bolavip.com), que bate com o perfil de 'counter' no motor (menos chances criadas, mas conversão bem mais clínica, cede posse de propósito) — diferente de 'offensive' (muito volume de chance, solto defensivamente) ou 'pressing' (volume alto + muito mais falta)."
 }

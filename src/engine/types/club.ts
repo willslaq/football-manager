@@ -1,4 +1,5 @@
 import type { PlayerId } from './player';
+import type { Formation, TacticStyle } from './tactics';
 
 export type ClubId = string;
 
@@ -17,4 +18,7 @@ export interface Club {
   stadiumCapacity: number;
   /** Referencia jogadores em World.players — não embute os objetos (fonte única de verdade). */
   squad: PlayerId[];
+  /** Formação/estilo real pesquisado (último jogo) pra escalação automática de CPU — ausente = DEFAULT_AUTO_TACTICS (season.ts). */
+  formation?: Formation;
+  style?: TacticStyle;
 }

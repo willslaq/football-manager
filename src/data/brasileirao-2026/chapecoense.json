@@ -11,7 +11,9 @@
     "colors": {
       "primary": "#006437",
       "secondary": "#ffffff"
-    }
+    },
+    "formation": "4-3-3",
+    "style": "counter"
   },
   "squad": [
     {
@@ -1737,5 +1739,5 @@
       }
     }
   ],
-  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Os valores foram convertidos para inteiros em euro. Quando o Transfermarkt apresenta '-', marketValue foi definido como 0. O JSON original foi preservado quanto aos jogadores, números e demais informações; não foram adicionados jogadores que aparecem atualmente no elenco do Transfermarkt mas não estavam na lista fornecida."
+  "sourceNotes": "Coleta em 27/08/2026. Valores de mercado e posições principais/secundárias consultados no Transfermarkt. Os valores foram convertidos para inteiros em euro. Quando o Transfermarkt apresenta '-', marketValue foi definido como 0. O JSON original foi preservado quanto aos jogadores, números e demais informações; não foram adicionados jogadores que aparecem atualmente no elenco do Transfermarkt mas não estavam na lista fornecida. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga seguem decididos pelo autoAssign de cada partida, mesma política dos demais clubes). Último jogo: Chapecoense 1x0 São Paulo, 23/08/2026 (Brasileirão, Arena Condá) — titulares Anderson; Everton, Kauan Faria, Eduardo Doma e Fernando; Camilo, Balieiro e Giovanni Augusto; Rossi, Túlio Eduardo e Marcinho (ogol.com.br/lance.com.br), formato 4-3-3 (defesa de 4, meio de 3, tridente ofensivo). Técnico é Rafael Lacerda (contratado 30/05/2026, contrato até dez/2026, situação estável) — uma busca inicial retornou 'Gilmar Dal Pozzo' como técnico, mas não foi possível confirmar essa informação em nenhuma fonte específica sobre o clube, enquanto Lacerda é confirmado por múltiplas fontes dedicadas (chapecoense.com, ogol.com.br, clicrdc.com.br); tratamos a menção a Dal Pozzo como provável erro/desatualização da busca. Estilo 'counter' com base em descrição direta do próprio plano de Lacerda (ndmais.com.br): 'linhas compactas, forte proteção ao meio-campo, intensidade na marcação e inteligência para aproveitar os contra-ataques' — bate com o perfil de 'counter' em STYLE_MODIFIERS (engine/simulation/config.ts): menos chances criadas mas conversão mais clínica, cede posse de propósito, junto com estilo de jogo defensivo/compacto descrito. Ele também já armou um 4-5-1 mais defensivo num jogo específico (vs Cruzeiro) mas mantivemos 4-3-3 por ser o formato do jogo mais recente de fato."
 }

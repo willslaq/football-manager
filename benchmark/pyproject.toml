@@ -1,0 +1,32 @@
+[project]
+name = "footmanager-benchmark"
+version = "0.1.0"
+description = "Benchmark, validation and calibration tool for footmanager's match/season simulation engine."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "pandas>=2.1",
+  "pyarrow>=14.0",
+  "pyyaml>=6.0",
+  "click>=8.1",
+  "optuna>=3.5",
+  "SALib>=1.4",
+  "penaltyblog>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "hypothesis>=6.90"]
+
+[project.scripts]
+benchmark = "benchmark.cli:cli"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

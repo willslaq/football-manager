@@ -1,0 +1,39 @@
+# Registro de métricas — o que é obrigatório (bloqueia o gate de aprovação/vira restrição na
+# calibração) vs informativo, os bins congelados de placar/gols (nunca mudam durante uma busca —
+# ver "congele antes da busca" no plano) e os pesos por grupo de objetivo usados em calibration.py.
+
+score_bins: ["0", "1", "2", "3", "4", "5+"]
+rare_tail_merge_from: 5 # gols >= 5 entram no bin "5+" — ver metrics._bucket_goals
+
+required_metrics:
+  - goals_per_match
+  - home_win_rate
+  - draw_rate
+  - away_win_rate
+  - fouls_per_match
+  - yellow_cards_per_match
+
+informational_metrics:
+  - red_cards_per_match
+  - clean_sheet_rate_home
+  - clean_sheet_rate_away
+  - score_0_0
+  - score_1_0
+  - score_0_1
+  - score_1_1
+
+# Grupos de objetivo — SRS "uma melhora grande em gols não pode esconder uma regressão em
+# cartões": calibration.py soma a perda dentro de cada grupo separadamente antes de combinar, e o
+# relatório mostra cada grupo, não só o total.
+objective_groups:
+  result_and_score:
+    metrics: [goals_per_match, goals_per_match_home, goals_per_match_away, home_win_rate, draw_rate, away_win_rate]
+    weight: 1.0
+  discipline:
+    metrics: [fouls_per_match, yellow_cards_per_match, red_cards_per_match]
+    weight: 1.0
+
+# Pesos dos termos de distância de distribuição (fora da soma por-métrica acima) na loss composta.
+distribution_weights:
+  score_matrix_jensen_shannon: 1.0
+  card_minute_wasserstein: 0.5

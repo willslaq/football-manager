@@ -1,0 +1,20 @@
+# Python virtualenv (bootstrapped locally — see README.md's Setup section)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/
+*.egg-info/
+
+# Generated run outputs — reproducible from configs/snapshots, not source
+reports/*
+!reports/.gitkeep
+
+# Large/derived snapshot artifacts (fixtures banks, seed banks are regenerable — see snapshots/README.md)
+snapshots/*.json
+snapshots/*.parquet
+!snapshots/real/
+!snapshots/README.md
+
+# Optuna study storage
+*.db

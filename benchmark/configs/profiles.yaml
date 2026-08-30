@@ -1,0 +1,43 @@
+# Perfis de execução do benchmark Monte Carlo (ver "benchmark run --profile <nome>"). Cada perfil
+# fixa: de qual banco de seeds tira (search vs validation — ver seed_bank.py), quantas partidas por
+# fixture do banco estratificado (replications_per_fixture — o total é isso × len(fixtures)), quantas
+# partidas por estrato ganham trace completo (amostra estratificada, nunca todas — ver events.py) e,
+# pro nightly, a parada adaptativa por margem de erro (e = z*sqrt(p(1-p)/n), IC95%).
+
+smoke:
+  seed_bank: search
+  replications_per_fixture: 15 # ~46 fixtures x 15 ≈ 700 partidas — dentro da faixa 500-2000 do SRS
+  trace_sample_per_stratum: 1
+  n_seasons: 3
+  adaptive: null
+
+nightly:
+  seed_bank: search
+  replications_per_fixture: 1200 # ~46 x 1200 ≈ 55k partidas — dentro de 50k-200k
+  trace_sample_per_stratum: 3
+  n_seasons: 40
+  adaptive:
+    enabled: true
+    metrics: [home_win_rate, draw_rate, away_win_rate]
+    target_margin_pp: 1.0 # ~1 ponto percentual de margem (IC95%)
+    check_every_matches: 2000
+    z: 1.96
+
+calibration:
+  seed_bank: search
+  replications_per_fixture: 120 # ~46 x 120 ≈ 5.5k, dentro de 2k-10k por candidato
+  trace_sample_per_stratum: 0 # calibração quer agregação rápida — sem custo de trace
+  n_seasons: 0
+  adaptive: null
+
+release:
+  seed_bank: validation # seeds nunca vistas durante busca/calibração — ver seed_bank.py
+  replications_per_fixture: 2200 # ~46 x 2200 ≈ 100k
+  trace_sample_per_stratum: 5
+  n_seasons: 60
+  adaptive:
+    enabled: true
+    metrics: [home_win_rate, draw_rate, away_win_rate]
+    target_margin_pp: 0.5
+    check_every_matches: 4000
+    z: 1.96

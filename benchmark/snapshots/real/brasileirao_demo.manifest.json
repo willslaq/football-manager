@@ -1,0 +1,24 @@
+{
+  "source": "SYNTHETIC DEMO — not real observed results (see snapshots/real/README.md)",
+  "url": null,
+  "seasons": [
+    2024,
+    2025
+  ],
+  "collected_at": null,
+  "license": "N/A — gerado localmente com scripts/generate_demo_snapshot.py só pra exercitar o pipeline",
+  "transformation": "gols i.i.d. Poisson por time; taxa = base_mando x fator_ataque(reputação) x fator_defesa(reputação do adversário); parâmetros base escolhidos pra aproximar a ordem de grandeza de agregados publicados do Brasileirão, sem reivindicar precisão",
+  "checksum_sha256": "b5509bfd864116f42eefb097af93a6c09dcb1244d0a855c4e232f5c11f8f2352",
+  "n_matches": 760,
+  "fields": [
+    "season",
+    "round",
+    "date",
+    "home_team",
+    "away_team",
+    "home_goals",
+    "away_goals"
+  ],
+  "generator": "benchmark/scripts/generate_demo_snapshot.py",
+  "generator_seed": 20260829
+}

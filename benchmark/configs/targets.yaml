@@ -1,0 +1,28 @@
+# Dados reais usados como alvo de comparação/calibração. Ver snapshots/real/README.md — o
+# snapshot atual é SINTÉTICO (demo), não Brasileirão real; troque `path` por um snapshot real
+# licenciado quando disponível, mantendo o mesmo schema (season, round, date, home_team,
+# away_team, home_goals, away_goals).
+
+real_snapshot:
+  path: snapshots/real/brasileirao_demo.csv
+  manifest: snapshots/real/brasileirao_demo.manifest.json
+  is_synthetic_demo: true
+  # Separação temporal — nunca ajuste o Dixon-Coles nem escolha tolerâncias olhando pro holdout.
+  fit_seasons: [2024]
+  holdout_seasons: [2025]
+
+# Tolerância prática por métrica (gate de equivalência: IC95%(sim - real) ⊆ [-tolerância, +tolerância]).
+# Mesma unidade da métrica (proporções em 0..1, gols em gols/partida, faltas em faltas/partida...).
+# Congeladas antes de qualquer calibração — mudar isso no meio de uma busca invalida o resultado.
+tolerances:
+  goals_per_match: 0.25
+  goals_per_match_home: 0.20
+  goals_per_match_away: 0.20
+  home_win_rate: 0.04
+  draw_rate: 0.04
+  away_win_rate: 0.04
+  clean_sheet_rate_home: 0.05
+  clean_sheet_rate_away: 0.05
+  fouls_per_match: 3.0
+  yellow_cards_per_match: 1.0
+  red_cards_per_match: 0.15

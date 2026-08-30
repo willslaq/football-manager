@@ -5,7 +5,7 @@ import type { Sector } from './strength';
 /** Todos os pesos/constantes de balanceamento do motor de partida vivem aqui. */
 
 /** Multiplicador aplicado às três notas de setor do time mandante. */
-export const HOME_ADVANTAGE = 1.06;
+export let HOME_ADVANTAGE = 1.06;
 
 /**
  * Energia (`Player.condition`) drenada minuto a minuto durante a partida — degrada a nota
@@ -65,18 +65,18 @@ export const RELEGATION_CUTOFF_POSITION = 17;
  * times muito desiguais quase determinísticas — o que o futebol real não é.
  * 1.0 = sem compressão; menor = jogos mais equilibrados.
  */
-export const RATIO_COMPRESSION = 0.6;
+export let RATIO_COMPRESSION = 0.6;
 
 /** Chances "claras" médias criadas por um time num jogo equilibrado. */
-export const BASE_CHANCES_PER_TEAM = 6;
+export let BASE_CHANCES_PER_TEAM = 6;
 
 /** Probabilidade de gol por chance, antes de modulação por qualidade. */
-export const BASE_GOAL_PROBABILITY = 0.32;
-export const MIN_GOAL_PROBABILITY = 0.05;
-export const MAX_GOAL_PROBABILITY = 0.75;
+export let BASE_GOAL_PROBABILITY = 0.32;
+export let MIN_GOAL_PROBABILITY = 0.05;
+export let MAX_GOAL_PROBABILITY = 0.75;
 
 /** Fração de chances não convertidas em gol que ainda vão na direção do gol (defesa do goleiro, não erro). */
-export const ON_TARGET_MISS_PROBABILITY = 0.45;
+export let ON_TARGET_MISS_PROBABILITY = 0.45;
 
 export interface StyleModifiers {
   /** Multiplica o volume de chances que o próprio time cria. */
@@ -119,11 +119,11 @@ export const POSSESSION_TARGET_CLAMP: [number, number] = [0.3, 0.7];
 /** Cada minuto pode se afastar mais do alvo do que a média da partida — dá vida ao passeio. */
 export const POSSESSION_MINUTE_CLAMP: [number, number] = [0.18, 0.82];
 /** Fração da distância até o alvo do minuto que a posse recupera a cada minuto. */
-export const POSSESSION_WALK_PULL_RATE = 0.18;
+export let POSSESSION_WALK_PULL_RATE = 0.18;
 /** Amplitude do ruído aleatório somado a cada minuto (passeio, não é um degrau reto até o alvo). */
-export const POSSESSION_WALK_NOISE = 0.05;
+export let POSSESSION_WALK_NOISE = 0.05;
 /** Empurrão de posse por gol de diferença no placar, no minuto 90 (cresce ao longo do jogo). */
-export const POSSESSION_SCORELINE_PULL_PER_GOAL = 0.02;
+export let POSSESSION_SCORELINE_PULL_PER_GOAL = 0.02;
 /** Viés de posse por meio-campista a mais/menos que o 4-4-2 (baseline), por causa da forma da formação. */
 export const POSSESSION_MIDFIELD_SHAPE_WEIGHT = 0.015;
 /** Teto de segurança pra probabilidade de chance num único minuto (nunca deveria ser atingido na prática). */
@@ -135,7 +135,7 @@ export const POSSESSION_CHANCE_PROBABILITY_CAP = 0.9;
  * ora — candidato natural a virar função de apoio do clube/público (reputação,
  * tamanho de estádio/público presente) numa evolução futura da mecânica.
  */
-export const POSSESSION_HOME_BOOST = 0.02;
+export let POSSESSION_HOME_BOOST = 0.02;
 
 /** Todas as constantes do motor de faltas/cartões/bolas paradas (ver simulation/fouls.ts e match.ts). */
 
@@ -145,18 +145,18 @@ export const POSSESSION_HOME_BOOST = 0.02;
  * bem acima do "jogador neutro" hipotético usado pra normalizar `teamFoulProfile` — o número
  * aqui já compensa isso, não é o "11 faltas reais" ingênuo por si só.
  */
-export const BASE_FOULS_PER_TEAM = 7.5;
+export let BASE_FOULS_PER_TEAM = 7.5;
 /** Teto de segurança pra probabilidade de falta num único minuto. */
-export const FOUL_PROBABILITY_CAP = 0.6;
+export let FOUL_PROBABILITY_CAP = 0.6;
 /**
  * Quanto o peso de sorteio de "quem comete a falta" cai pra um jogador já advertido na
  * partida — jogador advertido segura o carrinho, não pra de disputar. Sem isso, o mesmo
  * jogador de peso alto (zagueiro/volante) acumula faltas demais e o segundo amarelo vira
  * comum demais (calibrado via fouls.sanity.test.ts).
  */
-export const CAUTIONED_FOUL_WEIGHT_MULTIPLIER = 0.06;
+export let CAUTIONED_FOUL_WEIGHT_MULTIPLIER = 0.06;
 /** Quanto um bom carrinho (tackling) mitiga a agressão na hora de virar falta — 0 = não mitiga, 1 = anula. */
-export const FOUL_TACKLING_MITIGATION = 0.5;
+export let FOUL_TACKLING_MITIGATION = 0.5;
 
 /** Multiplicador de taxa de falta por estilo tático de quem comete — pressão/marcação alta erram mais entradas. */
 export const STYLE_FOUL_MODIFIERS: Record<TacticStyle, number> = {
@@ -255,12 +255,12 @@ export const FOUL_CARD_AGGRESSION_MIN_FACTOR = 0.6;
 export const FOUL_CARD_AGGRESSION_MAX_FACTOR = 1.4;
 
 /** Conversão de pênalti: taxa-base e faixa de clamp após ajuste por batedor x goleiro. */
-export const BASE_PENALTY_CONVERSION = 0.78;
+export let BASE_PENALTY_CONVERSION = 0.78;
 export const MIN_PENALTY_CONVERSION = 0.5;
 export const MAX_PENALTY_CONVERSION = 0.93;
 
 /** Conversão de cobrança direta de falta: taxa-base bem mais baixa que pênalti (chute de longe, barreira). */
-export const BASE_FREE_KICK_CONVERSION = 0.04;
+export let BASE_FREE_KICK_CONVERSION = 0.04;
 export const MIN_FREE_KICK_CONVERSION = 0.01;
 export const MAX_FREE_KICK_CONVERSION = 0.12;
 
@@ -279,3 +279,81 @@ export const RED_CARD_SECTOR_PENALTY: Record<Sector, number> = {
 
 /** Máximo de substituições por time por partida (ver match.ts's MatchSubstitution/applySubstitution). */
 export const MAX_SUBSTITUTIONS_PER_TEAM = 5;
+
+/**
+ * Overrides de parâmetro em runtime — único ponto de entrada pra calibração/análise de
+ * sensibilidade externa (ver `benchmark/`, fora do bundle do jogo). Cobre só os escalares que
+ * fazem sentido variar independentemente (fora de tabelas de posição/formação, que o benchmark
+ * ainda não expõe — ver `benchmark/README.md`'s limitações). Nada aqui é chamado pelo app em si:
+ * sem chamar `applyEngineParamOverrides`, o comportamento é idêntico ao de antes desta seção.
+ */
+const PARAM_ACCESSORS: Record<string, { get: () => number; set: (value: number) => void }> = {
+  HOME_ADVANTAGE: { get: () => HOME_ADVANTAGE, set: (v) => (HOME_ADVANTAGE = v) },
+  RATIO_COMPRESSION: { get: () => RATIO_COMPRESSION, set: (v) => (RATIO_COMPRESSION = v) },
+  BASE_CHANCES_PER_TEAM: { get: () => BASE_CHANCES_PER_TEAM, set: (v) => (BASE_CHANCES_PER_TEAM = v) },
+  BASE_GOAL_PROBABILITY: { get: () => BASE_GOAL_PROBABILITY, set: (v) => (BASE_GOAL_PROBABILITY = v) },
+  MIN_GOAL_PROBABILITY: { get: () => MIN_GOAL_PROBABILITY, set: (v) => (MIN_GOAL_PROBABILITY = v) },
+  MAX_GOAL_PROBABILITY: { get: () => MAX_GOAL_PROBABILITY, set: (v) => (MAX_GOAL_PROBABILITY = v) },
+  ON_TARGET_MISS_PROBABILITY: { get: () => ON_TARGET_MISS_PROBABILITY, set: (v) => (ON_TARGET_MISS_PROBABILITY = v) },
+  POSSESSION_HOME_BOOST: { get: () => POSSESSION_HOME_BOOST, set: (v) => (POSSESSION_HOME_BOOST = v) },
+  POSSESSION_WALK_PULL_RATE: { get: () => POSSESSION_WALK_PULL_RATE, set: (v) => (POSSESSION_WALK_PULL_RATE = v) },
+  POSSESSION_WALK_NOISE: { get: () => POSSESSION_WALK_NOISE, set: (v) => (POSSESSION_WALK_NOISE = v) },
+  POSSESSION_SCORELINE_PULL_PER_GOAL: {
+    get: () => POSSESSION_SCORELINE_PULL_PER_GOAL,
+    set: (v) => (POSSESSION_SCORELINE_PULL_PER_GOAL = v),
+  },
+  BASE_FOULS_PER_TEAM: { get: () => BASE_FOULS_PER_TEAM, set: (v) => (BASE_FOULS_PER_TEAM = v) },
+  FOUL_PROBABILITY_CAP: { get: () => FOUL_PROBABILITY_CAP, set: (v) => (FOUL_PROBABILITY_CAP = v) },
+  CAUTIONED_FOUL_WEIGHT_MULTIPLIER: {
+    get: () => CAUTIONED_FOUL_WEIGHT_MULTIPLIER,
+    set: (v) => (CAUTIONED_FOUL_WEIGHT_MULTIPLIER = v),
+  },
+  FOUL_TACKLING_MITIGATION: { get: () => FOUL_TACKLING_MITIGATION, set: (v) => (FOUL_TACKLING_MITIGATION = v) },
+  BASE_PENALTY_CONVERSION: { get: () => BASE_PENALTY_CONVERSION, set: (v) => (BASE_PENALTY_CONVERSION = v) },
+  BASE_FREE_KICK_CONVERSION: { get: () => BASE_FREE_KICK_CONVERSION, set: (v) => (BASE_FREE_KICK_CONVERSION = v) },
+  'FOUL_CARD_BASE.yellow': { get: () => FOUL_CARD_BASE.yellow, set: (v) => (FOUL_CARD_BASE.yellow = v) },
+  'FOUL_CARD_BASE.red': { get: () => FOUL_CARD_BASE.red, set: (v) => (FOUL_CARD_BASE.red = v) },
+  'STYLE_FOUL_MODIFIERS.offensive': { get: () => STYLE_FOUL_MODIFIERS.offensive, set: (v) => (STYLE_FOUL_MODIFIERS.offensive = v) },
+  'STYLE_FOUL_MODIFIERS.balanced': { get: () => STYLE_FOUL_MODIFIERS.balanced, set: (v) => (STYLE_FOUL_MODIFIERS.balanced = v) },
+  'STYLE_FOUL_MODIFIERS.defensive': { get: () => STYLE_FOUL_MODIFIERS.defensive, set: (v) => (STYLE_FOUL_MODIFIERS.defensive = v) },
+  'STYLE_FOUL_MODIFIERS.counter': { get: () => STYLE_FOUL_MODIFIERS.counter, set: (v) => (STYLE_FOUL_MODIFIERS.counter = v) },
+  'STYLE_FOUL_MODIFIERS.possession': { get: () => STYLE_FOUL_MODIFIERS.possession, set: (v) => (STYLE_FOUL_MODIFIERS.possession = v) },
+  'STYLE_FOUL_MODIFIERS.direct': { get: () => STYLE_FOUL_MODIFIERS.direct, set: (v) => (STYLE_FOUL_MODIFIERS.direct = v) },
+  'STYLE_FOUL_MODIFIERS.pressing': { get: () => STYLE_FOUL_MODIFIERS.pressing, set: (v) => (STYLE_FOUL_MODIFIERS.pressing = v) },
+};
+
+/** Nomes de parâmetro válidos pra `applyEngineParamOverrides`/`currentEngineParams` — espelha `PARAM_ACCESSORS`. */
+export const ENGINE_PARAM_NAMES: readonly string[] = Object.freeze(Object.keys(PARAM_ACCESSORS));
+
+/** Snapshot dos valores-padrão (definidos acima), capturado na primeira importação do módulo — base do `resetEngineParams`. */
+const DEFAULT_ENGINE_PARAMS: Readonly<Record<string, number>> = Object.freeze(
+  Object.fromEntries(ENGINE_PARAM_NAMES.map((name) => [name, PARAM_ACCESSORS[name].get()])),
+);
+
+/**
+ * Aplica overrides de parâmetro por nome (ver `ENGINE_PARAM_NAMES`) — usado só pelo benchmark
+ * (`benchmark/engine/server.ts`) pra calibração/sensibilidade. Lança em nome desconhecido, pra
+ * pegar erro de digitação/typo cedo em vez de silenciosamente ignorar.
+ */
+export function applyEngineParamOverrides(overrides: Record<string, number>): void {
+  for (const [name, value] of Object.entries(overrides)) {
+    const accessor = PARAM_ACCESSORS[name];
+    if (!accessor) throw new Error(`applyEngineParamOverrides: parâmetro desconhecido "${name}"`);
+    accessor.set(value);
+  }
+}
+
+/** Restaura todos os parâmetros calibráveis ao valor-padrão do código-fonte. */
+export function resetEngineParams(): void {
+  applyEngineParamOverrides(DEFAULT_ENGINE_PARAMS as Record<string, number>);
+}
+
+/** Snapshot corrente de todos os parâmetros calibráveis — usado pra computar o `config_hash` (ver server.ts). */
+export function currentEngineParams(): Record<string, number> {
+  return Object.fromEntries(ENGINE_PARAM_NAMES.map((name) => [name, PARAM_ACCESSORS[name].get()]));
+}
+
+/** Valores-padrão de todos os parâmetros calibráveis (cópia; não mutar). */
+export function defaultEngineParams(): Record<string, number> {
+  return { ...DEFAULT_ENGINE_PARAMS };
+}

@@ -1,0 +1,38 @@
+# Espaço de busca pra calibração (Optuna/differential_evolution) e sensibilidade (Morris/Sobol).
+# Nomes têm que bater com ENGINE_PARAM_NAMES (ver src/engine/simulation/config.ts's
+# PARAM_ACCESSORS / benchmark/engine/server.ts's cmd:"config_schema"). Valores-padrão não são
+# duplicados aqui — vêm sempre do motor em tempo de execução (EngineAdapter.config_schema()),
+# pra nunca divergir do código-fonte.
+
+parameters:
+  HOME_ADVANTAGE: { low: 1.00, high: 1.15 }
+  RATIO_COMPRESSION: { low: 0.30, high: 1.00 }
+  BASE_CHANCES_PER_TEAM: { low: 3.0, high: 10.0 }
+  BASE_GOAL_PROBABILITY: { low: 0.15, high: 0.50 }
+  MIN_GOAL_PROBABILITY: { low: 0.01, high: 0.15 }
+  MAX_GOAL_PROBABILITY: { low: 0.50, high: 0.95 }
+  ON_TARGET_MISS_PROBABILITY: { low: 0.20, high: 0.70 }
+  POSSESSION_HOME_BOOST: { low: -0.02, high: 0.08 }
+  POSSESSION_WALK_PULL_RATE: { low: 0.05, high: 0.40 }
+  POSSESSION_WALK_NOISE: { low: 0.01, high: 0.15 }
+  POSSESSION_SCORELINE_PULL_PER_GOAL: { low: 0.00, high: 0.08 }
+  BASE_FOULS_PER_TEAM: { low: 4.0, high: 14.0 }
+  FOUL_PROBABILITY_CAP: { low: 0.30, high: 0.90 }
+  CAUTIONED_FOUL_WEIGHT_MULTIPLIER: { low: 0.01, high: 0.50 }
+  FOUL_TACKLING_MITIGATION: { low: 0.00, high: 1.00 }
+  BASE_PENALTY_CONVERSION: { low: 0.50, high: 0.93 }
+  BASE_FREE_KICK_CONVERSION: { low: 0.01, high: 0.12 }
+  "FOUL_CARD_BASE.yellow": { low: 0.05, high: 0.35 }
+  "FOUL_CARD_BASE.red": { low: 0.001, high: 0.02 }
+  "STYLE_FOUL_MODIFIERS.offensive": { low: 0.70, high: 1.60 }
+  "STYLE_FOUL_MODIFIERS.balanced": { low: 0.70, high: 1.60 }
+  "STYLE_FOUL_MODIFIERS.defensive": { low: 0.70, high: 1.60 }
+  "STYLE_FOUL_MODIFIERS.counter": { low: 0.70, high: 1.60 }
+  "STYLE_FOUL_MODIFIERS.possession": { low: 0.70, high: 1.60 }
+  "STYLE_FOUL_MODIFIERS.direct": { low: 0.70, high: 1.60 }
+  "STYLE_FOUL_MODIFIERS.pressing": { low: 0.70, high: 1.60 }
+
+# Subconjunto pequeno e de alto impacto — usado por `benchmark calibrate --demo` e como ponto de
+# partida de uma triagem Morris (SRS "elimine da análise cara os parâmetros com influência
+# desprezível" — comece pequeno, expanda pro espaço inteiro acima só se o tempo permitir).
+demo_subset: [BASE_GOAL_PROBABILITY, BASE_FOULS_PER_TEAM, HOME_ADVANTAGE]

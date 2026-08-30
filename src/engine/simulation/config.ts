@@ -65,13 +65,13 @@ export const RELEGATION_CUTOFF_POSITION = 17;
  * times muito desiguais quase determinísticas — o que o futebol real não é.
  * 1.0 = sem compressão; menor = jogos mais equilibrados.
  */
-export let RATIO_COMPRESSION = 0.6;
+export let RATIO_COMPRESSION = 0.43;
 
 /** Chances "claras" médias criadas por um time num jogo equilibrado. */
 export let BASE_CHANCES_PER_TEAM = 6;
 
 /** Probabilidade de gol por chance, antes de modulação por qualidade. */
-export let BASE_GOAL_PROBABILITY = 0.32;
+export let BASE_GOAL_PROBABILITY = 0.21;
 export let MIN_GOAL_PROBABILITY = 0.05;
 export let MAX_GOAL_PROBABILITY = 0.75;
 

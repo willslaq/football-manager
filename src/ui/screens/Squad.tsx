@@ -1,13 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCareerStore } from '../../store/careerStore';
-import { POSITION_FILTERS, POSITION_GROUP, POSITION_LABEL, resolveSquad, type PlayerListFilter } from '../utils';
+import {
+  formatMarketValueBRL,
+  POSITION_FILTERS,
+  POSITION_GROUP,
+  POSITION_LABEL,
+  resolveSquad,
+  type PlayerListFilter,
+} from '../utils';
 import { Card, IconCard, ProgressBar } from '../components';
 import type { Player, PlayerAttributes } from '../../engine/types';
 import './Squad.css';
 
 type Filter = PlayerListFilter;
-type SortField = 'name' | 'position' | 'age' | 'strength' | 'condition' | 'morale';
+type SortField = 'name' | 'position' | 'age' | 'strength' | 'condition' | 'morale' | 'marketValue';
 type SortDirection = 'asc' | 'desc';
 
 /** Duração da transição de saída do painel (Squad.css) — o desmonte espera esse tempo pra não cortar a animação. */
@@ -47,6 +54,7 @@ const COLUMNS: { field: SortField; label: string; defaultDirection: SortDirectio
   { field: 'strength', label: 'Força', defaultDirection: 'desc' },
   { field: 'condition', label: 'Condição', defaultDirection: 'desc' },
   { field: 'morale', label: 'Moral', defaultDirection: 'desc' },
+  { field: 'marketValue', label: 'Valor', defaultDirection: 'desc' },
 ];
 
 function compareBy(field: SortField, a: Player, b: Player): number {
@@ -63,6 +71,8 @@ function compareBy(field: SortField, a: Player, b: Player): number {
       return a.condition - b.condition;
     case 'morale':
       return a.morale - b.morale;
+    case 'marketValue':
+      return a.marketValue - b.marketValue;
   }
 }
 
@@ -236,6 +246,7 @@ export function Squad() {
                       <span className={`numeric ${statClass(player.strength)}`}>{player.strength}</span>
                       <span className={`numeric ${statClass(player.condition)}`}>{player.condition}</span>
                       <span className={`numeric ${statClass(player.morale)}`}>{player.morale}</span>
+                      <span className="numeric squad__stat squad__stat--muted">{formatMarketValueBRL(player.marketValue)}</span>
                       <span className="numeric squad__stat squad__stat--muted">{formatPhysical(player)}</span>
                       <span className="numeric squad__stat squad__stat--muted">{formatFoot(player)}</span>
                     </div>
@@ -254,6 +265,7 @@ export function Squad() {
                 <p className="squad__detail-meta">
                   {POSITION_LABEL[panelPlayer.position]} · {panelPlayer.age} anos · {panelPlayer.nationality}
                 </p>
+                <p className="squad__detail-value">{formatMarketValueBRL(panelPlayer.marketValue)}</p>
               </div>
               <button
                 type="button"

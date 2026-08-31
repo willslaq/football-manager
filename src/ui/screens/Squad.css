@@ -64,11 +64,11 @@
 
 .squad__row {
   display: grid;
-  grid-template-columns: 2.4fr 0.7fr 0.6fr 0.8fr 0.9fr 0.8fr 1.1fr 0.9fr;
+  grid-template-columns: 2.4fr 0.7fr 0.6fr 0.8fr 0.9fr 0.8fr 1fr 1.1fr 0.9fr;
   align-items: center;
   gap: var(--space-3);
   padding: 0 var(--space-4);
-  min-width: 44rem;
+  min-width: 50rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -207,6 +207,13 @@
   margin: 0.2rem 0 0;
   font-size: var(--text-sm);
   color: var(--mist);
+}
+
+.squad__detail-value {
+  margin: 0.3rem 0 0;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--pitch);
 }
 
 .squad__detail-close {

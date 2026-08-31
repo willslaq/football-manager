@@ -61,6 +61,8 @@ export interface Player {
   age: number;
   /** Ano de nascimento — fonte da verdade pra reidratar `age` a cada virada de temporada (ver `startNewSeason`). */
   birthYear: number;
+  /** Valor de mercado em EUR (fonte: Transfermarkt/estimado — ver src/data/brasileirao-2026). Exibição converte pra R$ na UI (ver `formatMarketValueBRL`). */
+  marketValue: number;
   nationality: string;
   position: Position;
   secondaryPositions: Position[];

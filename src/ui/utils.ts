@@ -63,6 +63,22 @@ export const POSITION_FILTERS: { id: PlayerListFilter; label: string }[] = [
   { id: 'ATA', label: 'Ataque' },
 ];
 
+/**
+ * Câmbio fixo EUR→R$ só pra exibição — `Player.marketValue` continua guardado em EUR (fonte
+ * Transfermarkt), nunca convertido/persistido em R$. Sem cotação em tempo real no MVP; ajustar
+ * aqui se quiser refletir uma taxa diferente.
+ */
+const EUR_TO_BRL_RATE = 6;
+
+/** `Player.marketValue` (EUR) formatado como R$ compacto (mil/mi) pra caber em coluna de tabela. */
+export function formatMarketValueBRL(marketValueEur: number): string {
+  if (!marketValueEur) return '—';
+  const brl = marketValueEur * EUR_TO_BRL_RATE;
+  if (brl >= 1_000_000) return `R$ ${(brl / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mi`;
+  if (brl >= 1_000) return `R$ ${Math.round(brl / 1_000).toLocaleString('pt-BR')} mil`;
+  return `R$ ${brl.toLocaleString('pt-BR')}`;
+}
+
 export function findClub(career: CareerState, clubId: ClubId): Club | undefined {
   return career.world.clubs.find((c) => c.id === clubId);
 }

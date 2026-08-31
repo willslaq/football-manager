@@ -52,6 +52,8 @@ export interface RawSquadPlayer {
   nationality: string;
   birthYear: number | null;
   age: number;
+  /** Valor de mercado em EUR (Transfermarkt), quando conhecido — null/ausente = não informado. */
+  marketValue?: number | null;
   notes: string;
   /** Overall real (EA FC 26), quando casado com o mod. Ausente = geração procedural. */
   overall?: number;

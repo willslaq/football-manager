@@ -59,6 +59,7 @@ export function generateWorld(seed: number): World {
         name: rawPlayer.name,
         age: rawPlayer.age,
         birthYear: rawPlayer.birthYear ?? new Date().getFullYear() - rawPlayer.age,
+        marketValue: rawPlayer.marketValue ?? 0,
         nationality: rawPlayer.nationality,
         position: rawPlayer.position,
         secondaryPositions: rawPlayer.secondaryPositions,

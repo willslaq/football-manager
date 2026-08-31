@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCareerStore } from './store/careerStore';
 import { Start } from './ui/screens/Start';
 import { NewCareer } from './ui/screens/NewCareer';
+import { Friendly } from './ui/screens/Friendly';
 import { Home } from './ui/screens/Home';
 import { Squad } from './ui/screens/Squad';
 import { Lineup } from './ui/screens/Lineup';
@@ -17,7 +18,7 @@ import { findClub } from './ui/utils';
 import type { MatchResult as MatchResultData } from './engine/types';
 
 export type Screen = HubScreen | 'matchLive' | 'matchResult' | 'matchHistory';
-type PreCareerScreen = 'start' | 'newCareer';
+type PreCareerScreen = 'start' | 'newCareer' | 'friendly';
 
 function App() {
   const career = useCareerStore((s) => s.career);
@@ -40,7 +41,10 @@ function App() {
 
   if (!career) {
     if (preCareerScreen === 'newCareer') return <NewCareer onBack={() => setPreCareerScreen('start')} />;
-    return <Start onNewCareer={() => setPreCareerScreen('newCareer')} />;
+    if (preCareerScreen === 'friendly') return <Friendly onBack={() => setPreCareerScreen('start')} />;
+    return (
+      <Start onNewCareer={() => setPreCareerScreen('newCareer')} onFriendly={() => setPreCareerScreen('friendly')} />
+    );
   }
 
   if (screen === 'matchLive') {

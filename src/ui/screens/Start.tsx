@@ -7,7 +7,7 @@ function formatDate(epochMs: number): string {
   return new Date(epochMs).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-export function Start({ onNewCareer }: { onNewCareer: () => void }) {
+export function Start({ onNewCareer, onFriendly }: { onNewCareer: () => void; onFriendly: () => void }) {
   const saves = useCareerStore((s) => s.saves);
   const error = useCareerStore((s) => s.error);
   const refreshSaves = useCareerStore((s) => s.refreshSaves);
@@ -91,6 +91,16 @@ export function Start({ onNewCareer }: { onNewCareer: () => void }) {
           <FileButton accept="application/json" onFile={handleFile}>
             Escolher arquivo
           </FileButton>
+        </Card>
+
+        <Card className="action-card">
+          <h2 className="action-card__title">Amistoso</h2>
+          <p className="action-card__desc">
+            Escolha dois clubes, monte as escalações e simule uma partida avulsa — nada é salvo.
+          </p>
+          <Button variant="secondary" onClick={onFriendly}>
+            Jogar amistoso
+          </Button>
         </Card>
       </section>
 

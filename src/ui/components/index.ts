@@ -8,6 +8,7 @@ export * from './FileButton';
 export * from './Icons';
 export * from './MatchEventFeed';
 export * from './OnPitchList';
+export * from './PitchEditor';
 export * from './ProgressBar';
 export * from './RoundResultsList';
 export * from './SubstitutionDialog';

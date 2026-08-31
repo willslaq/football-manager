@@ -33,12 +33,12 @@ export const ENERGY_RECOMPUTE_INTERVAL_MINUTES = 5;
  * Recuperação de `Player.condition` por dia de descanso (ver `recoverCondition` em season.ts,
  * chamada pelo avanço de calendário — `advanceCalendar`). Calibrado pro ritmo semanal atual (uma
  * partida por rodada, ~6-7 dias de descanso): um titular que joga os 90 minutos inteiros termina
- * em torno de 100 - 90*ENERGY_DRAIN_PER_MINUTE_OUTFIELD ≈ 68 — a essa taxa, recupera de volta a
- * 100 em ~5-6 dias, com folga antes da próxima partida semanal. Inspirado no sistema de fitness
- * do EA FC 26 (energia volta ao normal em poucos dias de descanso), mas sem o "sharpness"/plano
- * de treino separado do jogo real — só a condição física em si, mantendo o mecanismo simples.
+ * em torno de 100 - 90*ENERGY_DRAIN_PER_MINUTE_OUTFIELD ≈ 68. Deliberadamente lento demais pra
+ * zerar isso em uma única semana (68 + 7*3 = 89) — um titular que joga toda rodada acumula um
+ * desgaste residual real. Só volta a 100 com um descanso mais longo, tipo ficar de fora de uma
+ * partida inteira (~14 dias sem jogar: 68 + 14*3 = 110 → 100).
  */
-export const CONDITION_RECOVERY_PER_DAY = 6;
+export const CONDITION_RECOVERY_PER_DAY = 3;
 
 /**
  * Ajuste de `Club.morale` (0-100) aplicado ao fim de cada partida da rodada, conforme o

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import bola from '../../assets/bola.png';
 
 interface IconProps {
   className?: string;
@@ -7,13 +8,19 @@ interface IconProps {
 
 /**
  * Marca de gol reaproveitada no feed de eventos e nas listas de artilheiros (MatchResult,
- * MatchLive, MatchHistory), pra não divergir o "ícone de gol" entre as telas.
+ * MatchLive, MatchHistory), pra não divergir o "ícone de gol" entre as telas. `.icon-ball`
+ * (tamanho/alinhamento base) vem de theme.css; cada chamador ainda pode empilhar sua própria
+ * classe (ex.: flex-shrink) via `className`.
  */
 export function IconBall({ className, style }: IconProps) {
   return (
-    <span className={className} style={style} aria-hidden="true">
-      ⚽
-    </span>
+    <img
+      src={bola}
+      alt=""
+      aria-hidden="true"
+      className={className ? `icon-ball ${className}` : 'icon-ball'}
+      style={style}
+    />
   );
 }
 

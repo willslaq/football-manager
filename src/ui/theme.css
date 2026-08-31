@@ -162,6 +162,14 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
+/** Tamanho/alinhamento base do IconBall (marca de gol) — ver Icons.tsx. */
+.icon-ball {
+  width: 1em;
+  height: 1em;
+  object-fit: contain;
+  vertical-align: -0.15em;
+}
+
 .eyebrow {
   font-family: var(--font-body);
   font-weight: 700;

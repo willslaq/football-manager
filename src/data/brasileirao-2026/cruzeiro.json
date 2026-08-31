@@ -960,11 +960,13 @@
         "PE",
         "PD"
       ],
-      "marketValue": null,
+      "marketValue": 3500000,
       "nationality": "BRA",
       "birthYear": 2009,
       "age": 17,
-      "notes": "Transfermarkt não atribui valor de mercado atualmente."
+      "notes": "Transfermarkt não atribui valor de mercado atualmente.",
+      "overall": 71,
+      "potential": 82
     },
     {
       "name": "Luis Sinisterra",

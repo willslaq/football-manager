@@ -1226,8 +1226,10 @@
       "nationality": "BRA",
       "birthYear": 2001,
       "age": 25,
-      "marketValue": 0,
-      "notes": "Transfermarkt não atribui valor de mercado atualmente."
+      "marketValue": 3000000,
+      "notes": "Transfermarkt não atribui valor de mercado atualmente.",
+      "overall": 73,
+      "potential": 77
     },
     {
       "name": "Yeferson Soteldo",
@@ -1293,8 +1295,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "marketValue": 0,
-      "notes": "Transfermarkt registra valor de mercado não disponível."
+      "marketValue": 3500000,
+      "notes": "Transfermarkt registra valor de mercado não disponível.",
+      "overall": 71,
+      "potential": 80
     },
     {
       "name": "Agustín Canobbio",

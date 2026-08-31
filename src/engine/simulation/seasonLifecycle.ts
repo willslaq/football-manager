@@ -62,11 +62,13 @@ export function buildSeasonSummary(state: CareerState): SeasonSummary {
 
 /**
  * Encerra a temporada atual e começa a seguinte: registra o resumo em `history`, reposiciona a
- * moral de cada clube pela colocação final (`moraleFromFinalStanding` — ver `Club.morale`), zera
- * estatísticas/suspensões/condição dos jogadores e gera a próxima temporada (`generateNextSeason`
- * — mesmos 20 clubes, calendário reaproveitado, tabela zerada, rodada 1). Rebaixamento é só
- * informativo no resumo: sem dados da Série B pra promover substitutos, os mesmos clubes voltam
- * (confirmado com o usuário).
+ * moral de cada clube pela colocação final (`moraleFromFinalStanding` — ver `Club.morale`),
+ * envelhece cada jogador em 1 ano (recalculado de `nextYear - birthYear`, não um +1 cego — ver
+ * `Player.birthYear`), zera estatísticas/suspensões/condição dos jogadores e gera a próxima
+ * temporada (`generateNextSeason` — mesmos 20 clubes, calendário reaproveitado, tabela zerada,
+ * rodada 1). Rebaixamento é só informativo no resumo: sem dados da Série B pra promover
+ * substitutos, os mesmos clubes voltam (confirmado com o usuário). Ainda não afeta atributos —
+ * envelhecer só muda o número exibido; crescimento/declínio de força ligado à idade fica pra depois.
  */
 export function startNewSeason(state: CareerState): CareerState {
   if (state.season.state !== 'finished') {
@@ -90,8 +92,10 @@ export function startNewSeason(state: CareerState): CareerState {
     morale: moraleFromFinalStanding(positionByClub.get(club.id) ?? totalTeams, totalTeams),
   }));
 
+  const nextYear = state.season.year + 1;
   const players = state.world.players.map((player) => ({
     ...player,
+    age: nextYear - player.birthYear,
     condition: 100,
     seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 },
     pendingYellowCards: 0,

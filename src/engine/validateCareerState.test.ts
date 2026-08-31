@@ -9,6 +9,7 @@ function makePlayer(id: string, name: string, position: Player['position']): Pla
     id,
     name,
     age: 24,
+    birthYear: 2001,
     nationality: 'BRA',
     position,
     secondaryPositions: [],

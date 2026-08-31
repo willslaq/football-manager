@@ -103,12 +103,17 @@ describe('startNewSeason', () => {
     expect(championClub.morale).toBe(100);
     expect(lastPlacedClub.morale).toBe(20);
 
-    // jogadores resetados
+    // jogadores resetados e envelhecidos (recalculado de `nextYear - birthYear`, não um +1 cego —
+    // por isso alguns sobem 2 nessa primeira virada: `age` de origem é preciso por data real de
+    // nascimento (scrape), enquanto só temos `birthYear` aqui, então quem ainda não fez aniversário
+    // no ano do scrape começa 1 "atrasado" em relação a `year - birthYear`; a partir da 2ª virada em
+    // diante o incremento é sempre exatamente +1).
     for (const player of next.world.players) {
       expect(player.seasonStats).toEqual({ appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 });
       expect(player.pendingYellowCards).toBe(0);
       expect(player.suspendedMatches).toBe(0);
       expect(player.condition).toBe(100);
+      expect(player.age).toBe(next.season.year - player.birthYear);
     }
 
     // temporada nova, do zero, mesmos 20 clubes

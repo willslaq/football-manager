@@ -397,8 +397,10 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "marketValue": null,
-      "notes": ""
+      "marketValue": 4000000,
+      "notes": "",
+      "overall": 73,
+      "potential": 79
     },
     {
       "name": "Matheus Bidu",
@@ -1144,7 +1146,7 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "marketValue": null,
+      "marketValue": 500000,
       "notes": "",
       "overall": 68,
       "potential": 68,

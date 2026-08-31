@@ -403,7 +403,7 @@
       "secondaryPositions": [
         "LE"
       ],
-      "marketValue": 0,
+      "marketValue": 350000,
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
@@ -705,11 +705,13 @@
         "PD",
         "PE"
       ],
-      "marketValue": 0,
+      "marketValue": 1500000,
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Jogador da base já registrado no profissional; número de camisa não confirmado com segurança"
+      "notes": "Jogador da base já registrado no profissional; número de camisa não confirmado com segurança",
+      "overall": 69,
+      "potential": 75
     },
     {
       "name": "Santiago Sosa",
@@ -1199,11 +1201,13 @@
         "SA",
         "PE"
       ],
-      "marketValue": 0,
+      "marketValue": 700000,
       "nationality": "ARG",
       "birthYear": 2000,
       "age": 26,
-      "notes": "Contratado pelo Vasco em agosto de 2026; Transfermarkt ainda não atualizou o jogador no elenco do clube, portanto marketValue foi mantido como 0 em vez de estimar um valor"
+      "notes": "Contratado pelo Vasco em agosto de 2026; Transfermarkt ainda não atualizou o jogador no elenco do clube, portanto marketValue foi mantido como 0 em vez de estimar um valor",
+      "overall": 67,
+      "potential": 70
     },
     {
       "name": "Brenner",

@@ -183,7 +183,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": ""
+      "notes": "",
+      "overall": 65,
+      "potential": 74,
+      "marketValue": 400000
     },
     {
       "name": "Luiz Fernando",
@@ -193,7 +196,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Jovem da base"
+      "notes": "Jovem da base",
+      "overall": 65,
+      "potential": 75,
+      "marketValue": 400000
     },
     {
       "name": "Bruno Bertinato",
@@ -203,7 +209,10 @@
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Sem número de camisa confirmado pelas fontes. Nome completo e presença no elenco atual confirmados pelo Transfermarkt (27/08/2026); sem valor de mercado atribuído pela fonte."
+      "notes": "Sem número de camisa confirmado pelas fontes. Nome completo e presença no elenco atual confirmados pelo Transfermarkt (27/08/2026); sem valor de mercado atribuído pela fonte.",
+      "overall": 68,
+      "potential": 70,
+      "marketValue": 100000
     },
     {
       "name": "Alexander Barboza",
@@ -690,7 +699,10 @@
       "nationality": "CIV",
       "birthYear": 2007,
       "age": 18,
-      "notes": "Zagueiro marfinense contratado para a base/profissional em 2026, apto desde janeiro/2026"
+      "notes": "Zagueiro marfinense contratado para a base/profissional em 2026, apto desde janeiro/2026",
+      "overall": 70,
+      "potential": 80,
+      "marketValue": 4000000
     },
     {
       "name": "Derick",
@@ -700,7 +712,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 70,
+      "potential": 80,
+      "marketValue": 4000000
     },
     {
       "name": "Luis Saboia",
@@ -710,7 +725,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 70,
+      "potential": 79,
+      "marketValue": 4000000
     },
     {
       "name": "Luccas Ramon",
@@ -720,7 +738,10 @@
       "nationality": "BRA",
       "birthYear": 2009,
       "age": 17,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 70,
+      "potential": 81,
+      "marketValue": 4000000
     },
     {
       "name": "Thiago Soares",
@@ -730,7 +751,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 70,
+      "potential": 79,
+      "marketValue": 4000000
     },
     {
       "name": "Arthur Gabriel",
@@ -793,7 +817,10 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 71,
+      "potential": 79,
+      "marketValue": 4000000
     },
     {
       "name": "Felipe Anderson",
@@ -1231,7 +1258,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 61,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "Victor Gabriel",
@@ -1241,7 +1271,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 61,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "Larson",
@@ -1304,7 +1337,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 61,
+      "potential": 71,
+      "marketValue": 500000
     },
     {
       "name": "Rafael Coutinho",
@@ -1314,7 +1350,10 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Jovem da base, posição genérica; número 55 também atribuído a 'Isaac' por uma das fontes"
+      "notes": "Jovem da base, posição genérica; número 55 também atribuído a 'Isaac' por uma das fontes",
+      "overall": 62,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "João Paulo",
@@ -1324,7 +1363,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 61,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "Ruan Yago",
@@ -1334,7 +1376,10 @@
       "nationality": "BRA",
       "birthYear": 2009,
       "age": 17,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 61,
+      "potential": 72,
+      "marketValue": 500000
     },
     {
       "name": "Guilherme Nogueira",
@@ -1344,7 +1389,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Jovem da base, posição genérica"
+      "notes": "Jovem da base, posição genérica",
+      "overall": 61,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "Erick Belé",
@@ -1693,7 +1741,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Jovem da base"
+      "notes": "Jovem da base",
+      "overall": 72,
+      "potential": 82,
+      "marketValue": 4000000
     },
     {
       "name": "Eduardo",
@@ -1703,7 +1754,10 @@
       "nationality": "BRA",
       "birthYear": 2010,
       "age": 16,
-      "notes": "Jovem da base, 16 anos"
+      "notes": "Jovem da base, 16 anos",
+      "overall": 72,
+      "potential": 82,
+      "marketValue": 4000000
     },
     {
       "name": "Juan Gabriel",
@@ -1713,7 +1767,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Jovem da base"
+      "notes": "Jovem da base",
+      "overall": 72,
+      "potential": 82,
+      "marketValue": 4000000
     },
     {
       "name": "Kauã",
@@ -1723,7 +1780,10 @@
       "nationality": "BRA",
       "birthYear": 2009,
       "age": 17,
-      "notes": "Jovem da base"
+      "notes": "Jovem da base",
+      "overall": 72,
+      "potential": 82,
+      "marketValue": 4000000
     },
     {
       "name": "Felipe Teresa",
@@ -1733,7 +1793,10 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Jovem da base"
+      "notes": "Jovem da base",
+      "overall": 73,
+      "potential": 81,
+      "marketValue": 4000000
     },
     {
       "name": "Miguel Cinoncelli Bilong",
@@ -1743,7 +1806,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Nacionalidade assumida como BRA (categoria de base do clube, sem indicação em contrário). Idade estimada por falta de fonte pública confiável (jovem da base)."
+      "notes": "Nacionalidade assumida como BRA (categoria de base do clube, sem indicação em contrário). Idade estimada por falta de fonte pública confiável (jovem da base).",
+      "overall": 72,
+      "potential": 81,
+      "marketValue": 4000000
     }
   ],
   "sourceNotes": "Coleta em 27/08/2026. Fontes: ESPN Brasil (elenco/_/id/2029, base principal com idades e nacionalidades), predefinição de elenco da Wikipédia em português (Sociedade Esportiva Palmeiras, numeração de camisa, atualizada em 21/07/2026), reportagem do Lance! sobre a lista de inscritos no Brasileirão 2026, e buscas específicas para confirmar a nacionalidade de Mohamed Koné (Costa do Marfim) e o status de empréstimo de Raphael Veiga, Luighi e Bruno Rodrigues. Raphael Veiga, Luighi e Bruno Rodrigues foram EXCLUÍDOS do elenco listado por estarem emprestados a outros clubes (Veiga no América-MEX até dez/2026; Luighi e Bruno Rodrigues emprestados até 31/12/2026), portanto não fazem parte do elenco profissional em atividade no clube. Idades convertidas a partir de 'idade em anos' informada pelas fontes (referência 27/08/2026); ano de nascimento é aproximação com possível erro de ±1 ano, exceto Mohamed Koné (data de nascimento exata confirmada: 20/10/2007). Havia uma divergência entre fontes quanto ao jogador de número 40 (Allan, volante de 1997 segundo a Wikipédia x 'Allan Elias', atacante jovem, segundo a ESPN) — RESOLVIDA na passagem de valor de mercado abaixo: o Transfermarkt confirma a versão da ESPN. O elenco tem 52 atletas listados, o que é compatível com o perfil do Palmeiras de manter grande número de jovens da base com contrato profissional registrados no BID. Valor de mercado e posição secundária cruzados com o Transfermarkt (transfermarkt.com.br/palmeiras, verein/1023) em 27/08/2026: a página de elenco oficial lista 30 atletas no time profissional registrado, com valor de mercado total de €232,48 milhões e idade média de 26,4 anos; os 29 desses 30 jogadores identificados com segurança no elenco deste arquivo receberam o campo marketValue (em euros, número inteiro, sem separadores) — o goleiro Bruno Bertinato (antes listado apenas como 'Bruno') teve a presença no elenco e o nome completo confirmados, mas o Transfermarkt não atribui valor de mercado a ele. Os demais ~21 atletas do arquivo são jovens da base/reservas fora da lista oficial de 30 do Transfermarkt e permanecem sem marketValue — omissão deliberada, não descuido, para não inventar valores sem fonte. secondaryPositions foi preenchido quando a classificação de posição do Transfermarkt diverge da posição principal já registrada aqui (ex.: Felipe Anderson MEA com PE secundária, Maurício MC com MEA secundária, Paulinho/Ramón Sosa CA com SA secundária, Riquelme CA com PE secundária, Erick Belé/Luis Pacheco MC com MEA/VOL secundária); a posição principal só foi alterada quando a fonte original já indicava incerteza e o Transfermarkt resolveu com clareza (Arthur Gabriel: ZAG genérico → LE confirmado; ver nota individual). Luis Pacheco teve o ano de nascimento corrigido de 2007 para 2008 (idade 18, não 19) conforme o Transfermarkt. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga continuam com o autoAssign de cada partida, mesma política dos outros clubes). Último jogo confirmado via ESPN Brasil (id 2029): Palmeiras 3x0 Santos em 26/08/2026 (Copa do Brasil, ida das quartas, Allianz Parque), técnico Abel Ferreira. Titulares (gazetaesportiva.com/vavel.com): Carlos Miguel; Giay, Murilo e Gustavo Gómez; Jhon Arias, Marlon Freitas, Andreas Pereira e Piquerez; Vitor Roque, Maurício e Flaco López — conferido contra o elenco (Giay=LD, Murilo/Gustavo Gómez=ZAG, Piquerez=LE: back four limpo; Jhon Arias=PD, Marlon Freitas=VOL, Andreas Pereira=MC; Vitor Roque/Flaco López=CA, Maurício=MC/MEA), dá defesa de 4 + meio de 3 + trio ofensivo = 4-3-3. Estilo 'pressing' com base em análise tática recorrente sobre Abel Ferreira (coachesvoice.com, moonbh.com.br): linhas defensivas compactas e curtas, primeira linha de pressão bem estruturada pra cortar linha de passe, reação rápida à recuperação de bola pra ganhar superioridade posicional — combinação de intensidade/pressão organizada com verticalidade, mais alinhada com STYLE_MODIFIERS.pressing (volume alto dos dois lados por causa da intensidade) e STYLE_FOUL_MODIFIERS.pressing (marcação mais agressiva) em engine/simulation/config.ts do que com 'possession' (que é sobre controle calmo, não pressão)."

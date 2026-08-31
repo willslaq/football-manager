@@ -130,7 +130,7 @@
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 23,
-      "marketValue": 0,
+      "marketValue": 300000,
       "notes": "",
       "overall": 64,
       "potential": 70,
@@ -236,8 +236,10 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "marketValue": 0,
-      "notes": ""
+      "marketValue": 500000,
+      "notes": "",
+      "overall": 69,
+      "potential": 75
     },
     {
       "name": "Guillermo Maripán",
@@ -936,7 +938,7 @@
       "nationality": "GHA",
       "birthYear": 2006,
       "age": 20,
-      "marketValue": 0,
+      "marketValue": 1000000,
       "notes": "Confirmado apenas via Transfermarkt; confiança média.",
       "overall": 65,
       "potential": 77,
@@ -1307,8 +1309,10 @@
       "nationality": "SWE",
       "birthYear": 1996,
       "age": 30,
-      "marketValue": 0,
-      "notes": ""
+      "marketValue": 1000000,
+      "notes": "",
+      "overall": 66,
+      "potential": 67
     },
     {
       "name": "Johan Carbonero",

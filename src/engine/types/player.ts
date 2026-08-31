@@ -59,6 +59,8 @@ export interface Player {
   id: PlayerId;
   name: string;
   age: number;
+  /** Ano de nascimento — fonte da verdade pra reidratar `age` a cada virada de temporada (ver `startNewSeason`). */
+  birthYear: number;
   nationality: string;
   position: Position;
   secondaryPositions: Position[];

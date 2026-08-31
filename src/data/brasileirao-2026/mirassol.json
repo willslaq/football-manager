@@ -618,8 +618,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "marketValue": 0,
-      "notes": "Jovem da base recém-registrado no profissional; posição genérica"
+      "marketValue": 2000000,
+      "notes": "Jovem da base recém-registrado no profissional; posição genérica",
+      "overall": 69,
+      "potential": 79
     },
     {
       "name": "Gabriel Knesowitsch",
@@ -682,8 +684,10 @@
       "nationality": "BRA",
       "birthYear": 2009,
       "age": 17,
-      "marketValue": 0,
-      "notes": "Jovem da base; lado do campo inferido"
+      "marketValue": 1500000,
+      "notes": "Jovem da base; lado do campo inferido",
+      "overall": 67,
+      "potential": 78
     },
     {
       "name": "Gabriel",
@@ -693,8 +697,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "marketValue": 0,
-      "notes": "Dados limitados; jovem da base, posição genérica"
+      "marketValue": 2000000,
+      "notes": "Dados limitados; jovem da base, posição genérica",
+      "overall": 69,
+      "potential": 78
     },
     {
       "name": "Marcelo Barbosa de Santos",
@@ -704,8 +710,10 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "marketValue": 0,
-      "notes": "Jovem da base, posição genérica"
+      "marketValue": 2000000,
+      "notes": "Jovem da base, posição genérica",
+      "overall": 69,
+      "potential": 79
     },
     {
       "name": "Giovanni Pacheco",
@@ -715,8 +723,10 @@
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "marketValue": 0,
-      "notes": "Jovem da base, posição genérica"
+      "marketValue": 1000000,
+      "notes": "Jovem da base, posição genérica",
+      "overall": 68,
+      "potential": 76
     },
     {
       "name": "João Wellington",
@@ -726,8 +736,10 @@
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
-      "marketValue": 0,
-      "notes": ""
+      "marketValue": 2000000,
+      "notes": "",
+      "overall": 68,
+      "potential": 75
     },
     {
       "name": "Shaylon",
@@ -1289,8 +1301,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "marketValue": 0,
-      "notes": "Jovem da base"
+      "marketValue": 1000000,
+      "notes": "Jovem da base",
+      "overall": 66,
+      "potential": 75
     },
     {
       "name": "Felipe Pereira dos Santos",
@@ -1300,8 +1314,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "marketValue": 0,
-      "notes": "Nome incompleto na fonte consultada; jovem da base"
+      "marketValue": 1000000,
+      "notes": "Nome incompleto na fonte consultada; jovem da base",
+      "overall": 66,
+      "potential": 75
     },
     {
       "name": "Alesson",

@@ -180,22 +180,26 @@
       "shirtNumber": 50,
       "position": "GOL",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 300000,
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 63,
+      "potential": 73
     },
     {
       "name": "Gustavo Reis",
       "shirtNumber": 56,
       "position": "GOL",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 300000,
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Transfermarkt: GOL. Valor de mercado não informado."
+      "notes": "Transfermarkt: GOL. Valor de mercado não informado.",
+      "overall": 64,
+      "potential": 70
     },
     {
       "name": "Guzmán Rodríguez",
@@ -679,11 +683,13 @@
       "shirtNumber": 46,
       "position": "ZAG",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1200000,
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 68,
+      "potential": 78
     },
     {
       "name": "Caue Nascimento Santos",
@@ -796,22 +802,26 @@
       "shirtNumber": 53,
       "position": "ZAG",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1200000,
       "nationality": "PAR",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 68,
+      "potential": 77
     },
     {
       "name": "Weimar Vivas",
       "shirtNumber": 54,
       "position": "ZAG",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1200000,
       "nationality": "COL",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 68,
+      "potential": 77
     },
     {
       "name": "Fabinho",
@@ -1136,7 +1146,7 @@
       "shirtNumber": 22,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 2500000,
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
@@ -1189,7 +1199,7 @@
       "shirtNumber": 25,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 3500000,
       "nationality": "BRA",
       "birthYear": 2002,
       "age": 24,
@@ -1317,33 +1327,39 @@
       "shirtNumber": 41,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 700000,
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 66,
+      "potential": 75
     },
     {
       "name": "Luis Gustavo",
       "shirtNumber": 49,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1000000,
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 66,
+      "potential": 76
     },
     {
       "name": "Chrystian Delfino",
       "shirtNumber": 55,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 700000,
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 66,
+      "potential": 75
     },
     {
       "name": "Marcelinho Braz",
@@ -1403,33 +1419,39 @@
       "shirtNumber": 58,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1000000,
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 67,
+      "potential": 75
     },
     {
       "name": "Marquinhos",
       "shirtNumber": 62,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1000000,
       "nationality": "BRA",
       "birthYear": 2004,
       "age": 22,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 67,
+      "potential": 74
     },
     {
       "name": "Vini Krygsman",
       "shirtNumber": null,
       "position": "MC",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1000000,
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 66,
+      "potential": 76
     },
     {
       "name": "Eduardo Sasha",
@@ -1648,18 +1670,20 @@
       "shirtNumber": 19,
       "position": "CA",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 3500000,
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 23,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 71,
+      "potential": 76
     },
     {
       "name": "Yuri Leles",
       "shirtNumber": 28,
       "position": "CA",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 1000000,
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
@@ -1818,22 +1842,26 @@
       "shirtNumber": 59,
       "position": "CA",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 3500000,
       "nationality": "BRA",
       "birthYear": 2006,
       "age": 20,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 70,
+      "potential": 78
     },
     {
       "name": "Jhuan Nunes",
       "shirtNumber": 67,
       "position": "CA",
       "secondaryPositions": [],
-      "marketValue": null,
+      "marketValue": 4000000,
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": "Não consta no elenco principal atual do Transfermarkt."
+      "notes": "Não consta no elenco principal atual do Transfermarkt.",
+      "overall": 69,
+      "potential": 78
     }
   ],
   "sourceNotes": "Atualizado em 27/08/2026 com base no elenco atual do Transfermarkt. O Transfermarkt lista 37 jogadores e €95,85 milhões em valor total de mercado no momento da consulta. Valores de mercado foram convertidos para números inteiros em euros para facilitar uso programático no Football Manager. Jogadores sem valor de mercado no Transfermarkt foram representados como null. As posições principais seguem a classificação do Transfermarkt. Jogadores do JSON original que não aparecem no elenco principal atual foram mantidos para preservar a estrutura original, mas não receberam valores inventados. Principais correções de posição: Eduardo Santos -> ZAG; Pedro Henrique -> ZAG; Agustín Sant'Anna -> LD; José Hurtado -> LD; Cauê Nascimento -> LE; Ryan Augusto -> LD; Eric Ramires -> MC; Davi Gomes -> PE; Lucas Barbosa -> PD; Ignacio Laquintana -> PD; José Herrera -> PD. Fonte principal: Transfermarkt, elenco detalhado do Red Bull Bragantino. CORREÇÃO (Claude, 27/08/2026): o Transfermarkt usa a categoria genérica \"Meio-Campo\" (MEI) pra Rodriguinho, Gustavinho e Marcelinho Braz, que não é um código de posição válido no motor do jogo (exige um subtipo específico: VOL/MC/MD/ME/MEA). Mapeado pra MC (meia central), o subtipo mais neutro, preservando a nota original \"Transfermarkt: MEI\" como registro da fonte. formation/style pesquisados em 29/08/2026, só formato/estilo fixados (jogadores específicos por vaga seguem decididos pelo autoAssign de cada partida, mesma política dos demais clubes). Último jogo: Bragantino 1x0 Grêmio, 23/08/2026 (24ª rodada, Brasileirão, Cícero de Souza Marques), técnico Vagner Mancini (contrato renovado até dez/2026, situação estável) — titulares Tiago Volpi; Agustín Sant'Anna, Pedro Henrique, Gustavo Marques e Juninho Capixaba; Rodriguinho, Eric Ramires e José Herrera; Lucas Barbosa, Isidro Pitta e Vinicinho (vavel.com/br.bolavip.com), formato 4-3-3 (defesa de 4, meio de 3, tridente ofensivo). Estilo 'pressing' com base em: Mancini descrito unindo 'futebol raiz' ao método de Klopp (gegenpressing), time com alto volume ofensivo (16,67 finalizações/jogo, 6,33 no alvo) mas também defensivamente sólido (0,67 gols sofridos/jogo) — bate melhor com 'pressing' (volume alto de ambos os lados, recuperação agressiva) do que com 'offensive' (volume alto mas solto defensivamente) em STYLE_MODIFIERS de engine/simulation/config.ts; a solidez defensiva provavelmente reflete qualidade de elenco, não a tendência sistêmica do estilo. Confiança média-alta pra formação (fonte específica do jogo), média pro estilo (inferido de descrição geral, não de estatística de posse/pressão direta)."

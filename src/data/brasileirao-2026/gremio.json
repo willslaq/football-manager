@@ -130,7 +130,7 @@
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 23,
-      "marketValue": 0,
+      "marketValue": 300000,
       "notes": "",
       "overall": 64,
       "potential": 74,
@@ -183,7 +183,7 @@
       "nationality": "BRA",
       "birthYear": 2009,
       "age": 17,
-      "marketValue": 0,
+      "marketValue": 300000,
       "notes": "Goleiro jovem da base; confirmado em apenas uma fonte, confiança baixa.",
       "overall": 63,
       "potential": 73,
@@ -448,7 +448,7 @@
       "nationality": "BRA",
       "birthYear": 2008,
       "age": 18,
-      "marketValue": 0,
+      "marketValue": 600000,
       "notes": "Jovem da base; confiança baixa, confirmado em apenas uma fonte.",
       "overall": 66,
       "potential": 73,
@@ -1108,8 +1108,10 @@
       "nationality": "BRA",
       "birthYear": 2002,
       "age": 24,
-      "marketValue": 0,
-      "notes": "Identidade completa não confirmada com certeza; voltou a vestir a camisa 8 na reformulação de agosto/2026."
+      "marketValue": 500000,
+      "notes": "Identidade completa não confirmada com certeza; voltou a vestir a camisa 8 na reformulação de agosto/2026.",
+      "overall": 66,
+      "potential": 71
     },
     {
       "name": "Willian",
@@ -1331,8 +1333,10 @@
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "marketValue": 0,
-      "notes": "Jovem da base; confiança baixa."
+      "marketValue": 1000000,
+      "notes": "Jovem da base; confiança baixa.",
+      "overall": 63,
+      "potential": 72
     },
     {
       "name": "Gabriel Mec",

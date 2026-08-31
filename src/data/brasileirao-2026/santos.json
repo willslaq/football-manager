@@ -180,7 +180,7 @@
       "shirtNumber": 67,
       "position": "GOL",
       "secondaryPositions": [],
-      "marketValue": 0,
+      "marketValue": 300000,
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
@@ -407,11 +407,13 @@
       "shirtNumber": 42,
       "position": "ZAG",
       "secondaryPositions": [],
-      "marketValue": 0,
+      "marketValue": 450000,
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
-      "notes": ""
+      "notes": "",
+      "overall": 62,
+      "potential": 71
     },
     {
       "name": "Vinicius Lira",
@@ -1083,7 +1085,7 @@
       "secondaryPositions": [
         "CA"
       ],
-      "marketValue": 0,
+      "marketValue": 1000000,
       "nationality": "BRA",
       "birthYear": 2007,
       "age": 19,
@@ -1472,11 +1474,13 @@
         "LD",
         "PE"
       ],
-      "marketValue": 0,
+      "marketValue": 700000,
       "nationality": "BRA",
       "birthYear": 2002,
       "age": 24,
-      "notes": ""
+      "notes": "",
+      "overall": 66,
+      "potential": 71
     },
     {
       "name": "Enzo Boer",
@@ -1486,11 +1490,13 @@
         "MEA",
         "PE"
       ],
-      "marketValue": 0,
+      "marketValue": 700000,
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": ""
+      "notes": "",
+      "overall": 65,
+      "potential": 71
     },
     {
       "name": "Rony",

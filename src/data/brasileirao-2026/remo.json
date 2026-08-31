@@ -130,7 +130,10 @@
       "nationality": "BRA",
       "birthYear": 1998,
       "age": 28,
-      "notes": "Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Caxias. marketValue não preenchido."
+      "notes": "Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Caxias. marketValue não preenchido.",
+      "overall": 65,
+      "potential": 67,
+      "marketValue": 100000
     },
     {
       "name": "João Victor",
@@ -140,7 +143,10 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": ""
+      "notes": "",
+      "overall": 63,
+      "potential": 69,
+      "marketValue": 300000
     },
     {
       "name": "Caio",
@@ -150,7 +156,10 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Posição genérica, dados limitados"
+      "notes": "Posição genérica, dados limitados",
+      "overall": 64,
+      "potential": 70,
+      "marketValue": 350000
     },
     {
       "name": "Jorge",
@@ -160,7 +169,10 @@
       "nationality": "BRA",
       "birthYear": 1996,
       "age": 30,
-      "notes": "Posição genérica ('defensor'); especialidade não confirmada"
+      "notes": "Posição genérica ('defensor'); especialidade não confirmada",
+      "overall": 66,
+      "potential": 67,
+      "marketValue": 350000
     },
     {
       "name": "Pedro",
@@ -170,7 +182,10 @@
       "nationality": "BRA",
       "birthYear": 1993,
       "age": 33,
-      "notes": "Lado do campo inferido pela numeração; não confirmado explicitamente pela fonte"
+      "notes": "Lado do campo inferido pela numeração; não confirmado explicitamente pela fonte",
+      "overall": 66,
+      "potential": 66,
+      "marketValue": 600000
     },
     {
       "name": "Cristian Tassano",
@@ -235,7 +250,10 @@
       "nationality": "BRA",
       "birthYear": 1996,
       "age": 30,
-      "notes": "Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Volta Redonda. marketValue não preenchido."
+      "notes": "Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Volta Redonda. marketValue não preenchido.",
+      "overall": 66,
+      "potential": 67,
+      "marketValue": 350000
     },
     {
       "name": "Nathan",
@@ -245,7 +263,10 @@
       "nationality": "BRA",
       "birthYear": 2002,
       "age": 24,
-      "notes": "Lado do campo inferido; há mais dois jogadores chamados 'Nathan' no elenco (meio-campo, #8 e #48) — possível confusão de homônimos na fonte"
+      "notes": "Lado do campo inferido; há mais dois jogadores chamados 'Nathan' no elenco (meio-campo, #8 e #48) — possível confusão de homônimos na fonte",
+      "overall": 65,
+      "potential": 70,
+      "marketValue": 600000
     },
     {
       "name": "Kawan",
@@ -255,7 +276,10 @@
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 23,
-      "notes": "Jovem, posição genérica"
+      "notes": "Jovem, posição genérica",
+      "overall": 65,
+      "potential": 70,
+      "marketValue": 450000
     },
     {
       "name": "Kayky",
@@ -265,7 +289,10 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Lado do campo inferido; posição não confirmada explicitamente"
+      "notes": "Lado do campo inferido; posição não confirmada explicitamente",
+      "overall": 64,
+      "potential": 70,
+      "marketValue": 600000
     },
     {
       "name": "Klaus",
@@ -275,7 +302,10 @@
       "nationality": "BRA",
       "birthYear": 1994,
       "age": 32,
-      "notes": ""
+      "notes": "",
+      "overall": 66,
+      "potential": 66,
+      "marketValue": 350000
     },
     {
       "name": "Alan Rodríguez",
@@ -285,7 +315,10 @@
       "nationality": "PAR",
       "birthYear": 2000,
       "age": 26,
-      "notes": ""
+      "notes": "",
+      "overall": 65,
+      "potential": 68,
+      "marketValue": 450000
     },
     {
       "name": "Luan (Martins Gonçalves)",
@@ -295,7 +328,10 @@
       "nationality": "BRA",
       "birthYear": 2000,
       "age": 26,
-      "notes": "Numeração (5) é atipicamente usada por volantes no Brasil, mas a fonte classifica o jogador como defensor"
+      "notes": "Numeração (5) é atipicamente usada por volantes no Brasil, mas a fonte classifica o jogador como defensor",
+      "overall": 65,
+      "potential": 68,
+      "marketValue": 450000
     },
     {
       "name": "Savio",
@@ -305,7 +341,10 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
-      "notes": "Lado do campo inferido; não confirmado explicitamente"
+      "notes": "Lado do campo inferido; não confirmado explicitamente",
+      "overall": 66,
+      "potential": 66,
+      "marketValue": 600000
     },
     {
       "name": "Marcelinho",
@@ -368,7 +407,10 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica",
+      "overall": 66,
+      "potential": 69,
+      "marketValue": 600000
     },
     {
       "name": "Marllon",
@@ -473,7 +515,8 @@
         "gkkicking": 18,
         "gkpositioning": 15,
         "gkreflexes": 15
-      }
+      },
+      "marketValue": 700000
     },
     {
       "name": "Dodô",
@@ -483,7 +526,10 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
-      "notes": "Posição genérica. Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Vila Nova. marketValue não preenchido."
+      "notes": "Posição genérica. Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Vila Nova. marketValue não preenchido.",
+      "overall": 67,
+      "potential": 67,
+      "marketValue": 500000
     },
     {
       "name": "Nathan",
@@ -535,7 +581,8 @@
         "gkkicking": 5,
         "gkpositioning": 13,
         "gkreflexes": 10
-      }
+      },
+      "marketValue": 1500000
     },
     {
       "name": "Madison",
@@ -587,7 +634,8 @@
         "gkkicking": 5,
         "gkpositioning": 5,
         "gkreflexes": 5
-      }
+      },
+      "marketValue": 500000
     },
     {
       "name": "Yago",
@@ -597,7 +645,10 @@
       "nationality": "BRA",
       "birthYear": 2001,
       "age": 25,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica",
+      "overall": 66,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "Nathan",
@@ -607,7 +658,10 @@
       "nationality": "BRA",
       "birthYear": 2005,
       "age": 21,
-      "notes": "Jovem; homônimo de outros dois jogadores chamados Nathan no elenco (#23 defesa, #8 meio-campo); distinguir por número"
+      "notes": "Jovem; homônimo de outros dois jogadores chamados Nathan no elenco (#23 defesa, #8 meio-campo); distinguir por número",
+      "overall": 65,
+      "potential": 71,
+      "marketValue": 500000
     },
     {
       "name": "Freitas",
@@ -617,7 +671,10 @@
       "nationality": "BRA",
       "birthYear": 2003,
       "age": 23,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica",
+      "overall": 66,
+      "potential": 72,
+      "marketValue": 500000
     },
     {
       "name": "Darilson",
@@ -627,7 +684,10 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica",
+      "overall": 67,
+      "potential": 70,
+      "marketValue": 500000
     },
     {
       "name": "Victor Cantillo",
@@ -637,7 +697,10 @@
       "nationality": "COL",
       "birthYear": 1994,
       "age": 32,
-      "notes": ""
+      "notes": "",
+      "overall": 67,
+      "potential": 67,
+      "marketValue": 1000000
     },
     {
       "name": "Reynaldo",
@@ -647,7 +710,10 @@
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica",
+      "overall": 67,
+      "potential": 68,
+      "marketValue": 500000
     },
     {
       "name": "Régis",
@@ -699,7 +765,8 @@
         "gkkicking": 5,
         "gkpositioning": 5,
         "gkreflexes": 5
-      }
+      },
+      "marketValue": 1200000
     },
     {
       "name": "Panagiotis Tachtsidis",
@@ -709,7 +776,10 @@
       "nationality": "GRE",
       "birthYear": 1991,
       "age": 35,
-      "notes": "Reforço de 2026, ex-futebol italiano"
+      "notes": "Reforço de 2026, ex-futebol italiano",
+      "overall": 67,
+      "potential": 67,
+      "marketValue": 1000000
     },
     {
       "name": "Pedro Castro",
@@ -719,7 +789,10 @@
       "nationality": "BRA",
       "birthYear": 1993,
       "age": 33,
-      "notes": "Posição genérica ('meio-campo')"
+      "notes": "Posição genérica ('meio-campo')",
+      "overall": 67,
+      "potential": 67,
+      "marketValue": 1000000
     },
     {
       "name": "Giovanni Confreste",
@@ -729,7 +802,10 @@
       "nationality": "BRA",
       "birthYear": 1997,
       "age": 29,
-      "notes": "Posição genérica"
+      "notes": "Posição genérica",
+      "overall": 67,
+      "potential": 68,
+      "marketValue": 500000
     },
     {
       "name": "Zé Ricardo",
@@ -898,7 +974,8 @@
         "gkkicking": 10,
         "gkpositioning": 10,
         "gkreflexes": 10
-      }
+      },
+      "marketValue": 500000
     },
     {
       "name": "João Pedro",
@@ -908,7 +985,10 @@
       "nationality": "GUI",
       "birthYear": 1997,
       "age": 29,
-      "notes": "Nacionalidade informada pela fonte apenas como 'Guiné'; não foi possível confirmar se Guiné ou Guiné-Bissau"
+      "notes": "Nacionalidade informada pela fonte apenas como 'Guiné'; não foi possível confirmar se Guiné ou Guiné-Bissau",
+      "overall": 65,
+      "potential": 66,
+      "marketValue": 500000
     },
     {
       "name": "Nicolás Ferreira",
@@ -918,7 +998,10 @@
       "nationality": "URU",
       "birthYear": 2002,
       "age": 24,
-      "notes": ""
+      "notes": "",
+      "overall": 64,
+      "potential": 69,
+      "marketValue": 1500000
     },
     {
       "name": "Marrony",
@@ -928,7 +1011,10 @@
       "nationality": "BRA",
       "birthYear": 1999,
       "age": 27,
-      "notes": "Costuma atuar como ponta esquerda. Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Atlético-GO. marketValue não preenchido."
+      "notes": "Costuma atuar como ponta esquerda. Não consta no elenco atual do Transfermarkt; reportagens de agosto/2026 indicam transferência para o Atlético-GO. marketValue não preenchido.",
+      "overall": 65,
+      "potential": 68,
+      "marketValue": 800000
     },
     {
       "name": "Diego Hernández",
@@ -938,7 +1024,10 @@
       "nationality": "URU",
       "birthYear": 2000,
       "age": 26,
-      "notes": "Reforço confirmado para 2026"
+      "notes": "Reforço confirmado para 2026",
+      "overall": 64,
+      "potential": 67,
+      "marketValue": 1000000
     },
     {
       "name": "Pedro Rocha",
@@ -948,7 +1037,10 @@
       "nationality": "BRA",
       "birthYear": 1995,
       "age": 31,
-      "notes": ""
+      "notes": "",
+      "overall": 65,
+      "potential": 65,
+      "marketValue": 500000
     },
     {
       "name": "Alef Manga",

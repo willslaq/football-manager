@@ -9,6 +9,7 @@ import {
   BASE_FREE_KICK_CONVERSION,
   BASE_GOAL_PROBABILITY,
   BASE_PENALTY_CONVERSION,
+  ageDrainMultiplier,
   ENERGY_DRAIN_PER_MINUTE_GOALKEEPER,
   ENERGY_DRAIN_PER_MINUTE_OUTFIELD,
   ENERGY_MIN,
@@ -21,6 +22,7 @@ import {
   MIN_GOAL_PROBABILITY,
   MIN_PENALTY_CONVERSION,
   ON_TARGET_MISS_PROBABILITY,
+  POSITION_ENERGY_DRAIN_WEIGHT,
   POSSESSION_CHANCE_PROBABILITY_CAP,
   POSSESSION_HOME_BOOST,
   POSSESSION_MINUTE_CLAMP,
@@ -371,7 +373,9 @@ export function simulateMatch(
   /** Drena a energia de quem está em campo naquele time — chamado uma vez por minuto simulado. */
   function drainEnergy(state: TeamMatchState): void {
     for (const player of state.players) {
-      const rate = player.position === 'GOL' ? ENERGY_DRAIN_PER_MINUTE_GOALKEEPER : ENERGY_DRAIN_PER_MINUTE_OUTFIELD;
+      const baseRate = player.position === 'GOL' ? ENERGY_DRAIN_PER_MINUTE_GOALKEEPER : ENERGY_DRAIN_PER_MINUTE_OUTFIELD;
+      const positionMultiplier = player.position === 'GOL' ? 1 : POSITION_ENERGY_DRAIN_WEIGHT[player.position];
+      const rate = baseRate * positionMultiplier * ageDrainMultiplier(player.age);
       const current = matchEnergy.get(player.id) ?? player.condition;
       matchEnergy.set(player.id, clamp(current - rate, ENERGY_MIN, 100));
     }

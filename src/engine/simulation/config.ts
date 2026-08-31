@@ -41,6 +41,70 @@ export const ENERGY_RECOMPUTE_INTERVAL_MINUTES = 5;
 export const CONDITION_RECOVERY_PER_DAY = 3;
 
 /**
+ * Faixa de "prime" físico usada só pra fadiga (drenagem/recuperação) — mesma faixa de anos que
+ * `ageFactor` em generation/attributes.ts usa pro prime de HABILIDADE, mas é uma constante
+ * separada de propósito: as duas coisas medem fenômenos diferentes (forma física vs.
+ * desenvolvimento técnico) e podem divergir numa calibração futura sem se afetarem.
+ */
+export const CONDITION_AGE_PEAK_MIN = 24;
+export const CONDITION_AGE_PEAK_MAX = 29;
+
+/** Quanto a drenagem de energia piora por ano de distância do prime físico (ver CONDITION_AGE_PEAK_*). */
+export const CONDITION_AGE_DRAIN_PENALTY_PER_YEAR = 0.02;
+/** Teto do multiplicador de drenagem por idade — trava jogador muito jovem/velho de drenar rápido demais. */
+export const CONDITION_AGE_DRAIN_MULTIPLIER_MAX = 1.3;
+/** Quanto a recuperação por dia piora por ano de distância do prime físico. */
+export const CONDITION_AGE_RECOVERY_PENALTY_PER_YEAR = 0.05;
+/** Piso do multiplicador de recuperação por idade — recuperação nunca cai abaixo da metade do normal. */
+export const CONDITION_AGE_RECOVERY_MULTIPLIER_MIN = 0.5;
+
+/**
+ * Distância (em anos) da idade até a faixa de prime físico — 0 dentro do prime, cresce linear
+ * pra fora dos dois lados. Base de `ageDrainMultiplier`/`ageRecoveryMultiplier` abaixo.
+ */
+function physicalAgeDistance(age: number): number {
+  if (age < CONDITION_AGE_PEAK_MIN) return CONDITION_AGE_PEAK_MIN - age;
+  if (age > CONDITION_AGE_PEAK_MAX) return age - CONDITION_AGE_PEAK_MAX;
+  return 0;
+}
+
+/** Multiplicador de drenagem de energia por idade (ver drainEnergy em match.ts) — 1.0 no prime, cresce fora dele. */
+export function ageDrainMultiplier(age: number): number {
+  const penalty = 1 + CONDITION_AGE_DRAIN_PENALTY_PER_YEAR * physicalAgeDistance(age);
+  return Math.min(penalty, CONDITION_AGE_DRAIN_MULTIPLIER_MAX);
+}
+
+/** Multiplicador de recuperação por dia por idade (ver recoverCondition em season.ts) — 1.0 no prime, cai fora dele. */
+export function ageRecoveryMultiplier(age: number): number {
+  const penalty = 1 - CONDITION_AGE_RECOVERY_PENALTY_PER_YEAR * physicalAgeDistance(age);
+  return Math.max(penalty, CONDITION_AGE_RECOVERY_MULTIPLIER_MIN);
+}
+
+/**
+ * Multiplicador de drenagem de energia por posição (mobilidade/distância percorrida real) —
+ * ala/ponta e volante/meia-central cobrem mais campo (maratona de corrida); zagueiro e
+ * centroavante fixo cobrem menos (jogo mais posicional). Goleiro fora da tabela: usa sempre
+ * ENERGY_DRAIN_PER_MINUTE_GOALKEEPER direto, nunca esse multiplicador.
+ */
+export const POSITION_ENERGY_DRAIN_WEIGHT: Record<Position, number> = {
+  GOL: 1.0,
+  ZAG: 0.85,
+  LD: 1.15,
+  LE: 1.15,
+  ALD: 1.2,
+  ALE: 1.2,
+  VOL: 1.2,
+  MC: 1.15,
+  MD: 1.1,
+  ME: 1.1,
+  MEA: 1.05,
+  PD: 1.2,
+  PE: 1.2,
+  SA: 1.0,
+  CA: 0.9,
+};
+
+/**
  * Ajuste de `Club.morale` (0-100) aplicado ao fim de cada partida da rodada, conforme o
  * resultado — puramente de exibição (ver `Club.morale`), não realimenta a simulação.
  */

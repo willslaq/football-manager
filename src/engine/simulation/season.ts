@@ -7,7 +7,13 @@ import type { EngineTraceEntry, MatchResult } from '../types/match';
 import type { Player, PlayerId } from '../types/player';
 import type { Season } from '../types/season';
 import type { Lineup, Tactics } from '../types/tactics';
-import { CLUB_MORALE_DRAW_DELTA, CLUB_MORALE_LOSS_DELTA, CLUB_MORALE_WIN_DELTA, CONDITION_RECOVERY_PER_DAY } from './config';
+import {
+  ageRecoveryMultiplier,
+  CLUB_MORALE_DRAW_DELTA,
+  CLUB_MORALE_LOSS_DELTA,
+  CLUB_MORALE_WIN_DELTA,
+  CONDITION_RECOVERY_PER_DAY,
+} from './config';
 import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
 import { simulateMatch, type MatchTeamInput } from './match';
 
@@ -190,7 +196,8 @@ function applyFinalEnergy(players: Player[], finalEnergyByPlayerId: Record<Playe
 function recoverCondition(players: Player[], days: number): Player[] {
   if (days <= 0) return players;
   return players.map((player) => {
-    const recovered = Math.min(100, Math.round(player.condition + CONDITION_RECOVERY_PER_DAY * days));
+    const rate = CONDITION_RECOVERY_PER_DAY * ageRecoveryMultiplier(player.age);
+    const recovered = Math.min(100, Math.round(player.condition + rate * days));
     return recovered === player.condition ? player : { ...player, condition: recovered };
   });
 }

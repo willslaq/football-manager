@@ -53,6 +53,8 @@ export interface PlayerSeasonStats {
   redCards: number;
   /** Defesas feitas como goleiro (chutes no alvo evitados). */
   saves: number;
+  /** Minutos em campo na temporada — base do "jogou mais" pro desenvolvimento (ver simulation/development.ts). */
+  minutesPlayed: number;
 }
 
 export interface Player {

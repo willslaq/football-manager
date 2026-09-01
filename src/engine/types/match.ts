@@ -68,6 +68,12 @@ export interface MatchResult {
    * fadiga em `Player.condition` entre partidas (ver `season.ts`'s `applyFinalEnergy`).
    */
   finalEnergyByPlayerId: Record<PlayerId, number>;
+  /**
+   * Minutos jogados nessa partida por todo mundo que entrou em campo (titulares + substitutos) —
+   * mesmo padrão de `finalEnergyByPlayerId`: quem foi substituído/expulso pára de contar dali em
+   * diante. Fonte pra acumular `PlayerSeasonStats.minutesPlayed` (ver `season.ts`).
+   */
+  minutesPlayedByPlayerId: Record<PlayerId, number>;
 }
 
 /**

@@ -7,6 +7,7 @@ import type { CareerHistoryEntry, CareerState } from '../types/career';
 import type { ClubId } from '../types/club';
 import type { PlayerId } from '../types/player';
 import { LIBERTADORES_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from './config';
+import { developPlayer } from './development';
 import { sortStandings } from './standings';
 
 export interface SeasonSummary {
@@ -63,12 +64,13 @@ export function buildSeasonSummary(state: CareerState): SeasonSummary {
 /**
  * Encerra a temporada atual e começa a seguinte: registra o resumo em `history`, reposiciona a
  * moral de cada clube pela colocação final (`moraleFromFinalStanding` — ver `Club.morale`),
+ * evolui a força de cada jogador com base na temporada que acabou (`developPlayer` — idade e
+ * minutagem AINDA da temporada que terminou, antes de envelhecer/zerar estatísticas abaixo),
  * envelhece cada jogador em 1 ano (recalculado de `nextYear - birthYear`, não um +1 cego — ver
  * `Player.birthYear`), zera estatísticas/suspensões/condição dos jogadores e gera a próxima
  * temporada (`generateNextSeason` — mesmos 20 clubes, calendário reaproveitado, tabela zerada,
  * rodada 1). Rebaixamento é só informativo no resumo: sem dados da Série B pra promover
- * substitutos, os mesmos clubes voltam (confirmado com o usuário). Ainda não afeta atributos —
- * envelhecer só muda o número exibido; crescimento/declínio de força ligado à idade fica pra depois.
+ * substitutos, os mesmos clubes voltam (confirmado com o usuário).
  */
 export function startNewSeason(state: CareerState): CareerState {
   if (state.season.state !== 'finished') {
@@ -79,6 +81,11 @@ export function startNewSeason(state: CareerState): CareerState {
   const table = sortStandings(competition.standings);
   const positionByClub = new Map(table.map((entry, index) => [entry.clubId, index + 1]));
   const totalTeams = table.length;
+  const matchesPlayedByClub = new Map(table.map((entry) => [entry.clubId, entry.played]));
+  const clubIdByPlayer = new Map<PlayerId, ClubId>();
+  for (const club of state.world.clubs) {
+    for (const playerId of club.squad) clubIdByPlayer.set(playerId, club.id);
+  }
 
   const summary = buildSeasonSummary(state);
   const historyEntry: CareerHistoryEntry = {
@@ -93,14 +100,20 @@ export function startNewSeason(state: CareerState): CareerState {
   }));
 
   const nextYear = state.season.year + 1;
-  const players = state.world.players.map((player) => ({
-    ...player,
-    age: nextYear - player.birthYear,
-    condition: 100,
-    seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 },
-    pendingYellowCards: 0,
-    suspendedMatches: 0,
-  }));
+  const players = state.world.players.map((player) => {
+    const clubId = clubIdByPlayer.get(player.id);
+    const clubMatchesPlayed = clubId ? matchesPlayedByClub.get(clubId) ?? 0 : 0;
+    const developed = developPlayer(player, clubMatchesPlayed);
+    return {
+      ...player,
+      strength: developed.strength,
+      age: nextYear - player.birthYear,
+      condition: 100,
+      seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0, minutesPlayed: 0 },
+      pendingYellowCards: 0,
+      suspendedMatches: 0,
+    };
+  });
 
   return {
     ...state,

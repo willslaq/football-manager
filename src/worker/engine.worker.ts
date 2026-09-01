@@ -409,7 +409,11 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
               ...player,
               attributes:
                 typeof player.attributes.aggression === 'number' ? player.attributes : { ...player.attributes, aggression: 50 },
-              seasonStats: { ...player.seasonStats, saves: player.seasonStats.saves ?? 0 },
+              seasonStats: {
+                ...player.seasonStats,
+                saves: player.seasonStats.saves ?? 0,
+                minutesPlayed: player.seasonStats.minutesPlayed ?? 0,
+              },
               pendingYellowCards: player.pendingYellowCards ?? 0,
               suspendedMatches: player.suspendedMatches ?? 0,
             })),

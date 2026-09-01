@@ -41,10 +41,16 @@ export const ENERGY_RECOMPUTE_INTERVAL_MINUTES = 5;
 export const CONDITION_RECOVERY_PER_DAY = 3;
 
 /**
- * Faixa de "prime" físico usada só pra fadiga (drenagem/recuperação) — mesma faixa de anos que
- * `ageFactor` em generation/attributes.ts usa pro prime de HABILIDADE, mas é uma constante
- * separada de propósito: as duas coisas medem fenômenos diferentes (forma física vs.
- * desenvolvimento técnico) e podem divergir numa calibração futura sem se afetarem.
+ * Faixa de "prime" físico usada pra fadiga (drenagem/recuperação) — mesma faixa de anos que
+ * `ageFactor` em generation/attributes.ts usa pro prime de HABILIDADE na geração, mas é uma
+ * constante separada de propósito: as duas coisas medem fenômenos diferentes (forma física vs.
+ * nível técnico no momento da criação) e podem divergir numa calibração futura sem se afetarem.
+ *
+ * Esta é, no entanto, a fonte da verdade única pra faixa de prime usada pelo desenvolvimento de
+ * força ao longo da carreira (ver `simulation/development.ts`): dentro da faixa a força fica
+ * estável, abaixo dela o jogador ainda cresce rumo ao potencial, acima dela declina. Reaproveitar
+ * a mesma constante (em vez de duplicar os números lá) é o que mantém o motor "honesto" — um
+ * jogador não pode estar fisicamente no prime aqui e "velho demais" pro desenvolvimento ali.
  */
 export const CONDITION_AGE_PEAK_MIN = 24;
 export const CONDITION_AGE_PEAK_MAX = 29;
@@ -59,10 +65,12 @@ export const CONDITION_AGE_RECOVERY_PENALTY_PER_YEAR = 0.05;
 export const CONDITION_AGE_RECOVERY_MULTIPLIER_MIN = 0.5;
 
 /**
- * Distância (em anos) da idade até a faixa de prime físico — 0 dentro do prime, cresce linear
- * pra fora dos dois lados. Base de `ageDrainMultiplier`/`ageRecoveryMultiplier` abaixo.
+ * Distância (em anos) da idade até a faixa de prime físico (`CONDITION_AGE_PEAK_MIN/MAX`) — 0
+ * dentro do prime, cresce linear pra fora dos dois lados. Base de `ageDrainMultiplier`/
+ * `ageRecoveryMultiplier` abaixo, e também de `simulation/development.ts` — exportada pra ser a
+ * única implementação de "distância do prime" no motor.
  */
-function physicalAgeDistance(age: number): number {
+export function physicalAgeDistance(age: number): number {
   if (age < CONDITION_AGE_PEAK_MIN) return CONDITION_AGE_PEAK_MIN - age;
   if (age > CONDITION_AGE_PEAK_MAX) return age - CONDITION_AGE_PEAK_MAX;
   return 0;
@@ -79,6 +87,26 @@ export function ageRecoveryMultiplier(age: number): number {
   const penalty = 1 - CONDITION_AGE_RECOVERY_PENALTY_PER_YEAR * physicalAgeDistance(age);
   return Math.max(penalty, CONDITION_AGE_RECOVERY_MULTIPLIER_MIN);
 }
+
+/**
+ * Balanceamento do desenvolvimento de força entre temporadas (ver `simulation/development.ts`,
+ * chamado por `startNewSeason`). Faixa de prime reaproveitada de `CONDITION_AGE_PEAK_MIN/MAX`
+ * acima — não duplicada aqui de propósito.
+ */
+
+/** Abaixo dessa idade a velocidade de crescimento já está no teto (1.0) — jovem demais pra diferenciar mais. */
+export const DEVELOPMENT_YOUTH_AGE_FLOOR = 15;
+/** Piso da velocidade de crescimento perto da borda do prime — mesmo a um ano do prime ainda cresce um pouco. */
+export const DEVELOPMENT_MIN_GROWTH_SPEED = 0.15;
+/**
+ * Fração do gap força→potencial fechada numa temporada, no teto (jovem + titular absoluto).
+ * Retornos decrescentes: quanto mais perto do potencial, menor o ganho — nunca "bate um teto" seco.
+ */
+export const DEVELOPMENT_BASE_GROWTH_RATE = 0.35;
+/** Perda de força por ano de distância acima do fim do prime (`CONDITION_AGE_PEAK_MAX`) — puramente etária, minutagem não entra. */
+export const DEVELOPMENT_DECLINE_PER_YEAR = 1.5;
+/** Teto de declínio numa única temporada — trava jogador muito além do prime de desabar de uma vez. */
+export const DEVELOPMENT_MAX_DECLINE_PER_SEASON = 6;
 
 /**
  * Multiplicador de drenagem de energia por posição (mobilidade/distância percorrida real) —

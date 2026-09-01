@@ -79,6 +79,12 @@ describe('advanceRound', () => {
     });
     expect(startersWithAppearance.length).toBe(11);
 
+    // Titular que não foi substituído nem expulso joga a partida inteira.
+    for (const id of lineup.starters) {
+      const player = next.world.players.find((p) => p.id === id)!;
+      expect(player.seasonStats.minutesPlayed).toBe(90);
+    }
+
     const totalGoalsInRound = next.season.competitions[0].fixtures[state.season.currentRound - 1].reduce(
       (sum, f) => sum + (f.result?.homeGoals ?? 0) + (f.result?.awayGoals ?? 0),
       0,

@@ -109,7 +109,15 @@ describe('startNewSeason', () => {
     // no ano do scrape começa 1 "atrasado" em relação a `year - birthYear`; a partir da 2ª virada em
     // diante o incremento é sempre exatamente +1).
     for (const player of next.world.players) {
-      expect(player.seasonStats).toEqual({ appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 });
+      expect(player.seasonStats).toEqual({
+        appearances: 0,
+        goals: 0,
+        assists: 0,
+        yellowCards: 0,
+        redCards: 0,
+        saves: 0,
+        minutesPlayed: 0,
+      });
       expect(player.pendingYellowCards).toBe(0);
       expect(player.suspendedMatches).toBe(0);
       expect(player.condition).toBe(100);

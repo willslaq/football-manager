@@ -30,7 +30,7 @@ function makePlayer(id: string, name: string, position: Player['position']): Pla
     condition: 100,
     morale: 70,
     potential: 75,
-    seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0 },
+    seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0, minutesPlayed: 0 },
     pendingYellowCards: 0,
     suspendedMatches: 0,
   };

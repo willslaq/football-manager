@@ -381,6 +381,17 @@ export function simulateMatch(
     }
   }
 
+  // Minutos jogados — mesmo padrão de `matchEnergy`: conta só enquanto o jogador está em
+  // `state.players` (encolhe/troca em expulsão/substituição), congelado dali em diante.
+  const matchMinutes = new Map<PlayerId, number>();
+
+  /** Soma 1 minuto pra quem está em campo naquele time — chamado uma vez por minuto simulado. */
+  function trackMinutes(state: TeamMatchState): void {
+    for (const player of state.players) {
+      matchMinutes.set(player.id, (matchMinutes.get(player.id) ?? 0) + 1);
+    }
+  }
+
   // Goleiro titular de cada time — fixo a partida inteira (sem modelo de substituição ainda),
   // usado só pra creditar a defesa (shot_saved) ao goleiro certo.
   const homeGoalkeeper = home.players.find((p) => p.position === 'GOL');
@@ -713,6 +724,8 @@ export function simulateMatch(
 
     drainEnergy(homeState);
     drainEnergy(awayState);
+    trackMinutes(homeState);
+    trackMinutes(awayState);
     if (minute === 1 || minute % ENERGY_RECOMPUTE_INTERVAL_MINUTES === 0) {
       recomputeStrengthForFatigue();
       // Snapshot pro "modo geek"/UI só nos mesmos minutos em que a força já é recomputada — emitir
@@ -885,6 +898,10 @@ export function simulateMatch(
     [...homeParticipants, ...awayParticipants].map((p) => [p.id, matchEnergy.get(p.id) ?? p.condition]),
   );
 
+  const minutesPlayedByPlayerId: Record<PlayerId, number> = Object.fromEntries(
+    [...homeParticipants, ...awayParticipants].map((p) => [p.id, matchMinutes.get(p.id) ?? 0]),
+  );
+
   return {
     homeTeamId: home.clubId,
     awayTeamId: away.clubId,
@@ -900,5 +917,6 @@ export function simulateMatch(
     manOfTheMatch: manOfTheMatch.id,
     explanation,
     finalEnergyByPlayerId,
+    minutesPlayedByPlayerId,
   };
 }

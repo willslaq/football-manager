@@ -209,6 +209,8 @@ interface MatchStatMaps {
   savesByGoalkeeper: Map<string, number>;
   yellowCardsByPlayer: Map<string, number>;
   redCardsByPlayer: Map<string, number>;
+  /** Minutos jogados nessa partida, por jogador — direto de `result.minutesPlayedByPlayerId`. */
+  minutesByPlayer: Map<string, number>;
 }
 
 /** Extrai os mapas de estatística de uma partida já resolvida — titulares dos dois lados + qualquer substituto que entrou (evento 'substitution'). */
@@ -235,7 +237,9 @@ function collectMatchStatMaps(homeStarters: Player[], awayStarters: Player[], re
     }
   }
 
-  return { participantIds, goalsByPlayer, savesByGoalkeeper, yellowCardsByPlayer, redCardsByPlayer };
+  const minutesByPlayer = new Map<string, number>(Object.entries(result.minutesPlayedByPlayerId));
+
+  return { participantIds, goalsByPlayer, savesByGoalkeeper, yellowCardsByPlayer, redCardsByPlayer, minutesByPlayer };
 }
 
 /**
@@ -251,6 +255,7 @@ function applyParticipantStats(
   savesByGoalkeeper: Map<string, number>,
   yellowCardsByPlayer: Map<string, number>,
   redCardsByPlayer: Map<string, number>,
+  minutesByPlayer: Map<string, number>,
 ): Player[] {
   return players.map((player) => {
     if (!participantIds.has(player.id)) return player;
@@ -259,6 +264,7 @@ function applyParticipantStats(
     const saves = savesByGoalkeeper.get(player.id) ?? 0;
     const yellowCards = yellowCardsByPlayer.get(player.id) ?? 0;
     const redCards = redCardsByPlayer.get(player.id) ?? 0;
+    const minutes = minutesByPlayer.get(player.id) ?? 0;
     const { pendingYellowCards, suspendedMatches } = applyCardSuspension(player, yellowCards, redCards);
 
     return {
@@ -270,6 +276,7 @@ function applyParticipantStats(
         saves: player.seasonStats.saves + saves,
         yellowCards: player.seasonStats.yellowCards + yellowCards,
         redCards: player.seasonStats.redCards + redCards,
+        minutesPlayed: player.seasonStats.minutesPlayed + minutes,
       },
       pendingYellowCards,
       suspendedMatches,
@@ -373,6 +380,7 @@ function commitFixturesBatch(
         stats.savesByGoalkeeper,
         stats.yellowCardsByPlayer,
         stats.redCardsByPlayer,
+        stats.minutesByPlayer,
       ),
       result.finalEnergyByPlayerId,
     );
@@ -626,6 +634,7 @@ export function commitPlayerMatchResult(
           stats.savesByGoalkeeper,
           stats.yellowCardsByPlayer,
           stats.redCardsByPlayer,
+          stats.minutesByPlayer,
         ),
         finalResult.finalEnergyByPlayerId,
       ),

@@ -8,6 +8,7 @@ import {
   createBrasileiraoCareer,
   generateSeason,
   generateWorld,
+  initialStandingsByClub,
   MAX_SUBSTITUTIONS_PER_TEAM,
   pickAutoLineup,
   setTacticalIntensity,
@@ -85,26 +86,24 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
       case 'listClubs': {
         const world = generateWorld(request.payload.seed);
 
-        // Posição real na tabela atual — dado de verdade, não estimado a partir da reputação.
-        const standings = [...generateSeason().competitions[0].standings].sort((a, b) => {
-          if (b.points !== a.points) return b.points - a.points;
-          if (b.won !== a.won) return b.won - a.won;
-          const gdDiff = b.goalsFor - b.goalsAgainst - (a.goalsFor - a.goalsAgainst);
-          if (gdDiff !== 0) return gdDiff;
-          return b.goalsFor - a.goalsFor;
-        });
-        const positionByClub = new Map(standings.map((entry, index) => [entry.clubId, index + 1]));
+        // Posição real na tabela atual (da PRÓPRIA divisão do clube) — dado de verdade, não
+        // estimado a partir da reputação. Ver `initialStandingsByClub` (generation/season.ts).
+        const standingByClub = initialStandingsByClub();
 
         const clubs: ClubSummary[] = world.clubs
-          .map((c) => ({
-            id: c.id,
-            name: c.name,
-            shortName: c.shortName,
-            reputation: c.reputation,
-            colors: c.colors,
-            tablePosition: positionByClub.get(c.id) ?? 0,
-          }))
-          .sort((a, b) => a.tablePosition - b.tablePosition);
+          .map((c) => {
+            const standing = standingByClub.get(c.id);
+            return {
+              id: c.id,
+              name: c.name,
+              shortName: c.shortName,
+              reputation: c.reputation,
+              colors: c.colors,
+              tablePosition: standing?.position ?? 0,
+              division: (standing?.competitionId.includes('serie-b') ? 'B' : 'A') as 'A' | 'B',
+            };
+          })
+          .sort((a, b) => (a.division === b.division ? a.tablePosition - b.tablePosition : a.division === 'A' ? -1 : 1));
         respond({ type: 'clubsList', requestId: request.requestId, payload: { clubs } });
         break;
       }
@@ -395,17 +394,43 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         // registrados retroativamente pra temporadas já encerradas antes dessa versão).
         // Saves de antes do calendário real não têm date/currentDate — sem o snapshot original pra
         // reancorar, usa a rodada já salva + a data real de hoje como âncora (ver backfillFixtureDates).
+        // Saves de antes da Série B só têm a competição da Série A (`competitions.length === 1`) e
+        // um `world` sem nenhum clube/jogador da Série B — completa as duas coisas gerando uma
+        // Série B nova em folha (mesma seed, snapshot real de hoje) e anexando, sem tocar no
+        // progresso já salvo da Série A (competição, tabela, calendário, elenco do jogador).
         const incoming = request.payload.state;
+        const needsSerieB = incoming.season.competitions.length < 2;
+        const serieBAddon = needsSerieB ? generateSeason(incoming.playerClubId) : null;
+        const serieBCompetition = serieBAddon?.competitions.find(
+          (c) => !incoming.season.competitions.some((existing) => existing.id === c.id),
+        );
+        const serieBClubIds = new Set(serieBCompetition?.teams ?? []);
+        const existingClubIds = new Set(incoming.world.clubs.map((c) => c.id));
+        const serieBWorld = needsSerieB ? generateWorld(incoming.seed) : null;
+        const newClubs = serieBWorld?.clubs.filter((c) => serieBClubIds.has(c.id) && !existingClubIds.has(c.id)) ?? [];
+        const newPlayers = serieBWorld?.players.filter((p) => newClubs.some((c) => c.squad.includes(p.id))) ?? [];
+
+        const baseSeason =
+          serieBCompetition && serieBAddon
+            ? {
+                ...incoming.season,
+                competitions: [...incoming.season.competitions, serieBCompetition],
+                calendar: [...incoming.season.calendar, ...serieBAddon.calendar.filter((e) => e.competitionId === serieBCompetition.id)],
+              }
+            : incoming.season;
+        const baseWorld = {
+          clubs: [...incoming.world.clubs, ...newClubs],
+          players: [...incoming.world.players, ...newPlayers],
+        };
+
         const normalized: CareerState = {
           ...incoming,
           settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
-          season: incoming.season.currentDate
-            ? incoming.season
-            : backfillFixtureDates(incoming.season, new Date().toISOString().slice(0, 10)),
+          season: baseSeason.currentDate ? baseSeason : backfillFixtureDates(baseSeason, new Date().toISOString().slice(0, 10)),
           world: {
-            ...incoming.world,
-            clubs: incoming.world.clubs.map((club) => ({ ...club, morale: club.morale ?? 70 })),
-            players: incoming.world.players.map((player) => ({
+            ...baseWorld,
+            clubs: baseWorld.clubs.map((club) => ({ ...club, morale: club.morale ?? 70 })),
+            players: baseWorld.players.map((player) => ({
               ...player,
               attributes:
                 typeof player.attributes.aggression === 'number' ? player.attributes : { ...player.attributes, aggression: 50 },
@@ -422,6 +447,7 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
             ...entry,
             libertadores: entry.libertadores ?? [],
             relegated: entry.relegated ?? [],
+            promoted: entry.promoted ?? [],
             topScorer: entry.topScorer ?? null,
             goldenGlove: entry.goldenGlove ?? null,
           })),

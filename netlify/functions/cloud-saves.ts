@@ -11,6 +11,40 @@ interface CloudSaveDoc {
   tactics: unknown;
   createdAt: number;
   updatedAt: number;
+  trainerName: string;
+  clubName: string;
+  clubColor: string;
+  currentRound: number;
+  totalRounds: number;
+  seasonState: string;
+}
+
+/** Deriva os metadados leves de listagem (clube, treinador, progresso) do CareerState bruto, sem depender do motor. */
+function deriveSummaryFields(state: unknown): Pick<
+  CloudSaveDoc,
+  'trainerName' | 'clubName' | 'clubColor' | 'currentRound' | 'totalRounds' | 'seasonState'
+> {
+  const s = state as {
+    playerClubId?: string;
+    trainer?: { name?: string };
+    world?: { clubs?: { id: string; name: string; colors?: { primary?: string } }[] };
+    season?: {
+      currentRound?: number;
+      state?: string;
+      competitions?: { teams: string[]; fixtures: unknown[] }[];
+    };
+  };
+  const club = s.world?.clubs?.find((c) => c.id === s.playerClubId);
+  const competition =
+    s.season?.competitions?.find((c) => c.teams.includes(s.playerClubId ?? '')) ?? s.season?.competitions?.[0];
+  return {
+    trainerName: s.trainer?.name ?? '',
+    clubName: club?.name ?? s.playerClubId ?? '',
+    clubColor: club?.colors?.primary ?? '#8b98a5',
+    currentRound: s.season?.currentRound ?? 0,
+    totalRounds: competition?.fixtures.length ?? 0,
+    seasonState: s.season?.state ?? 'active',
+  };
 }
 
 /**
@@ -59,6 +93,12 @@ export default async (req: Request): Promise<Response> => {
           slotName: doc.slotName,
           updatedAt: doc.updatedAt,
           createdAt: doc.createdAt,
+          trainerName: doc.trainerName ?? '',
+          clubName: doc.clubName ?? '',
+          clubColor: doc.clubColor ?? '#8b98a5',
+          currentRound: doc.currentRound ?? 0,
+          totalRounds: doc.totalRounds ?? 0,
+          seasonState: doc.seasonState ?? 'active',
         })),
       );
     }
@@ -77,6 +117,7 @@ export default async (req: Request): Promise<Response> => {
       }
       const now = Date.now();
       const existingId = typeof body.id === 'string' ? body.id : undefined;
+      const summary = deriveSummaryFields(body.state);
 
       if (existingId) {
         const result = await saves.findOneAndUpdate(
@@ -88,6 +129,7 @@ export default async (req: Request): Promise<Response> => {
               lineup: body.lineup ?? null,
               tactics: body.tactics ?? null,
               updatedAt: now,
+              ...summary,
             },
           },
           { returnDocument: 'after' },
@@ -105,6 +147,7 @@ export default async (req: Request): Promise<Response> => {
         tactics: body.tactics ?? null,
         createdAt: now,
         updatedAt: now,
+        ...summary,
       });
       return Response.json({ id: insertResult.insertedId.toString() });
     }

@@ -6,6 +6,7 @@ export * from './Card';
 export * from './CloudSaveControls';
 export * from './EnergyBar';
 export * from './FileButton';
+export * from './GoogleSignInButton';
 export * from './Icons';
 export * from './MatchEventFeed';
 export * from './OnPitchList';

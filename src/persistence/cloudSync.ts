@@ -6,6 +6,12 @@ export interface CloudSaveSummary {
   slotName: string;
   updatedAt: number;
   createdAt: number;
+  trainerName: string;
+  clubName: string;
+  clubColor: string;
+  currentRound: number;
+  totalRounds: number;
+  seasonState: CareerState['season']['state'];
 }
 
 export interface CloudSaveRecord {

@@ -1,5 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import type { CareerState, Lineup, Tactics } from '../engine/types';
+import { sortStandings } from '../engine/simulation/standings';
 
 export interface SavedCareer {
   id?: number;
@@ -19,11 +20,16 @@ export interface SavedCareerSummary {
   slotName: string;
   updatedAt: number;
   trainerName: string;
+  clubId: string;
   clubName: string;
   clubColor: string;
   currentRound: number;
   totalRounds: number;
   seasonState: CareerState['season']['state'];
+  /** 'Série A' ou 'Série B', ou null se a competição do clube não foi encontrada (save corrompido). */
+  division: string | null;
+  /** Posição do clube na tabela da própria competição (1 = líder), ou null se não encontrado nela. */
+  tablePosition: number | null;
 }
 
 class FootManagerDB extends Dexie {
@@ -60,16 +66,22 @@ export async function listCareerSummaries(): Promise<SavedCareerSummary[]> {
     const club = saved.state.world.clubs.find((c) => c.id === saved.state.playerClubId);
     const competition = saved.state.season.competitions.find((c) => c.teams.includes(saved.state.playerClubId)) ??
       saved.state.season.competitions[0];
+    const tableIndex = competition
+      ? sortStandings(competition.standings).findIndex((entry) => entry.clubId === saved.state.playerClubId)
+      : -1;
     return {
       id: saved.id!,
       slotName: saved.slotName,
       updatedAt: saved.updatedAt,
       trainerName: saved.state.trainer.name,
+      clubId: saved.state.playerClubId,
       clubName: club?.name ?? saved.state.playerClubId,
       clubColor: club?.colors.primary ?? '#8b98a5',
       currentRound: saved.state.season.currentRound,
       totalRounds: competition?.fixtures.length ?? 0,
       seasonState: saved.state.season.state,
+      division: competition ? (competition.id.includes('serie-b') ? 'Série B' : 'Série A') : null,
+      tablePosition: tableIndex === -1 ? null : tableIndex + 1,
     };
   });
 }

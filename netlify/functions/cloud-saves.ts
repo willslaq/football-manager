@@ -12,17 +12,38 @@ interface CloudSaveDoc {
   createdAt: number;
   updatedAt: number;
   trainerName: string;
+  clubId: string;
   clubName: string;
   clubColor: string;
   currentRound: number;
   totalRounds: number;
   seasonState: string;
+  division: string | null;
+  tablePosition: number | null;
+}
+
+/** Mesmo critério de desempate de `engine/simulation/standings.ts#sortStandings` — duplicado aqui porque esta função roda isolada, sem depender do motor. */
+function tablePositionOf(
+  standings: { clubId: string; points: number; won: number; goalsFor: number; goalsAgainst: number }[] | undefined,
+  clubId: string | undefined,
+): number | null {
+  if (!standings || !clubId) return null;
+  const sorted = [...standings].sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.won !== a.won) return b.won - a.won;
+    const gdA = a.goalsFor - a.goalsAgainst;
+    const gdB = b.goalsFor - b.goalsAgainst;
+    if (gdB !== gdA) return gdB - gdA;
+    return b.goalsFor - a.goalsFor;
+  });
+  const index = sorted.findIndex((entry) => entry.clubId === clubId);
+  return index === -1 ? null : index + 1;
 }
 
 /** Deriva os metadados leves de listagem (clube, treinador, progresso) do CareerState bruto, sem depender do motor. */
 function deriveSummaryFields(state: unknown): Pick<
   CloudSaveDoc,
-  'trainerName' | 'clubName' | 'clubColor' | 'currentRound' | 'totalRounds' | 'seasonState'
+  'trainerName' | 'clubId' | 'clubName' | 'clubColor' | 'currentRound' | 'totalRounds' | 'seasonState' | 'division' | 'tablePosition'
 > {
   const s = state as {
     playerClubId?: string;
@@ -31,7 +52,12 @@ function deriveSummaryFields(state: unknown): Pick<
     season?: {
       currentRound?: number;
       state?: string;
-      competitions?: { teams: string[]; fixtures: unknown[] }[];
+      competitions?: {
+        id: string;
+        teams: string[];
+        fixtures: unknown[];
+        standings?: { clubId: string; points: number; won: number; goalsFor: number; goalsAgainst: number }[];
+      }[];
     };
   };
   const club = s.world?.clubs?.find((c) => c.id === s.playerClubId);
@@ -39,11 +65,14 @@ function deriveSummaryFields(state: unknown): Pick<
     s.season?.competitions?.find((c) => c.teams.includes(s.playerClubId ?? '')) ?? s.season?.competitions?.[0];
   return {
     trainerName: s.trainer?.name ?? '',
+    clubId: s.playerClubId ?? '',
     clubName: club?.name ?? s.playerClubId ?? '',
     clubColor: club?.colors?.primary ?? '#8b98a5',
     currentRound: s.season?.currentRound ?? 0,
     totalRounds: competition?.fixtures.length ?? 0,
     seasonState: s.season?.state ?? 'active',
+    division: competition ? (competition.id.includes('serie-b') ? 'Série B' : 'Série A') : null,
+    tablePosition: tablePositionOf(competition?.standings, s.playerClubId),
   };
 }
 
@@ -94,11 +123,14 @@ export default async (req: Request): Promise<Response> => {
           updatedAt: doc.updatedAt,
           createdAt: doc.createdAt,
           trainerName: doc.trainerName ?? '',
+          clubId: doc.clubId,
           clubName: doc.clubName ?? '',
           clubColor: doc.clubColor ?? '#8b98a5',
           currentRound: doc.currentRound ?? 0,
           totalRounds: doc.totalRounds ?? 0,
           seasonState: doc.seasonState ?? 'active',
+          division: doc.division ?? null,
+          tablePosition: doc.tablePosition ?? null,
         })),
       );
     }

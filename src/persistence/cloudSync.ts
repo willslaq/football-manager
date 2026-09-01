@@ -7,11 +7,16 @@ export interface CloudSaveSummary {
   updatedAt: number;
   createdAt: number;
   trainerName: string;
+  /** Ausente em saves gravados antes desse campo existir — trate como opcional (crest cai no fallback de iniciais). */
+  clubId?: string;
   clubName: string;
   clubColor: string;
   currentRound: number;
   totalRounds: number;
   seasonState: CareerState['season']['state'];
+  /** Ausentes em saves antigos (mesmo motivo de `clubId`) — trate 'Série A'/'Série B'/null como o conjunto completo. */
+  division?: string | null;
+  tablePosition?: number | null;
 }
 
 export interface CloudSaveRecord {

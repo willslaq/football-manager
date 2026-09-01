@@ -11,6 +11,17 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  max-width: var(--measure);
+}
+
+.start__title {
+  font-size: var(--text-3xl);
+  color: var(--chalk);
+}
+
+.start__lead {
+  font-size: var(--text-lg);
+  color: var(--mist);
 }
 
 .start__hint {
@@ -72,17 +83,6 @@
   white-space: nowrap;
 }
 
-.start__title {
-  font-size: var(--text-4xl);
-  color: var(--chalk);
-}
-
-.start__lead {
-  font-size: var(--text-lg);
-  color: var(--mist);
-  max-width: var(--measure);
-}
-
 .start__section-title {
   font-size: var(--text-sm);
   font-weight: 800;
@@ -92,35 +92,195 @@
   margin-bottom: var(--space-3);
 }
 
-.save-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(22rem, 26rem));
+/* Escudo do clube — círculo com halo na cor do clube (accent-color, ver Card.css). */
+.club-crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 2px solid color-mix(in srgb, var(--accent-color, var(--pitch)) 40%, var(--line));
+  width: 40px;
+  height: 40px;
+}
+
+.club-crest__img {
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
+}
+
+.club-crest__fallback {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--mist);
+}
+
+.club-crest--hero {
+  width: 96px;
+  height: 96px;
+  box-shadow: 0 0 32px color-mix(in srgb, var(--accent-color, var(--pitch)) 35%, transparent);
+}
+
+.club-crest--hero .club-crest__fallback {
+  font-size: var(--text-3xl);
+}
+
+.club-crest--sm {
+  width: 40px;
+  height: 40px;
+}
+
+/* Hero: continuar a carreira mais recente. */
+.hero-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding: var(--space-6);
+  overflow: hidden;
+}
+
+.hero-card__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    55% 90% at 0% 50%,
+    color-mix(in srgb, var(--accent-color, var(--pitch)) 20%, transparent),
+    transparent 72%
+  );
+}
+
+.hero-card__sync {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+}
+
+.hero-card__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  min-width: 17.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hero-card__club {
+  font-size: var(--text-2xl);
+  color: var(--chalk);
+}
+
+.hero-card__meta {
+  font-size: var(--text-sm);
+  color: var(--mist);
+}
+
+.hero-card__badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-1);
+}
+
+.hero-card__stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 14rem;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card__rounds {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.hero-card__rounds-value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--chalk);
+}
+
+.hero-card__rounds-total {
+  font-size: var(--text-sm);
+  color: var(--mist);
+}
+
+.hero-card__date {
+  font-size: var(--text-xs);
+  color: var(--mist);
+}
+
+.hero-card__actions {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card__cta {
+  font-size: var(--text-base);
+  padding: var(--space-4) var(--space-6);
+}
+
+/* Outras carreiras — fileira horizontal de cartões compactos. */
+.save-row {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
 }
 
 .save-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  width: 19rem;
+  flex-shrink: 0;
+  padding: var(--space-4);
 }
 
 .save-card__header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
   gap: var(--space-3);
 }
 
+.save-card__names {
+  min-width: 0;
+  flex: 1;
+}
+
 .save-card__name {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 800;
   color: var(--chalk);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .save-card__meta {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--mist);
-  margin-top: var(--space-1);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .save-card__tags {
@@ -135,8 +295,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 .save-card__date {
@@ -147,28 +306,97 @@
 .save-card__actions {
   display: flex;
   gap: var(--space-2);
-  margin-left: auto;
 }
 
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 20rem));
+/* Começar algo novo — nova carreira / importar / amistoso. */
+.action-tiles {
+  display: flex;
   gap: var(--space-4);
+  flex-wrap: wrap;
 }
 
-.action-card {
+.action-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: 1;
+  min-width: 16rem;
+  padding: var(--space-5);
+  text-align: left;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.action-tile:hover {
+  border-color: var(--pitch);
+  background: var(--surface-2);
+}
+
+.action-tile--floodlight:hover {
+  border-color: var(--floodlight);
+}
+
+.action-tile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--mist);
+}
+
+.action-tile--pitch .action-tile__icon {
+  background: color-mix(in srgb, var(--pitch) 16%, transparent);
+  color: var(--pitch);
+}
+
+.action-tile--floodlight .action-tile__icon {
+  background: color-mix(in srgb, var(--floodlight) 18%, transparent);
+  color: var(--floodlight);
+}
+
+.action-tile__vs {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  letter-spacing: 0.02em;
+}
+
+.action-tile__body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
-.action-card__title {
-  font-size: var(--text-xl);
+.action-tile__title {
+  font-size: var(--text-base);
+  font-weight: 800;
   color: var(--chalk);
 }
 
-.action-card__desc {
+.action-tile__desc {
   font-size: var(--text-sm);
   color: var(--mist);
-  flex: 1;
+}
+
+.action-tile__chevron {
+  color: var(--mist);
+  flex-shrink: 0;
+}
+
+.action-tile__file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
 }

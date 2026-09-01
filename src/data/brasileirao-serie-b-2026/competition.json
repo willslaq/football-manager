@@ -1,0 +1,40 @@
+{
+  "id": "brasileirao-serie-b-2026",
+  "name": "Campeonato Brasileiro Série B 2026",
+  "season": {
+    "year": 2026,
+    "startDate": "2026-03-21",
+    "endDate": "2026-11-28"
+  },
+  "format": {
+    "type": "round-robin-double",
+    "teams": 20,
+    "rounds": 38,
+    "description": "Turno e returno: cada clube enfrenta todos os outros 19 clubes duas vezes (19 jogos de ida, 19 de volta)."
+  },
+  "points": {
+    "win": 3,
+    "draw": 1,
+    "loss": 0
+  },
+  "tiebreakers": [
+    "wins",
+    "goalDifference",
+    "goalsFor",
+    "headToHead",
+    "redCards",
+    "yellowCards",
+    "draw"
+  ],
+  "promotion": {
+    "spots": 4,
+    "positions": [1, 2, 3, 4],
+    "description": "Os 4 primeiros colocados (1º ao 4º) sobem para a Série A do ano seguinte."
+  },
+  "relegation": {
+    "spots": 4,
+    "positions": [17, 18, 19, 20],
+    "description": "Os 4 últimos colocados (17º ao 20º) são rebaixados para a Série C."
+  },
+  "sourceNotes": "Datas de início/fim e regra de acesso/rebaixamento (4 sobem, 4 caem) confirmadas via busca web em 2026-09-01 (Wikipédia, CBF). Fixtures.json desta competição NÃO reproduz o calendário real de confrontos da CBF (diferente de brasileirao-2026/fixtures.json) — é um turno-returno sintético (método do círculo) gerado localmente, porque não coletamos os 380 confrontos reais rodada a rodada; a tabela em standings-current.json, porém, é o snapshot real da classificação atual."
+}

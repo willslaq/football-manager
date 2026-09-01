@@ -14,7 +14,7 @@ import { MatchResult } from './ui/screens/MatchResult';
 import { MatchHistory } from './ui/screens/MatchHistory';
 import { AppShell, type HubScreen } from './ui/components';
 import { CLUB_CRESTS } from './ui/clubCrests';
-import { findClub } from './ui/utils';
+import { findClub, findPlayerCompetition } from './ui/utils';
 import type { MatchResult as MatchResultData } from './engine/types';
 
 export type Screen = HubScreen | 'matchLive' | 'matchResult' | 'matchHistory';
@@ -76,7 +76,7 @@ function App() {
   }
 
   const club = findClub(career, career.playerClubId);
-  const competition = career.season.competitions[0];
+  const competition = findPlayerCompetition(career);
   const totalRounds = competition.fixtures.length;
   const roundLabel =
     career.season.state === 'finished'

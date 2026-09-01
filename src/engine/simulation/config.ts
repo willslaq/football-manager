@@ -144,10 +144,20 @@ export const CLUB_MORALE_LOSS_DELTA = -4;
  * Cortes de posição final usados tanto pela tabela (zonas de classificação/rebaixamento,
  * `ui/utils.ts`) quanto pelo resumo de fim de temporada (`seasonLifecycle.ts`) — mesma fonte
  * pros dois lados não divergirem. 20 times: 1-4 Libertadores (fase de grupos), 5 Pré-Libertadores
- * (ainda "classificado pra Libertadores" pro resumo de temporada), 17-20 rebaixamento.
+ * (ainda "classificado pra Libertadores" pro resumo de temporada), 17-20 rebaixamento (agora real —
+ * ver `startNewSeason`'s troca com o topo da Série B).
  */
 export const LIBERTADORES_CUTOFF_POSITION = 5;
 export const RELEGATION_CUTOFF_POSITION = 17;
+
+/**
+ * Corte de acesso da Série B: 1-4 sobem pra Série A no ano seguinte (regra real da CBF — ver
+ * `startNewSeason`). A zona de rebaixamento da Série B pra Série C (posições 17-20 real) NÃO é
+ * modelada: não há dados de clubes da Série C neste projeto, então os 4 últimos da Série B
+ * simplesmente continuam na Série B no ano seguinte — mesma simplificação "informativa, sem
+ * dados pra promover substitutos" que a Série A tinha antes desta feature (ver TODO.md).
+ */
+export const PROMOTION_CUTOFF_POSITION = 4;
 
 /**
  * Fator de compressão (0-1) aplicado a toda razão de força centrada em 0.5

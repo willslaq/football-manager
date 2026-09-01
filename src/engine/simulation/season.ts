@@ -291,9 +291,11 @@ function applyParticipantStats(
  * snapshot real - 1) vêm de `standings-current.json` sem placar jogo a jogo (só o saldo agregado
  * já está nas standings) — comparar por data as exclui corretamente sem confundi-las com "ainda
  * por simular", o que compará-las por ausência de `.result` faria (bug: ficariam "atuais" pra sempre).
+ * Usa a competição do `playerClubId` (não sempre `competitions[0]`): o clube do jogador pode estar
+ * na Série A ou na Série B, e cada uma tem seu próprio calendário/rodada corrente.
  */
-function deriveCurrentRound(season: Season): number {
-  const competition = season.competitions[0];
+function deriveCurrentRound(season: Season, playerClubId: ClubId): number {
+  const competition = season.competitions.find((c) => c.teams.includes(playerClubId)) ?? season.competitions[0];
   for (const round of competition.fixtures) {
     if (round.some((f) => !f.result && f.date >= season.currentDate)) return round[0].round;
   }
@@ -466,7 +468,10 @@ export function advanceCalendar(state: CareerState, input: AdvanceRoundInput): A
   }
 
   const finalSeason: Season = { ...workingState.season, state: seasonFinished ? 'finished' : 'in_progress' };
-  const nextState: CareerState = { ...workingState, season: { ...finalSeason, currentRound: deriveCurrentRound(finalSeason) } };
+  const nextState: CareerState = {
+    ...workingState,
+    season: { ...finalSeason, currentRound: deriveCurrentRound(finalSeason, state.playerClubId) },
+  };
 
   return { nextState, simulatedAlongTheWay, reachedPlayerMatchDay, seasonFinished };
 }
@@ -563,7 +568,10 @@ export function startMatchDay(state: CareerState, input: AdvanceRoundInput): Sta
     simulatedAlongTheWay = swept.simulatedAlongTheWay;
     seasonFinished = swept.seasonFinished;
   } else {
-    workingState = { ...workingState, season: { ...workingState.season, currentRound: deriveCurrentRound(workingState.season) } };
+    workingState = {
+      ...workingState,
+      season: { ...workingState.season, currentRound: deriveCurrentRound(workingState.season, state.playerClubId) },
+    };
   }
 
   return {
@@ -639,7 +647,7 @@ export function commitPlayerMatchResult(
         finalResult.finalEnergyByPlayerId,
       ),
     },
-    season: { ...nextSeason, currentRound: deriveCurrentRound(nextSeason) },
+    season: { ...nextSeason, currentRound: deriveCurrentRound(nextSeason, state.playerClubId) },
   };
 }
 

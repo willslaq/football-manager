@@ -1,0 +1,381 @@
+{
+  "club": {
+    "id": "atletico-go",
+    "name": "Atlético-GO",
+    "shortName": "ACG",
+    "city": "Goiânia",
+    "state": "GO",
+    "founded": 1937,
+    "stadium": "Estádio Antônio Accioly",
+    "stadiumCapacity": 12500,
+    "colors": {
+      "primary": "#c8102e",
+      "secondary": "#000000"
+    },
+    "formation": "4-2-3-1",
+    "style": "balanced"
+  },
+  "squad": [
+    {
+      "name": "Léo Rosa",
+      "shirtNumber": null,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Paulo Henrique",
+      "shirtNumber": null,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Paulo Vítor",
+      "shirtNumber": null,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Vladimir",
+      "shirtNumber": null,
+      "position": "GOL",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Adriano Martins",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Junior Barreto",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "PAR",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Marcão",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Natã Felipe",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Tito",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Ewerthon",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Gustavo Daniel",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Felipe Guimarães",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Guilherme Lopes",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Guilherme Romão",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Yuri",
+      "shirtNumber": null,
+      "position": "ZAG",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Assis",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Cristiano",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Henrique Freitas",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Geovane",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Igor Henrique",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Guilherme Marques",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Matheusinho",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Netinho",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Daniel Peixoto",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Leandro Vilela",
+      "shirtNumber": null,
+      "position": "MC",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Gustavo Coutinho",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Léo Jacó",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Bruno José",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Kahiser Lenis",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "PAN",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Lima",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "POR",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Daniel Lima",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Gustavo Maia",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Marrony",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "João Pedro",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "GNB",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Geovany Soares",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    },
+    {
+      "name": "Léo Tocantins",
+      "shirtNumber": null,
+      "position": "CA",
+      "secondaryPositions": [],
+      "nationality": "BRA",
+      "birthYear": 2002,
+      "age": 24,
+      "notes": "Sem correspondência no EA FC26 (número de camisa não encontrado na base); idade estimada, atributos via geração procedural do motor"
+    }
+  ],
+  "sourceNotes": "Elenco e infobox: Wikipédia (Atlético Clube Goianiense), consultada em 2026-09-01. Fonte não trouxe numeração de camisa para nenhum jogador — não houve correspondência por número com o EA FC26; todos os atributos vêm da geração procedural do motor. 0/36 jogadores casados com atributos reais do EA FC26 via número de camisa; os demais usam geração procedural do motor a partir da reputação do clube."
+}

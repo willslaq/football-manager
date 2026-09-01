@@ -26,11 +26,11 @@ export function Start({ onNewCareer, onFriendly }: { onNewCareer: () => void; on
   return (
     <Backdrop>
       <header className="start__header">
-        <span className="eyebrow">Campeonato Brasileiro Série A · 2026</span>
+        <span className="eyebrow">Campeonato Brasileiro Série A e Série B · 2026</span>
         <h1 className="start__title">Manager de Futebol</h1>
         <p className="start__lead">
-          Assuma o comando de um clube da Série A e viva a temporada real, rodada a rodada — com os 20 clubes e o
-          calendário oficial de 2026.
+          Assuma o comando de um clube da Série A ou da Série B e viva a temporada real, rodada a rodada — com os
+          40 clubes das duas divisões e acesso/rebaixamento de verdade entre elas ano a ano.
         </p>
       </header>
 
@@ -79,7 +79,7 @@ export function Start({ onNewCareer, onFriendly }: { onNewCareer: () => void; on
       <section className="action-grid">
         <Card className="action-card">
           <h2 className="action-card__title">Nova carreira</h2>
-          <p className="action-card__desc">Escolha um clube da Série A e comece uma carreira do zero.</p>
+          <p className="action-card__desc">Escolha um clube da Série A ou da Série B e comece uma carreira do zero.</p>
           <Button variant="primary" onClick={onNewCareer}>
             Criar carreira
           </Button>

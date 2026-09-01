@@ -77,31 +77,36 @@ describe('startNewSeason', () => {
     expect(() => startNewSeason(state)).toThrow();
   });
 
-  it('registra o resumo em history, reseta jogadores e clubes, e gera a temporada seguinte do zero', () => {
+  it('registra o resumo das DUAS divisões em history, reseta jogadores e clubes, e gera a temporada seguinte do zero', () => {
     const finished = playToFinished(11, 'palmeiras');
-    const table = sortStandings(finished.season.competitions[0].standings);
-    const summary = buildSeasonSummary(finished);
+    const tableA = sortStandings(finished.season.competitions[0].standings);
+    const tableB = sortStandings(finished.season.competitions[1].standings);
+    const summaryA = buildSeasonSummary(finished, 0);
+    const summaryB = buildSeasonSummary(finished, 1);
 
     const next = startNewSeason(finished);
 
-    // history
-    expect(next.history).toHaveLength(1);
-    expect(next.history[0]).toEqual({
-      year: finished.season.year,
-      competitionId: finished.season.competitions[0].id,
-      ...summary,
-    });
-    expect(next.history[0].champion).toBe(table[0].clubId);
+    // history: uma entrada por divisão
+    expect(next.history).toHaveLength(2);
+    expect(next.history[0]).toEqual({ year: finished.season.year, ...summaryA });
+    expect(next.history[1]).toEqual({ year: finished.season.year, ...summaryB });
+
+    expect(next.history[0].champion).toBe(tableA[0].clubId);
     expect(next.history[0].libertadores).toHaveLength(5);
     expect(next.history[0].relegated).toHaveLength(4);
+    expect(next.history[0].promoted).toHaveLength(0);
     expect(next.history[0].topScorer?.goals).toBeGreaterThan(0);
     expect(next.history[0].goldenGlove?.saves).toBeGreaterThan(0);
 
-    // moral por posição final
-    const championClub = next.world.clubs.find((c) => c.id === table[0].clubId)!;
-    const lastPlacedClub = next.world.clubs.find((c) => c.id === table[table.length - 1].clubId)!;
-    expect(championClub.morale).toBe(100);
-    expect(lastPlacedClub.morale).toBe(20);
+    expect(next.history[1].champion).toBe(tableB[0].clubId);
+    expect(next.history[1].libertadores).toHaveLength(0);
+    expect(next.history[1].promoted).toHaveLength(4);
+
+    // moral por posição final (dentro da PRÓPRIA divisão)
+    const championClubA = next.world.clubs.find((c) => c.id === tableA[0].clubId)!;
+    const lastPlacedClubA = next.world.clubs.find((c) => c.id === tableA[tableA.length - 1].clubId)!;
+    expect(championClubA.morale).toBe(100);
+    expect(lastPlacedClubA.morale).toBe(20);
 
     // jogadores resetados e envelhecidos (recalculado de `nextYear - birthYear`, não um +1 cego —
     // por isso alguns sobem 2 nessa primeira virada: `age` de origem é preciso por data real de
@@ -124,13 +129,28 @@ describe('startNewSeason', () => {
       expect(player.age).toBe(next.season.year - player.birthYear);
     }
 
-    // temporada nova, do zero, mesmos 20 clubes
+    // temporada nova, do zero, 20 clubes em cada divisão
     expect(next.season.year).toBe(finished.season.year + 1);
     expect(next.season.currentRound).toBe(1);
     expect(next.season.state).toBe('in_progress');
-    const nextCompetition = next.season.competitions[0];
-    expect(nextCompetition.teams).toEqual(finished.season.competitions[0].teams);
-    expect(nextCompetition.fixtures.every((round) => round.every((f) => f.result === undefined))).toBe(true);
-    expect(nextCompetition.standings.every((e) => e.played === 0 && e.points === 0)).toBe(true);
+    for (const nextCompetition of next.season.competitions) {
+      expect(nextCompetition.teams).toHaveLength(20);
+      expect(new Set(nextCompetition.teams).size).toBe(20);
+      expect(nextCompetition.fixtures.every((round) => round.every((f) => f.result === undefined))).toBe(true);
+      expect(nextCompetition.standings.every((e) => e.played === 0 && e.points === 0)).toBe(true);
+    }
+
+    // acesso/rebaixamento real: os 4 rebaixados da Série A viram time da Série B, e os 4
+    // promovidos da Série B viram time da Série A — troca direta, sem playoff.
+    const nextSeriesATeams = new Set(next.season.competitions[0].teams);
+    const nextSeriesBTeams = new Set(next.season.competitions[1].teams);
+    for (const clubId of summaryA.relegated) {
+      expect(nextSeriesATeams.has(clubId)).toBe(false);
+      expect(nextSeriesBTeams.has(clubId)).toBe(true);
+    }
+    for (const clubId of summaryB.promoted) {
+      expect(nextSeriesBTeams.has(clubId)).toBe(false);
+      expect(nextSeriesATeams.has(clubId)).toBe(true);
+    }
   });
 });

@@ -15,7 +15,7 @@ export function createBrasileiraoCareer(
     trainer,
     playerClubId,
     world: generateWorld(seed),
-    season: generateSeason(),
+    season: generateSeason(playerClubId),
     history: [],
     settings: { tacticalIntensity },
   };

@@ -19,12 +19,37 @@ import saoPaulo from '../assets/escudos/saopaulo_bra.png';
 import vasco from '../assets/escudos/vasco.png';
 import vitoria from '../assets/escudos/vitoria.png';
 
+// Série B
+import americaMg from '../assets/escudos/americamg_bra.png';
+import athletic from '../assets/escudos/athleticclub_mg.png';
+import atleticoGo from '../assets/escudos/atleticogo_bra.png';
+import avai from '../assets/escudos/avai_bra.png';
+import botafogoSp from '../assets/escudos/botafogosp_bra.png';
+import ceara from '../assets/escudos/ceara_bra.png';
+import crb from '../assets/escudos/crb_bra.png';
+import criciuma from '../assets/escudos/criciuma_bra.png';
+import cuiaba from '../assets/escudos/cuiaba_bra.png';
+import fortaleza from '../assets/escudos/fortaleza.png';
+import goias from '../assets/escudos/goias.png';
+import juventude from '../assets/escudos/juventude.png';
+import londrina from '../assets/escudos/londrina_pr.png';
+import nautico from '../assets/escudos/nautico.png';
+import novorizontino from '../assets/escudos/novorinzontino_sp.png';
+import operarioPr from '../assets/escudos/operario_pr.png';
+import pontePreta from '../assets/escudos/pontepreta_bra.png';
+import saoBernardo from '../assets/escudos/saobernardo_sp.png';
+import sport from '../assets/escudos/sport.png';
+import vilaNova from '../assets/escudos/vilago.png';
+
 /**
  * clubId -> escudo. Mapeamento explícito porque os nomes de arquivo do pacote
  * de escudos original são inconsistentes e alguns têm erros de digitação
  * (ex.: "miirassol_sp.png" para Mirassol, "flarj.png"/"flurj.png" para
- * Flamengo/Fluminense) — não dá pra derivar o caminho a partir do clubId.
- * Conferido visualmente um a um contra o clube real antes de mapear.
+ * Flamengo/Fluminense, "novorinzontino_sp.png" para Novorizontino) — não dá
+ * pra derivar o caminho a partir do clubId. Conferido visualmente um a um
+ * contra o clube real antes de mapear (ver [[project_serie_b_dual_division]]
+ * pra "vilago.png" = Vila Nova-GO, não confundir com "villanovamg.png",
+ * clube diferente do mesmo nome em MG).
  */
 export const CLUB_CRESTS: Record<string, string> = {
   'athletico-pr': athleticoPr,
@@ -47,4 +72,26 @@ export const CLUB_CRESTS: Record<string, string> = {
   'sao-paulo': saoPaulo,
   vasco,
   vitoria,
+
+  // Série B
+  'america-mg': americaMg,
+  athletic,
+  'atletico-go': atleticoGo,
+  avai,
+  'botafogo-sp': botafogoSp,
+  ceara,
+  crb,
+  criciuma,
+  cuiaba,
+  fortaleza,
+  goias,
+  juventude,
+  londrina,
+  nautico,
+  novorizontino,
+  'operario-pr': operarioPr,
+  'ponte-preta': pontePreta,
+  'sao-bernardo': saoBernardo,
+  sport,
+  'vila-nova': vilaNova,
 };

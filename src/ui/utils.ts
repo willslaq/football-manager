@@ -1,5 +1,5 @@
-import { LIBERTADORES_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from '../engine/simulation/config';
-import type { CareerState, Club, ClubId, Fixture, Player, Position, StandingEntry, TacticalIntensity } from '../engine/types';
+import { LIBERTADORES_CUTOFF_POSITION, PROMOTION_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from '../engine/simulation/config';
+import type { CareerState, Club, ClubId, Competition, Fixture, Player, Position, StandingEntry, TacticalIntensity } from '../engine/types';
 
 export const TACTICAL_INTENSITY_COPY: Record<TacticalIntensity, { label: string; hint: string }> = {
   subtle: {
@@ -83,6 +83,20 @@ export function findClub(career: CareerState, clubId: ClubId): Club | undefined 
   return career.world.clubs.find((c) => c.id === clubId);
 }
 
+/**
+ * A competição do clube do jogador — Série A ou Série B, dependendo de onde ele está NESSA
+ * temporada (acesso/rebaixamento pode mudar isso ano a ano, ver `startNewSeason`). Toda tela que
+ * antes assumia `season.competitions[0]` (só existia uma competição) deve usar isso no lugar.
+ */
+export function findPlayerCompetition(career: CareerState): Competition {
+  return career.season.competitions.find((c) => c.teams.includes(career.playerClubId)) ?? career.season.competitions[0];
+}
+
+/** true quando a competição em questão é a Série B (pela ordem fixa: índice 1, ou id contendo "serie-b"). */
+export function isSeriesB(competition: Competition): boolean {
+  return competition.id.includes('serie-b');
+}
+
 export function playersById(career: CareerState): Map<string, Player> {
   return new Map(career.world.players.map((p) => [p.id, p]));
 }
@@ -112,17 +126,29 @@ export function standingPosition(standings: StandingEntry[], clubId: ClubId): nu
   return index === -1 ? null : index + 1;
 }
 
-export type StandingsZone = 'libertadores' | 'libertadores-pre' | 'sula' | 'relegation' | null;
+export type StandingsZone = 'libertadores' | 'libertadores-pre' | 'sula' | 'relegation' | 'promotion' | null;
 
 /**
- * Zona de classificação/rebaixamento de uma posição final — usada tanto pela Tabela (zebra de
- * cores) quanto pelo resumo de fim de temporada (Home). Os cortes (`LIBERTADORES_CUTOFF_POSITION`/
- * `RELEGATION_CUTOFF_POSITION`) vêm do motor pra não divergir do que `buildSeasonSummary` calcula.
+ * Zona de classificação/rebaixamento de uma posição final NA SÉRIE A — usada tanto pela Tabela
+ * (zebra de cores) quanto pelo resumo de fim de temporada (Home). Os cortes
+ * (`LIBERTADORES_CUTOFF_POSITION`/`RELEGATION_CUTOFF_POSITION`) vêm do motor pra não divergir do
+ * que `buildSeasonSummary` calcula. Pra Série B ver `standingsZoneSeriesB`.
  */
 export function standingsZone(position: number): StandingsZone {
   if (position < LIBERTADORES_CUTOFF_POSITION) return 'libertadores';
   if (position === LIBERTADORES_CUTOFF_POSITION) return 'libertadores-pre';
   if (position <= 11) return 'sula';
+  if (position >= RELEGATION_CUTOFF_POSITION) return 'relegation';
+  return null;
+}
+
+/**
+ * Zona de acesso/rebaixamento de uma posição final NA SÉRIE B: 1-4 sobem pra Série A
+ * (`PROMOTION_CUTOFF_POSITION`), 17-20 é zona de rebaixamento informativa (sem dados de Série C —
+ * ver `PROMOTION_CUTOFF_POSITION`'s comentário em config.ts).
+ */
+export function standingsZoneSeriesB(position: number): StandingsZone {
+  if (position <= PROMOTION_CUTOFF_POSITION) return 'promotion';
   if (position >= RELEGATION_CUTOFF_POSITION) return 'relegation';
   return null;
 }

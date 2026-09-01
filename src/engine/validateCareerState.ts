@@ -158,7 +158,7 @@ export function validateCareerState(state: CareerState): ValidationResult {
     if (!clubIds.has(entry.champion)) {
       errors.push(`history referencia campeão inexistente (${entry.champion})`);
     }
-    for (const clubId of [...entry.libertadores, ...entry.relegated]) {
+    for (const clubId of [...entry.libertadores, ...entry.relegated, ...entry.promoted]) {
       if (!clubIds.has(clubId)) {
         errors.push(`history (${entry.year}) referencia clube inexistente (${clubId})`);
       }

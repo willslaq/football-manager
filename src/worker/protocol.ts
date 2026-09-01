@@ -22,6 +22,8 @@ export interface ClubSummary {
   colors: { primary: string; secondary: string };
   /** Posição real na tabela do Brasileirão 2026 no momento da coleta dos dados (1 = líder). */
   tablePosition: number;
+  /** Divisão do clube nessa temporada — Série A ou Série B (ver `initialStandingsByClub` em generation/season.ts). */
+  division: 'A' | 'B';
 }
 
 export interface ListClubsRequest {

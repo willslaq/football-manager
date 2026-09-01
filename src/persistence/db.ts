@@ -58,7 +58,8 @@ export async function listCareerSummaries(): Promise<SavedCareerSummary[]> {
   const all = await db.careers.orderBy('updatedAt').reverse().toArray();
   return all.map((saved) => {
     const club = saved.state.world.clubs.find((c) => c.id === saved.state.playerClubId);
-    const competition = saved.state.season.competitions[0];
+    const competition = saved.state.season.competitions.find((c) => c.teams.includes(saved.state.playerClubId)) ??
+      saved.state.season.competitions[0];
     return {
       id: saved.id!,
       slotName: saved.slotName,

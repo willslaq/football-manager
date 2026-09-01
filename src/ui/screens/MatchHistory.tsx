@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import { findClub, outcomeFor, OUTCOME_LABEL, OUTCOME_VAR } from '../utils';
+import { findClub, findPlayerCompetition, outcomeFor, OUTCOME_LABEL, OUTCOME_VAR } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Badge, Button, Card, CardButton, IconBall } from '../components';
 import type { ClubId, MatchEvent, MatchResult, Player } from '../../engine/types';
@@ -48,7 +48,7 @@ export function MatchHistory({ onSelect, onBack }: MatchHistoryProps) {
   const [selectedRound, setSelectedRound] = useState<number | null>(null);
   if (!career) return null;
 
-  const competition = career.season.competitions[0];
+  const competition = findPlayerCompetition(career);
   const playersById = new Map(career.world.players.map((p) => [p.id, p]));
   const playedRounds = competition.fixtures
     .map((fixtures, index) => ({ roundNumber: index + 1, fixtures }))

@@ -4,32 +4,28 @@ import type { Player } from '../types/player';
 import type { World } from '../types/career';
 import { clubReputationFromStanding, generatePlayerDerived, moraleFromFinalStanding, playerSeed } from './attributes';
 import type { RawClubFile, RawStandingsFile } from './rawData';
-import standingsFile from '../../data/brasileirao-2026/standings-current.json';
+import standingsFileA from '../../data/brasileirao-2026/standings-current.json';
+import standingsFileB from '../../data/brasileirao-serie-b-2026/standings-current.json';
 
 const EXCLUDED_FILES = ['competition.json', 'fixtures.json', 'standings-current.json'];
 
-const clubModules = import.meta.glob<{ default: RawClubFile }>(
-  '../../data/brasileirao-2026/*.json',
-  { eager: true },
-);
+const clubModulesA = import.meta.glob<{ default: RawClubFile }>('../../data/brasileirao-2026/*.json', { eager: true });
+const clubModulesB = import.meta.glob<{ default: RawClubFile }>('../../data/brasileirao-serie-b-2026/*.json', {
+  eager: true,
+});
 
-function loadRawClubs(): RawClubFile[] {
-  return Object.entries(clubModules)
+function loadRawClubs(modules: Record<string, { default: RawClubFile }>): RawClubFile[] {
+  return Object.entries(modules)
     .filter(([path]) => !EXCLUDED_FILES.some((excluded) => path.endsWith(excluded)))
     .map(([, mod]) => mod.default);
 }
 
 /**
- * Monta o mundo (clubes + jogadores) a partir dos dados reais do Brasileirão
- * Série A 2026 (src/data/brasileirao-2026). Identidade dos jogadores (nome,
- * posição, idade, nacionalidade) é fixa. Para jogadores casados com o mod do
- * EA FC 26 (campo `overall` presente), strength/potential/attributes vêm dos
- * dados reais (ver `generatePlayerDerived`); para os demais, continuam
- * derivados deterministicamente a partir da seed, como antes.
+ * Monta clubes+jogadores de UMA divisão a partir dos dados reais brutos e do snapshot de tabela
+ * daquela divisão — reputação/moral inicial vêm da posição do clube NA PRÓPRIA competição (uma
+ * tabela de 20 times cada, Série A e Série B não se misturam pra esse cálculo).
  */
-export function generateWorld(seed: number): World {
-  const rawClubs = loadRawClubs();
-  const standings = (standingsFile as RawStandingsFile).standings;
+function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStandingsFile['standings']): World {
   const totalTeams = standings.length;
   const positionByClub = new Map(standings.map((entry, index) => [entry.clubId, index + 1]));
 
@@ -94,4 +90,20 @@ export function generateWorld(seed: number): World {
   }
 
   return { clubs, players };
+}
+
+/**
+ * Monta o mundo (clubes + jogadores) a partir dos dados reais do Brasileirão Série A E Série B
+ * 2026 (src/data/brasileirao-2026 e src/data/brasileirao-serie-b-2026) — as duas divisões
+ * inteiras, sempre, já que o jogador pode escolher um clube de qualquer uma das duas ao começar
+ * uma carreira, e um clube pode migrar de divisão entre temporadas (ver `startNewSeason`).
+ * Identidade dos jogadores (nome, posição, idade, nacionalidade) é fixa. Para jogadores casados
+ * com o mod do EA FC 26 (campo `overall` presente), strength/potential/attributes vêm dos dados
+ * reais (ver `generatePlayerDerived`); para os demais, continuam derivados deterministicamente a
+ * partir da seed, como antes.
+ */
+export function generateWorld(seed: number): World {
+  const seriesA = buildDivision(seed, loadRawClubs(clubModulesA), (standingsFileA as RawStandingsFile).standings);
+  const seriesB = buildDivision(seed, loadRawClubs(clubModulesB), (standingsFileB as RawStandingsFile).standings);
+  return { clubs: [...seriesA.clubs, ...seriesB.clubs], players: [...seriesA.players, ...seriesB.players] };
 }

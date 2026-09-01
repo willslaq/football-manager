@@ -17,17 +17,17 @@ describe('generateWorld', () => {
     expect(anyMoraleDiffers).toBe(true);
   });
 
-  it('carrega os 20 clubes da Série A 2026 com elenco não vazio', () => {
+  it('carrega os 40 clubes (20 da Série A + 20 da Série B) 2026 com elenco não vazio', () => {
     const world = generateWorld(1);
-    expect(world.clubs).toHaveLength(20);
+    expect(world.clubs).toHaveLength(40);
     for (const club of world.clubs) {
       expect(club.squad.length).toBeGreaterThan(0);
     }
   });
 
-  it('carrega o total esperado de jogadores reais (BID completo)', () => {
+  it('carrega o total esperado de jogadores reais das duas divisões (BID completo)', () => {
     const world = generateWorld(1);
-    expect(world.players.length).toBeGreaterThan(700);
+    expect(world.players.length).toBeGreaterThan(1300);
   });
 
   it('todo jogador referenciado em squad existe em players', () => {

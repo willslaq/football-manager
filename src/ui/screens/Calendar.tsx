@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 import { useCareerStore } from '../../store/careerStore';
 import { fromEpochDay } from '../../engine/generation/calendar';
 import { buildMonthGrid } from '../calendarGrid';
-import { findClub, outcomeFor, OUTCOME_LABEL, OUTCOME_VAR } from '../utils';
+import { findClub, findPlayerCompetition, outcomeFor, OUTCOME_LABEL, OUTCOME_VAR } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Button, Card } from '../components';
 import type { Fixture, MatchResult } from '../../engine/types';
@@ -63,7 +63,7 @@ export function Calendar({ onSelect }: CalendarProps) {
 
   if (!career) return null;
 
-  const competition = career.season.competitions[0];
+  const competition = findPlayerCompetition(career);
   const monthLabel = `${MONTH_LABELS[viewed.month]} ${viewed.year}`;
 
   function goToMonth(deltaMonths: number) {

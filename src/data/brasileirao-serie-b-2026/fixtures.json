@@ -1,0 +1,1712 @@
+[
+  {
+    "round": 1,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "cuiaba"
+      }
+    ]
+  },
+  {
+    "round": 2,
+    "matches": [
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "operario-pr"
+      }
+    ]
+  },
+  {
+    "round": 3,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "operario-pr"
+      }
+    ]
+  },
+  {
+    "round": 4,
+    "matches": [
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "atletico-go"
+      }
+    ]
+  },
+  {
+    "round": 5,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "atletico-go"
+      }
+    ]
+  },
+  {
+    "round": 6,
+    "matches": [
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "fortaleza"
+      }
+    ]
+  },
+  {
+    "round": 7,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "fortaleza"
+      }
+    ]
+  },
+  {
+    "round": 8,
+    "matches": [
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "criciuma"
+      }
+    ]
+  },
+  {
+    "round": 9,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "criciuma"
+      }
+    ]
+  },
+  {
+    "round": 10,
+    "matches": [
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "ponte-preta"
+      }
+    ]
+  },
+  {
+    "round": 11,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "ponte-preta"
+      }
+    ]
+  },
+  {
+    "round": 12,
+    "matches": [
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "londrina"
+      }
+    ]
+  },
+  {
+    "round": 13,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "londrina"
+      }
+    ]
+  },
+  {
+    "round": 14,
+    "matches": [
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "avai"
+      }
+    ]
+  },
+  {
+    "round": 15,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "avai"
+      }
+    ]
+  },
+  {
+    "round": 16,
+    "matches": [
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "sao-bernardo"
+      }
+    ]
+  },
+  {
+    "round": 17,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "sao-bernardo"
+      }
+    ]
+  },
+  {
+    "round": 18,
+    "matches": [
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "nautico"
+      }
+    ]
+  },
+  {
+    "round": 19,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "nautico"
+      }
+    ]
+  },
+  {
+    "round": 20,
+    "matches": [
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "goias"
+      }
+    ]
+  },
+  {
+    "round": 21,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "goias"
+      }
+    ]
+  },
+  {
+    "round": 22,
+    "matches": [
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "sport"
+      }
+    ]
+  },
+  {
+    "round": 23,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "sport"
+      }
+    ]
+  },
+  {
+    "round": 24,
+    "matches": [
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "crb"
+      }
+    ]
+  },
+  {
+    "round": 25,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "crb"
+      }
+    ]
+  },
+  {
+    "round": 26,
+    "matches": [
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "novorizontino"
+      }
+    ]
+  },
+  {
+    "round": 27,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "novorizontino"
+      }
+    ]
+  },
+  {
+    "round": 28,
+    "matches": [
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "vila-nova"
+      }
+    ]
+  },
+  {
+    "round": 29,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "vila-nova"
+      }
+    ]
+  },
+  {
+    "round": 30,
+    "matches": [
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "america-mg"
+      }
+    ]
+  },
+  {
+    "round": 31,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "america-mg"
+      }
+    ]
+  },
+  {
+    "round": 32,
+    "matches": [
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "ceara"
+      }
+    ]
+  },
+  {
+    "round": 33,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "ceara"
+      }
+    ]
+  },
+  {
+    "round": 34,
+    "matches": [
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "athletic"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "botafogo-sp"
+      }
+    ]
+  },
+  {
+    "round": 35,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "botafogo-sp"
+      }
+    ]
+  },
+  {
+    "round": 36,
+    "matches": [
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "criciuma",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "cuiaba"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "nautico"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "athletic"
+      }
+    ]
+  },
+  {
+    "round": 37,
+    "matches": [
+      {
+        "homeTeamId": "juventude",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "novorizontino",
+        "awayTeamId": "vila-nova"
+      },
+      {
+        "homeTeamId": "fortaleza",
+        "awayTeamId": "ponte-preta"
+      },
+      {
+        "homeTeamId": "crb",
+        "awayTeamId": "america-mg"
+      },
+      {
+        "homeTeamId": "atletico-go",
+        "awayTeamId": "londrina"
+      },
+      {
+        "homeTeamId": "sport",
+        "awayTeamId": "ceara"
+      },
+      {
+        "homeTeamId": "operario-pr",
+        "awayTeamId": "avai"
+      },
+      {
+        "homeTeamId": "goias",
+        "awayTeamId": "botafogo-sp"
+      },
+      {
+        "homeTeamId": "cuiaba",
+        "awayTeamId": "sao-bernardo"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "athletic"
+      }
+    ]
+  },
+  {
+    "round": 38,
+    "matches": [
+      {
+        "homeTeamId": "vila-nova",
+        "awayTeamId": "juventude"
+      },
+      {
+        "homeTeamId": "ponte-preta",
+        "awayTeamId": "criciuma"
+      },
+      {
+        "homeTeamId": "america-mg",
+        "awayTeamId": "novorizontino"
+      },
+      {
+        "homeTeamId": "londrina",
+        "awayTeamId": "fortaleza"
+      },
+      {
+        "homeTeamId": "ceara",
+        "awayTeamId": "crb"
+      },
+      {
+        "homeTeamId": "avai",
+        "awayTeamId": "atletico-go"
+      },
+      {
+        "homeTeamId": "botafogo-sp",
+        "awayTeamId": "sport"
+      },
+      {
+        "homeTeamId": "sao-bernardo",
+        "awayTeamId": "operario-pr"
+      },
+      {
+        "homeTeamId": "athletic",
+        "awayTeamId": "goias"
+      },
+      {
+        "homeTeamId": "nautico",
+        "awayTeamId": "cuiaba"
+      }
+    ]
+  }
+]

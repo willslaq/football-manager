@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCareerStore } from '../../store/careerStore';
-import { findClub } from '../utils';
+import { findClub, findPlayerCompetition } from '../utils';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Badge, Button, Card, IconBall, MatchEventFeed, RoundResultsList } from '../components';
 import type { Screen } from '../../App';
@@ -64,7 +64,7 @@ export function MatchResult({ onNavigate, result: resultProp }: MatchResultProps
   const playersById = new Map(career.world.players.map((p) => [p.id, p]));
   const clubsById = new Map(career.world.clubs.map((c) => [c.id, c]));
   const clubName = (id: string) => clubsById.get(id)?.shortName ?? id;
-  const competition = career.season.competitions[0];
+  const competition = findPlayerCompetition(career);
   const matchRoundIndex = competition.fixtures.findIndex((round) => round.some((f) => f.result === match));
   const roundPlayed = matchRoundIndex === -1 ? career.season.currentRound - 1 : matchRoundIndex + 1;
   const roundFixtures = matchRoundIndex === -1 ? [] : competition.fixtures[matchRoundIndex];

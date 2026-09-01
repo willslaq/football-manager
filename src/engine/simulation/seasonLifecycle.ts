@@ -1,21 +1,29 @@
-// Fim de temporada: resumo (campeão, Libertadores, rebaixados, artilheiro, luva de ouro) e
+// Fim de temporada: resumo (campeão, Libertadores/acesso, rebaixados, artilheiro, luva de ouro) e
 // transição pra temporada seguinte. Funções puras — devolvem novo estado, não mutam o recebido.
 
 import { generateNextSeason } from '../generation/season';
 import { moraleFromFinalStanding } from '../generation/attributes';
 import type { CareerHistoryEntry, CareerState } from '../types/career';
 import type { ClubId } from '../types/club';
+import type { CompetitionId } from '../types/competition';
 import type { PlayerId } from '../types/player';
-import { LIBERTADORES_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from './config';
+import { LIBERTADORES_CUTOFF_POSITION, PROMOTION_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from './config';
 import { developPlayer } from './development';
 import { sortStandings } from './standings';
 
 export interface SeasonSummary {
+  competitionId: CompetitionId;
   champion: ClubId;
-  /** Posições 1 a `LIBERTADORES_CUTOFF_POSITION` (fase de grupos + Pré-Libertadores). */
+  /** Posições 1 a `LIBERTADORES_CUTOFF_POSITION` (fase de grupos + Pré-Libertadores) — vazio pra Série B. */
   libertadores: ClubId[];
-  /** Posições a partir de `RELEGATION_CUTOFF_POSITION`. */
+  /**
+   * Posições a partir de `RELEGATION_CUTOFF_POSITION`. Pra Série A é REAL (ver `startNewSeason` —
+   * esses clubes de fato disputam a Série B no ano seguinte). Pra Série B é só informativo (não há
+   * dados de Série C pra substituí-los).
+   */
   relegated: ClubId[];
+  /** Posições 1 a `PROMOTION_CUTOFF_POSITION` — só populado pra Série B (regra real: sobem pra Série A). Vazio pra Série A. */
+  promoted: ClubId[];
   topScorer: { playerId: PlayerId; goals: number } | null;
   goldenGlove: { playerId: PlayerId; saves: number } | null;
 }
@@ -45,59 +53,99 @@ function findLeader(
   return best ? { playerId: best.playerId, value: best.value } : null;
 }
 
-/** Pura — usada tanto pra exibir o resumo de fim de temporada quanto (via `startNewSeason`) pra persistir em `history`. */
-export function buildSeasonSummary(state: CareerState): SeasonSummary {
-  const table = sortStandings(state.season.competitions[0].standings);
+/** Jogadores cujo clube atual pertence a `clubIds` — usado pra apurar artilheiro/luva de ouro POR DIVISÃO, não misturando Série A e B. */
+function playersInClubs(state: CareerState, clubIds: Set<ClubId>): CareerState['world']['players'] {
+  const clubIdByPlayer = new Map<PlayerId, ClubId>();
+  for (const club of state.world.clubs) {
+    if (!clubIds.has(club.id)) continue;
+    for (const playerId of club.squad) clubIdByPlayer.set(playerId, club.id);
+  }
+  return state.world.players.filter((player) => clubIdByPlayer.has(player.id));
+}
 
-  const topScorer = findLeader(state.world.players, (s) => s.goals);
-  const goldenGlove = findLeader(state.world.players, (s) => s.saves);
+/**
+ * Resumo de fim de temporada de UMA competição — `competitionIndex` 0 = Série A, 1 = Série B
+ * (ordem fixa, ver `generation/season.ts`'s `DIVISIONS`). Pura — usada tanto pra exibir o resumo
+ * (Home.tsx, sempre a divisão do próprio clube do jogador) quanto (via `startNewSeason`) pra
+ * persistir as DUAS em `history`.
+ */
+export function buildSeasonSummary(state: CareerState, competitionIndex = 0): SeasonSummary {
+  const competition = state.season.competitions[competitionIndex];
+  const table = sortStandings(competition.standings);
+  const isSeriesA = competitionIndex === 0;
+
+  const divisionPlayers = playersInClubs(state, new Set(competition.teams));
+  const topScorer = findLeader(divisionPlayers, (s) => s.goals);
+  const goldenGlove = findLeader(divisionPlayers, (s) => s.saves);
 
   return {
+    competitionId: competition.id,
     champion: table[0]?.clubId ?? state.playerClubId,
-    libertadores: table.slice(0, LIBERTADORES_CUTOFF_POSITION).map((e) => e.clubId),
+    libertadores: isSeriesA ? table.slice(0, LIBERTADORES_CUTOFF_POSITION).map((e) => e.clubId) : [],
     relegated: table.slice(RELEGATION_CUTOFF_POSITION - 1).map((e) => e.clubId),
+    promoted: isSeriesA ? [] : table.slice(0, PROMOTION_CUTOFF_POSITION).map((e) => e.clubId),
     topScorer: topScorer ? { playerId: topScorer.playerId, goals: topScorer.value } : null,
     goldenGlove: goldenGlove ? { playerId: goldenGlove.playerId, saves: goldenGlove.value } : null,
   };
 }
 
 /**
- * Encerra a temporada atual e começa a seguinte: registra o resumo em `history`, reposiciona a
- * moral de cada clube pela colocação final (`moraleFromFinalStanding` — ver `Club.morale`),
- * evolui a força de cada jogador com base na temporada que acabou (`developPlayer` — idade e
- * minutagem AINDA da temporada que terminou, antes de envelhecer/zerar estatísticas abaixo),
- * envelhece cada jogador em 1 ano (recalculado de `nextYear - birthYear`, não um +1 cego — ver
- * `Player.birthYear`), zera estatísticas/suspensões/condição dos jogadores e gera a próxima
- * temporada (`generateNextSeason` — mesmos 20 clubes, calendário reaproveitado, tabela zerada,
- * rodada 1). Rebaixamento é só informativo no resumo: sem dados da Série B pra promover
- * substitutos, os mesmos clubes voltam (confirmado com o usuário).
+ * Encerra a temporada atual e começa a seguinte: registra o resumo de CADA divisão em `history`,
+ * reposiciona a moral de cada clube pela colocação final na SUA divisão (`moraleFromFinalStanding`
+ * — ver `Club.morale`), evolui a força de cada jogador com base na temporada que acabou
+ * (`developPlayer` — idade e minutagem AINDA da temporada que terminou, antes de
+ * envelhecer/zerar estatísticas abaixo), envelhece cada jogador em 1 ano (recalculado de
+ * `nextYear - birthYear`, não um +1 cego — ver `Player.birthYear`), zera estatísticas/suspensões/
+ * condição dos jogadores e gera a próxima temporada (`generateNextSeason`).
+ *
+ * Acesso/rebaixamento agora é REAL (regra oficial CBF, sem playoff): os 4 últimos da Série A
+ * (`summaryA.relegated`) trocam de lugar com os 4 primeiros da Série B (`summaryB.promoted`) —
+ * os clubes literalmente migram de `competition.teams` pra temporada seguinte. O rebaixamento da
+ * Série B pra uma hipotética Série C continua só informativo (`summaryB.relegated`): não há dados
+ * de clubes da Série C neste projeto.
  */
 export function startNewSeason(state: CareerState): CareerState {
   if (state.season.state !== 'finished') {
     throw new Error('startNewSeason: a temporada atual ainda não terminou');
   }
+  if (state.season.competitions.length < 2) {
+    throw new Error('startNewSeason: esperava Série A e Série B (season.competitions.length < 2)');
+  }
 
-  const competition = state.season.competitions[0];
-  const table = sortStandings(competition.standings);
-  const positionByClub = new Map(table.map((entry, index) => [entry.clubId, index + 1]));
-  const totalTeams = table.length;
-  const matchesPlayedByClub = new Map(table.map((entry) => [entry.clubId, entry.played]));
+  const [competitionA, competitionB] = state.season.competitions;
+  const tableA = sortStandings(competitionA.standings);
+  const tableB = sortStandings(competitionB.standings);
+
+  const positionByClub = new Map<ClubId, number>();
+  const totalTeamsByClub = new Map<ClubId, number>();
+  const matchesPlayedByClub = new Map<ClubId, number>();
+  for (const table of [tableA, tableB]) {
+    table.forEach((entry, index) => {
+      positionByClub.set(entry.clubId, index + 1);
+      totalTeamsByClub.set(entry.clubId, table.length);
+      matchesPlayedByClub.set(entry.clubId, entry.played);
+    });
+  }
+
   const clubIdByPlayer = new Map<PlayerId, ClubId>();
   for (const club of state.world.clubs) {
     for (const playerId of club.squad) clubIdByPlayer.set(playerId, club.id);
   }
 
-  const summary = buildSeasonSummary(state);
-  const historyEntry: CareerHistoryEntry = {
-    year: state.season.year,
-    competitionId: competition.id,
-    ...summary,
-  };
+  const summaryA = buildSeasonSummary(state, 0);
+  const summaryB = buildSeasonSummary(state, 1);
+  const historyEntryA: CareerHistoryEntry = { year: state.season.year, ...summaryA };
+  const historyEntryB: CareerHistoryEntry = { year: state.season.year, ...summaryB };
 
-  const clubs = state.world.clubs.map((club) => ({
-    ...club,
-    morale: moraleFromFinalStanding(positionByClub.get(club.id) ?? totalTeams, totalTeams),
-  }));
+  const relegatedFromA = new Set(summaryA.relegated);
+  const promotedFromB = new Set(summaryB.promoted);
+  const nextSeriesATeams = [...competitionA.teams.filter((id) => !relegatedFromA.has(id)), ...promotedFromB];
+  const nextSeriesBTeams = [...competitionB.teams.filter((id) => !promotedFromB.has(id)), ...relegatedFromA];
+
+  const clubs = state.world.clubs.map((club) => {
+    const totalTeams = totalTeamsByClub.get(club.id) ?? 20;
+    return { ...club, morale: moraleFromFinalStanding(positionByClub.get(club.id) ?? totalTeams, totalTeams) };
+  });
 
   const nextYear = state.season.year + 1;
   const players = state.world.players.map((player) => {
@@ -118,7 +166,10 @@ export function startNewSeason(state: CareerState): CareerState {
   return {
     ...state,
     world: { clubs, players },
-    season: generateNextSeason(state.season.year, competition.teams),
-    history: [...state.history, historyEntry],
+    season: generateNextSeason(state.season.year, {
+      [competitionA.id]: nextSeriesATeams,
+      [competitionB.id]: nextSeriesBTeams,
+    }),
+    history: [...state.history, historyEntryA, historyEntryB],
   };
 }

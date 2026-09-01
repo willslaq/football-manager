@@ -6,7 +6,7 @@ import { TACTIC_STYLE_LABELS } from '../../engine/types';
 import { addDays, toEpochDay } from '../../engine/generation/calendar';
 import { DEFAULT_AUTO_TACTICS } from '../../engine/simulation/season';
 import { buildSeasonSummary } from '../../engine/simulation/seasonLifecycle';
-import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
+import { findClub, findPlayerCompetition, isSeriesB, sortStandingsForDisplay, standingPosition } from '../utils';
 import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
 import { Badge, Button, Card, CloudSaveControls, RoundResultsList, TextField } from '../components';
@@ -137,9 +137,19 @@ function SaveExportControls({ defaultSlotName }: { defaultSlotName: string }) {
   );
 }
 
-/** Lista compacta de clubes (crest/nome/pontos) — Libertadores/rebaixamento no resumo de fim de temporada. */
-function ClubStandingList({ career, clubIds, accent }: { career: CareerState; clubIds: string[]; accent: string }) {
-  const table = sortStandingsForDisplay(career.season.competitions[0].standings);
+/** Lista compacta de clubes (crest/nome/pontos) — Libertadores/acesso/rebaixamento no resumo de fim de temporada. */
+function ClubStandingList({
+  career,
+  standings,
+  clubIds,
+  accent,
+}: {
+  career: CareerState;
+  standings: CareerState['season']['competitions'][number]['standings'];
+  clubIds: string[];
+  accent: string;
+}) {
+  const table = sortStandingsForDisplay(standings);
   const entries = table.filter((e) => clubIds.includes(e.clubId));
   return (
     <ul className="season-end__club-list">
@@ -257,7 +267,9 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   );
 
   const playerClub = findClub(career, career.playerClubId);
-  const competition = career.season.competitions[0];
+  const competition = findPlayerCompetition(career);
+  const competitionIndex = career.season.competitions.indexOf(competition);
+  const playerInSeriesB = isSeriesB(competition);
   const playersById = new Map(career.world.players.map((p) => [p.id, p]));
   const lineupCheck = isLineupValid(lineup, playersById);
   const slotName = defaultSlotName(career);
@@ -266,7 +278,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
     const table = sortStandingsForDisplay(competition.standings);
     const championEntry = table[0];
     const champion = findClub(career, championEntry.clubId);
-    const summary = buildSeasonSummary(career);
+    const summary = buildSeasonSummary(career, competitionIndex);
 
     return (
       <div className="home">
@@ -303,13 +315,20 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
         </div>
 
         <div className="season-end__zones">
+          {playerInSeriesB ? (
+            <Card className="season-end__zone">
+              <span className="eyebrow">Acesso à Série A</span>
+              <ClubStandingList career={career} standings={competition.standings} clubIds={summary.promoted} accent="var(--pitch)" />
+            </Card>
+          ) : (
+            <Card className="season-end__zone">
+              <span className="eyebrow">Classificados para a Libertadores</span>
+              <ClubStandingList career={career} standings={competition.standings} clubIds={summary.libertadores} accent="var(--pitch)" />
+            </Card>
+          )}
           <Card className="season-end__zone">
-            <span className="eyebrow">Classificados para a Libertadores</span>
-            <ClubStandingList career={career} clubIds={summary.libertadores} accent="var(--pitch)" />
-          </Card>
-          <Card className="season-end__zone">
-            <span className="eyebrow">Rebaixados</span>
-            <ClubStandingList career={career} clubIds={summary.relegated} accent="var(--danger)" />
+            <span className="eyebrow">{playerInSeriesB ? 'Zona de rebaixamento' : 'Rebaixados para a Série B'}</span>
+            <ClubStandingList career={career} standings={competition.standings} clubIds={summary.relegated} accent="var(--danger)" />
           </Card>
         </div>
 

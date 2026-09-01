@@ -1,0 +1,33 @@
+{
+  "snapshotDate": "2026-08-31",
+  "currentRound": 26,
+  "totalRounds": 38,
+  "source": {
+    "provider": "web search (ESPN Brasil / ogol.com.br / goal.com)",
+    "upstream": "cbf.com.br",
+    "note": "Classificação real capturada em 31/08/2026, com a 25ª rodada encerrada (a 26ª começa em 03/09/2026). Usada como ponto de partida da carreira, mesmo padrão de src/data/brasileirao-2026/standings-current.json."
+  },
+  "standings": [
+    { "clubId": "juventude", "played": 24, "won": 13, "drawn": 6, "lost": 5, "goalsFor": 26, "goalsAgainst": 13, "points": 45 },
+    { "clubId": "vila-nova", "played": 25, "won": 13, "drawn": 5, "lost": 7, "goalsFor": 37, "goalsAgainst": 25, "points": 44 },
+    { "clubId": "criciuma", "played": 25, "won": 12, "drawn": 8, "lost": 5, "goalsFor": 26, "goalsAgainst": 19, "points": 44 },
+    { "clubId": "novorizontino", "played": 25, "won": 12, "drawn": 7, "lost": 6, "goalsFor": 41, "goalsAgainst": 22, "points": 43 },
+    { "clubId": "fortaleza", "played": 25, "won": 11, "drawn": 8, "lost": 6, "goalsFor": 28, "goalsAgainst": 22, "points": 41 },
+    { "clubId": "crb", "played": 25, "won": 11, "drawn": 6, "lost": 8, "goalsFor": 37, "goalsAgainst": 35, "points": 39 },
+    { "clubId": "atletico-go", "played": 25, "won": 10, "drawn": 9, "lost": 6, "goalsFor": 28, "goalsAgainst": 23, "points": 39 },
+    { "clubId": "sport", "played": 25, "won": 9, "drawn": 11, "lost": 5, "goalsFor": 33, "goalsAgainst": 24, "points": 38 },
+    { "clubId": "operario-pr", "played": 25, "won": 10, "drawn": 7, "lost": 8, "goalsFor": 31, "goalsAgainst": 32, "points": 37 },
+    { "clubId": "goias", "played": 25, "won": 10, "drawn": 6, "lost": 9, "goalsFor": 25, "goalsAgainst": 30, "points": 36 },
+    { "clubId": "cuiaba", "played": 25, "won": 8, "drawn": 12, "lost": 5, "goalsFor": 23, "goalsAgainst": 19, "points": 36 },
+    { "clubId": "nautico", "played": 25, "won": 9, "drawn": 7, "lost": 9, "goalsFor": 30, "goalsAgainst": 28, "points": 34 },
+    { "clubId": "athletic", "played": 25, "won": 8, "drawn": 10, "lost": 7, "goalsFor": 26, "goalsAgainst": 27, "points": 34 },
+    { "clubId": "sao-bernardo", "played": 25, "won": 8, "drawn": 8, "lost": 9, "goalsFor": 34, "goalsAgainst": 29, "points": 32 },
+    { "clubId": "botafogo-sp", "played": 25, "won": 8, "drawn": 7, "lost": 10, "goalsFor": 29, "goalsAgainst": 28, "points": 31 },
+    { "clubId": "avai", "played": 25, "won": 7, "drawn": 7, "lost": 11, "goalsFor": 25, "goalsAgainst": 32, "points": 28 },
+    { "clubId": "ceara", "played": 24, "won": 5, "drawn": 6, "lost": 13, "goalsFor": 29, "goalsAgainst": 36, "points": 21 },
+    { "clubId": "londrina", "played": 25, "won": 3, "drawn": 5, "lost": 17, "goalsFor": 18, "goalsAgainst": 42, "points": 14 },
+    { "clubId": "america-mg", "played": 25, "won": 3, "drawn": 4, "lost": 18, "goalsFor": 17, "goalsAgainst": 40, "points": 13 },
+    { "clubId": "ponte-preta", "played": 25, "won": 2, "drawn": 4, "lost": 19, "goalsFor": 16, "goalsAgainst": 52, "points": 10 }
+  ],
+  "sourceNotes": "Posições 1-18 e 20 confirmadas de forma consistente por múltiplas fontes (ESPN Brasil, ogol.com.br). A linha do América-MG (19º) NÃO pôde ser confirmada com confiança: duas tentativas de busca devolveram números idênticos aos do Londrina (18º), claramente um artefato de extração e não um empate real. Mantida como estimativa plausível (pontuação entre o 18º e o 20º colocado) até confirmação futura — impacto baixo, já que serve só de ponto de partida (o motor simula as rodadas seguintes normalmente)."
+}

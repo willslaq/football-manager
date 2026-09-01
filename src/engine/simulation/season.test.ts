@@ -85,18 +85,27 @@ describe('advanceRound', () => {
       expect(player.seasonStats.minutesPlayed).toBe(90);
     }
 
+    // Só jogadores da Série A (mesma competição usada pra somar os gols/defesas "esperados"
+    // abaixo) — `next.world.players` agora inclui a Série B inteira também (duas competições
+    // rodando em paralelo), então somar TODOS os jogadores misturaria as duas rodadas.
+    const seriesAClubIds = new Set(next.season.competitions[0].teams);
+    const seriesAPlayerIds = new Set(
+      next.world.clubs.filter((c) => seriesAClubIds.has(c.id)).flatMap((c) => c.squad),
+    );
+    const seriesAPlayers = next.world.players.filter((p) => seriesAPlayerIds.has(p.id));
+
     const totalGoalsInRound = next.season.competitions[0].fixtures[state.season.currentRound - 1].reduce(
       (sum, f) => sum + (f.result?.homeGoals ?? 0) + (f.result?.awayGoals ?? 0),
       0,
     );
-    const totalPlayerGoals = next.world.players.reduce((sum, p) => sum + p.seasonStats.goals, 0);
+    const totalPlayerGoals = seriesAPlayers.reduce((sum, p) => sum + p.seasonStats.goals, 0);
     expect(totalPlayerGoals).toBe(totalGoalsInRound);
 
     const totalShotsSavedInRound = next.season.competitions[0].fixtures[state.season.currentRound - 1].reduce(
       (sum, f) => sum + (f.result?.events.filter((e) => e.type === 'shot_saved').length ?? 0),
       0,
     );
-    const totalPlayerSaves = next.world.players.reduce((sum, p) => sum + p.seasonStats.saves, 0);
+    const totalPlayerSaves = seriesAPlayers.reduce((sum, p) => sum + p.seasonStats.saves, 0);
     expect(totalPlayerSaves).toBe(totalShotsSavedInRound);
     expect(totalPlayerSaves).toBeGreaterThan(0);
   });

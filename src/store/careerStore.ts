@@ -237,6 +237,8 @@ interface CareerStore {
   deleteSave: (id: number) => Promise<void>;
   exportCurrentCareer: () => string | null;
   importCareerFile: (json: string) => void;
+  /** Aplica um save vindo da nuvem (já buscado via cloudSync) — não tem id local, não referencia Dexie. */
+  loadCareerFromCloud: (record: { state: CareerState; lineup: Lineup | null; tactics: Tactics | null }) => void;
 }
 
 export const useCareerStore = create<CareerStore>((set, get) => {
@@ -639,6 +641,12 @@ export const useCareerStore = create<CareerStore>((set, get) => {
       } catch (err) {
         set({ error: err instanceof Error ? err.message : String(err) });
       }
+    },
+
+    loadCareerFromCloud: ({ state, lineup, tactics }) => {
+      pendingLoadedSelection = lineup && tactics ? { lineup, tactics } : null;
+      set({ activeSaveId: null, loading: true, error: null });
+      send({ type: 'setCareer', requestId: crypto.randomUUID(), payload: { state } });
     },
   };
 });

@@ -13,6 +13,12 @@ dist-ssr
 *.local
 /lab
 
+# Secrets — never commit real Mongo/JWT/OAuth credentials
+.env
+!.env.example
+.netlify
+deno.lock
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

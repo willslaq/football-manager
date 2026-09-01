@@ -3,6 +3,7 @@ export * from './Backdrop';
 export * from './Badge';
 export * from './Button';
 export * from './Card';
+export * from './CloudSaveControls';
 export * from './EnergyBar';
 export * from './FileButton';
 export * from './Icons';

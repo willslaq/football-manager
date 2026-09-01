@@ -1,0 +1,54 @@
+.cloud-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.cloud-controls__signin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cloud-controls__account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.cloud-controls__message {
+  font-size: var(--text-sm);
+  color: var(--pitch);
+}
+
+.cloud-controls__error {
+  font-size: var(--text-sm);
+  color: var(--danger);
+}
+
+.cloud-controls__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.cloud-controls__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+}
+
+.cloud-controls__row-name {
+  font-weight: 600;
+  flex: 1;
+  min-width: 8rem;
+}
+
+.cloud-controls__row-date {
+  color: var(--mist);
+}

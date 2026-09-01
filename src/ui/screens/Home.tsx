@@ -9,7 +9,7 @@ import { buildSeasonSummary } from '../../engine/simulation/seasonLifecycle';
 import { findClub, sortStandingsForDisplay, standingPosition } from '../utils';
 import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card, RoundResultsList, TextField } from '../components';
+import { Badge, Button, Card, CloudSaveControls, RoundResultsList, TextField } from '../components';
 import type { Screen } from '../../App';
 import './Home.css';
 
@@ -318,6 +318,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
         </Button>
 
         <SaveExportControls defaultSlotName={slotName} />
+        <CloudSaveControls defaultSlotName={slotName} />
 
         {rollOverlay}
       </div>
@@ -434,6 +435,7 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
       )}
 
       <SaveExportControls defaultSlotName={slotName} />
+      <CloudSaveControls defaultSlotName={slotName} />
 
       {rollOverlay}
     </div>

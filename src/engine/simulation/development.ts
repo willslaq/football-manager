@@ -1,5 +1,9 @@
 import type { Player } from '../types/player';
 import {
+  ACADEMY_GROWTH_RATE,
+  ACADEMY_MIN_AGE,
+  ACADEMY_MIN_GROWTH_SPEED,
+  ACADEMY_RELEASE_AGE,
   CONDITION_AGE_PEAK_MAX,
   CONDITION_AGE_PEAK_MIN,
   DEVELOPMENT_BASE_GROWTH_RATE,
@@ -64,4 +68,30 @@ export function developPlayer(player: Player, clubMatchesPlayed: number): Player
   }
 
   return player;
+}
+
+/**
+ * Quão rápido uma promessa da base cresce em treino, de 0 a 1 — máximo (`ACADEMY_MIN_AGE`) até o
+ * piso (`ACADEMY_MIN_GROWTH_SPEED`) perto de `ACADEMY_RELEASE_AGE` (idade em que é liberada se
+ * não promovida — ver `simulation/academy.ts`). Mesma forma de `growthSpeed`, faixa própria.
+ */
+function academyGrowthSpeed(age: number): number {
+  const span = ACADEMY_RELEASE_AGE - ACADEMY_MIN_AGE;
+  const t = (ACADEMY_RELEASE_AGE - age) / span;
+  return clamp(t, ACADEMY_MIN_GROWTH_SPEED, 1);
+}
+
+/**
+ * Evolui a força de uma promessa da categoria de base ainda não promovida — crescimento passivo
+ * em treino, SEM depender de minutagem (diferente de `developPlayer`: uma promessa na base nunca
+ * joga partida oficial, então `seasonStats.minutesPlayed` fica sempre zerado pra ela). Mesmos
+ * retornos decrescentes rumo ao potencial de `developPlayer`, taxa e curva de idade próprias
+ * (`ACADEMY_GROWTH_RATE`/`academyGrowthSpeed`) — mais lento que treinar com o profissional.
+ */
+export function developAcademyPlayer(player: Player): Player {
+  const gap = Math.max(0, player.potential - player.strength);
+  if (gap === 0) return player;
+  const growth = gap * ACADEMY_GROWTH_RATE * academyGrowthSpeed(player.age);
+  if (growth <= 0) return player;
+  return { ...player, strength: clamp(player.strength + growth, player.strength, player.potential) };
 }

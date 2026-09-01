@@ -3,6 +3,8 @@ import type { Club } from '../types/club';
 import type { Player } from '../types/player';
 import type { World } from '../types/career';
 import { clubReputationFromStanding, generatePlayerDerived, moraleFromFinalStanding, playerSeed } from './attributes';
+import { generateAcademyIntake } from './academy';
+import { INITIAL_SEASON_YEAR } from './season';
 import type { RawClubFile, RawStandingsFile } from './rawData';
 import standingsFileA from '../../data/brasileirao-2026/standings-current.json';
 import standingsFileB from '../../data/brasileirao-serie-b-2026/standings-current.json';
@@ -23,7 +25,9 @@ function loadRawClubs(modules: Record<string, { default: RawClubFile }>): RawClu
 /**
  * Monta clubes+jogadores de UMA divisão a partir dos dados reais brutos e do snapshot de tabela
  * daquela divisão — reputação/moral inicial vêm da posição do clube NA PRÓPRIA competição (uma
- * tabela de 20 times cada, Série A e Série B não se misturam pra esse cálculo).
+ * tabela de 20 times cada, Série A e Série B não se misturam pra esse cálculo). Também semeia a
+ * categoria de base de cada clube (`academySquad`) com o intake do ano inicial (ver `academy.ts`),
+ * pra não começar vazia — as próximas gerações vêm de `startNewSeason` a cada temporada.
  */
 function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStandingsFile['standings']): World {
   const totalTeams = standings.length;
@@ -75,6 +79,9 @@ function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStan
       squad.push(id);
     });
 
+    const academy = generateAcademyIntake(seed, { id: raw.club.id, reputation }, INITIAL_SEASON_YEAR);
+    players.push(...academy);
+
     clubs.push({
       id: raw.club.id,
       name: raw.club.name,
@@ -84,6 +91,7 @@ function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStan
       colors: raw.club.colors,
       stadiumCapacity: raw.club.stadiumCapacity,
       squad,
+      academySquad: academy.map((p) => p.id),
       formation: raw.club.formation,
       style: raw.club.style,
     });

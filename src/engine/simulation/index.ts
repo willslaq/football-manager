@@ -6,3 +6,5 @@ export * from './match';
 export * from './season';
 export * from './seasonLifecycle';
 export * from './standings';
+export * from './academy';
+export * from './development';

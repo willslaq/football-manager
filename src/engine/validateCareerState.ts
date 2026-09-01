@@ -58,6 +58,16 @@ function validateClub(club: Club, playerIds: Set<string>, errors: string[]): voi
       errors.push(`${label}: squad referencia player inexistente (${playerId})`);
     }
   }
+
+  const squadSet = new Set(club.squad);
+  for (const playerId of club.academySquad ?? []) {
+    if (!playerIds.has(playerId)) {
+      errors.push(`${label}: academySquad referencia player inexistente (${playerId})`);
+    }
+    if (squadSet.has(playerId)) {
+      errors.push(`${label}: academySquad e squad compartilham o mesmo player (${playerId})`);
+    }
+  }
 }
 
 export function validateCareerState(state: CareerState): ValidationResult {

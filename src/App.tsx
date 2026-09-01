@@ -5,6 +5,7 @@ import { NewCareer } from './ui/screens/NewCareer';
 import { Friendly } from './ui/screens/Friendly';
 import { Home } from './ui/screens/Home';
 import { Squad } from './ui/screens/Squad';
+import { Academy } from './ui/screens/Academy';
 import { Lineup } from './ui/screens/Lineup';
 import { Calendar } from './ui/screens/Calendar';
 import { Table } from './ui/screens/Table';
@@ -92,6 +93,7 @@ function App() {
       roundLabel={roundLabel}
     >
       {screen === 'squad' && <Squad />}
+      {screen === 'academy' && <Academy />}
       {screen === 'lineup' && <Lineup />}
       {screen === 'calendar' && (
         <Calendar

@@ -6,11 +6,13 @@ import {
   backfillFixtureDates,
   commitPlayerMatchResult,
   createBrasileiraoCareer,
+  generateAcademyIntake,
   generateSeason,
   generateWorld,
   initialStandingsByClub,
   MAX_SUBSTITUTIONS_PER_TEAM,
   pickAutoLineup,
+  promotePlayer,
   setTacticalIntensity,
   simulateMatch,
   startMatchDay,
@@ -398,6 +400,10 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         // um `world` sem nenhum clube/jogador da Série B — completa as duas coisas gerando uma
         // Série B nova em folha (mesma seed, snapshot real de hoje) e anexando, sem tocar no
         // progresso já salvo da Série A (competição, tabela, calendário, elenco do jogador).
+        // Saves de antes da categoria de base não têm `Club.academySquad` (undefined, não `[]` —
+        // é o que distingue "nunca gerada" de "gerada e vazia") — completa com um intake pro ano
+        // ATUAL da temporada salva (mesma lógica de `world.ts`'s ano inicial, só que aplicada
+        // agora em vez de na criação da carreira; não tenta reconstruir os anos que já passaram).
         const incoming = request.payload.state;
         const needsSerieB = incoming.season.competitions.length < 2;
         const serieBAddon = needsSerieB ? generateSeason(incoming.playerClubId) : null;
@@ -423,25 +429,38 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
           players: [...incoming.world.players, ...newPlayers],
         };
 
+        const academyByClub = new Map(
+          baseWorld.clubs
+            .filter((club) => club.academySquad === undefined)
+            .map((club) => [club.id, generateAcademyIntake(incoming.seed, club, incoming.season.year)]),
+        );
+
         const normalized: CareerState = {
           ...incoming,
           settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
           season: baseSeason.currentDate ? baseSeason : backfillFixtureDates(baseSeason, new Date().toISOString().slice(0, 10)),
           world: {
             ...baseWorld,
-            clubs: baseWorld.clubs.map((club) => ({ ...club, morale: club.morale ?? 70 })),
-            players: baseWorld.players.map((player) => ({
-              ...player,
-              attributes:
-                typeof player.attributes.aggression === 'number' ? player.attributes : { ...player.attributes, aggression: 50 },
-              seasonStats: {
-                ...player.seasonStats,
-                saves: player.seasonStats.saves ?? 0,
-                minutesPlayed: player.seasonStats.minutesPlayed ?? 0,
-              },
-              pendingYellowCards: player.pendingYellowCards ?? 0,
-              suspendedMatches: player.suspendedMatches ?? 0,
+            clubs: baseWorld.clubs.map((club) => ({
+              ...club,
+              morale: club.morale ?? 70,
+              academySquad: club.academySquad ?? (academyByClub.get(club.id) ?? []).map((p) => p.id),
             })),
+            players: [
+              ...baseWorld.players.map((player) => ({
+                ...player,
+                attributes:
+                  typeof player.attributes.aggression === 'number' ? player.attributes : { ...player.attributes, aggression: 50 },
+                seasonStats: {
+                  ...player.seasonStats,
+                  saves: player.seasonStats.saves ?? 0,
+                  minutesPlayed: player.seasonStats.minutesPlayed ?? 0,
+                },
+                pendingYellowCards: player.pendingYellowCards ?? 0,
+                suspendedMatches: player.suspendedMatches ?? 0,
+              })),
+              ...[...academyByClub.values()].flat(),
+            ],
           },
           history: incoming.history.map((entry) => ({
             ...entry,
@@ -473,6 +492,13 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         if (!career) throw new Error('Nenhuma carreira iniciada');
         career = setTacticalIntensity(career, request.payload.tacticalIntensity);
         respond({ type: 'settingsUpdated', requestId: request.requestId, payload: { state: career } });
+        break;
+      }
+
+      case 'promotePlayer': {
+        if (!career) throw new Error('Nenhuma carreira iniciada');
+        career = promotePlayer(career, request.payload.clubId, request.payload.playerId);
+        respond({ type: 'playerPromoted', requestId: request.requestId, payload: { state: career } });
         break;
       }
     }

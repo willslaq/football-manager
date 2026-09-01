@@ -201,6 +201,8 @@ interface CareerStore {
   listClubs: (seed: number) => void;
   startCareer: (seed: number, trainerName: string, clubId: string, tacticalIntensity?: TacticalIntensity) => void;
   setTacticalIntensity: (tacticalIntensity: TacticalIntensity) => void;
+  /** Promove uma promessa da categoria de base pro elenco principal do clube do jogador. */
+  promotePlayer: (playerId: PlayerId) => void;
   /**
    * Avança só o CALENDÁRIO, dia a dia, até a data do próximo jogo do time do jogador — comita
    * qualquer outro jogo alcançado pelo caminho, mas NUNCA inicia a partida do jogador sozinho,
@@ -423,6 +425,9 @@ export const useCareerStore = create<CareerStore>((set, get) => {
       case 'settingsUpdated':
         set({ career: response.payload.state });
         break;
+      case 'playerPromoted':
+        set({ career: response.payload.state });
+        break;
       case 'error':
         liveMatchRequestId = null;
         set({ error: response.payload.message, loading: false, liveMatch: null });
@@ -462,6 +467,12 @@ export const useCareerStore = create<CareerStore>((set, get) => {
 
     setTacticalIntensity: (tacticalIntensity) => {
       send({ type: 'setTacticalIntensity', requestId: crypto.randomUUID(), payload: { tacticalIntensity } });
+    },
+
+    promotePlayer: (playerId) => {
+      const { career } = get();
+      if (!career) return;
+      send({ type: 'promotePlayer', requestId: crypto.randomUUID(), payload: { clubId: career.playerClubId, playerId } });
     },
 
     advanceTime: () => {

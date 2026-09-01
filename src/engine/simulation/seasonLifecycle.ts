@@ -8,7 +8,8 @@ import type { ClubId } from '../types/club';
 import type { CompetitionId } from '../types/competition';
 import type { PlayerId } from '../types/player';
 import { LIBERTADORES_CUTOFF_POSITION, PROMOTION_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from './config';
-import { developPlayer } from './development';
+import { developAcademyPlayer, developPlayer } from './development';
+import { advanceAcademies } from './academy';
 import { sortStandings } from './standings';
 
 export interface SeasonSummary {
@@ -103,6 +104,10 @@ export function buildSeasonSummary(state: CareerState, competitionIndex = 0): Se
  * os clubes literalmente migram de `competition.teams` pra temporada seguinte. O rebaixamento da
  * Série B pra uma hipotética Série C continua só informativo (`summaryB.relegated`): não há dados
  * de clubes da Série C neste projeto.
+ *
+ * Também gira a categoria de base de cada clube (`advanceAcademies`): libera por idade quem não
+ * foi promovido, faz cada promessa restante crescer em treino (`developAcademyPlayer` — sem
+ * minutagem, diferente de `developPlayer`) e gera o intake do próximo ano — ver `academy.ts`.
  */
 export function startNewSeason(state: CareerState): CareerState {
   if (state.season.state !== 'finished') {
@@ -142,26 +147,42 @@ export function startNewSeason(state: CareerState): CareerState {
   const nextSeriesATeams = [...competitionA.teams.filter((id) => !relegatedFromA.has(id)), ...promotedFromB];
   const nextSeriesBTeams = [...competitionB.teams.filter((id) => !promotedFromB.has(id)), ...relegatedFromA];
 
+  const nextYear = state.season.year + 1;
+
+  // Categoria de base: poda quem foi liberado por idade, gera o intake do próximo ano por clube
+  // (ver academy.ts) — roda antes do resto porque só depende de `birthYear` (estável), não da
+  // idade recém-incrementada abaixo.
+  const academy = advanceAcademies(state, nextYear);
+  const academyClubById = new Map(academy.clubs.map((club) => [club.id, club]));
+  const academyPlayerIds = new Set(state.world.clubs.flatMap((club) => club.academySquad ?? []));
+
   const clubs = state.world.clubs.map((club) => {
     const totalTeams = totalTeamsByClub.get(club.id) ?? 20;
-    return { ...club, morale: moraleFromFinalStanding(positionByClub.get(club.id) ?? totalTeams, totalTeams) };
-  });
-
-  const nextYear = state.season.year + 1;
-  const players = state.world.players.map((player) => {
-    const clubId = clubIdByPlayer.get(player.id);
-    const clubMatchesPlayed = clubId ? matchesPlayedByClub.get(clubId) ?? 0 : 0;
-    const developed = developPlayer(player, clubMatchesPlayed);
     return {
-      ...player,
-      strength: developed.strength,
-      age: nextYear - player.birthYear,
-      condition: 100,
-      seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0, minutesPlayed: 0 },
-      pendingYellowCards: 0,
-      suspendedMatches: 0,
+      ...(academyClubById.get(club.id) ?? club),
+      morale: moraleFromFinalStanding(positionByClub.get(club.id) ?? totalTeams, totalTeams),
     };
   });
+
+  const players = [
+    ...state.world.players
+      .filter((player) => !academy.releasedPlayerIds.has(player.id))
+      .map((player) => {
+        const developed = academyPlayerIds.has(player.id)
+          ? developAcademyPlayer(player)
+          : developPlayer(player, matchesPlayedByClub.get(clubIdByPlayer.get(player.id) ?? '') ?? 0);
+        return {
+          ...player,
+          strength: developed.strength,
+          age: nextYear - player.birthYear,
+          condition: 100,
+          seasonStats: { appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0, saves: 0, minutesPlayed: 0 },
+          pendingYellowCards: 0,
+          suspendedMatches: 0,
+        };
+      }),
+    ...academy.newPlayers,
+  ];
 
   return {
     ...state,

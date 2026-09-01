@@ -39,6 +39,9 @@ const FIXTURES_BY_COMPETITION_ID: Record<CompetitionId, RawFixturesFile> = Objec
   DIVISIONS.map((d) => [d.competitionRaw.id, d.fixturesRaw]),
 );
 
+/** Ano da primeira temporada (snapshot real) — usado por `world.ts` pra semear a categoria de base inicial com o mesmo ano que `generateSeason` usaria. */
+export const INITIAL_SEASON_YEAR = DIVISIONS[0].competitionRaw.season.year;
+
 function buildFixtures(fixturesRaw: RawFixturesFile, dates: string[][]): Fixture[][] {
   return fixturesRaw.map((round, roundIndex) =>
     round.matches.map((match, matchIndex) => ({

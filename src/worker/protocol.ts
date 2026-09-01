@@ -117,6 +117,13 @@ export interface RequestSubstitutionRequest {
   payload: { liveRequestId: string; substitutions: { playerOutId: PlayerId; playerInId: PlayerId }[] };
 }
 
+/** Promove uma promessa da categoria de base (`Club.academySquad`) pro elenco principal (`Club.squad`) — ver `promotePlayer` em simulation/academy.ts. */
+export interface PromotePlayerRequest {
+  type: 'promotePlayer';
+  requestId: string;
+  payload: { clubId: ClubId; playerId: PlayerId };
+}
+
 export type EngineRequest =
   | ListClubsRequest
   | StartCareerRequest
@@ -128,7 +135,8 @@ export type EngineRequest =
   | SetLiveMatchSpeedRequest
   | SetLiveMatchPausedRequest
   | SetTacticalIntensityRequest
-  | RequestSubstitutionRequest;
+  | RequestSubstitutionRequest
+  | PromotePlayerRequest;
 
 export interface ClubsListResponse {
   type: 'clubsList';
@@ -246,6 +254,13 @@ export interface ErrorResponse {
   payload: { message: string };
 }
 
+/** Confirma a promoção de uma promessa — só atualiza `career`, mesmo padrão de `SettingsUpdatedResponse`. */
+export interface PlayerPromotedResponse {
+  type: 'playerPromoted';
+  requestId: string;
+  payload: { state: CareerState };
+}
+
 export type EngineResponse =
   | ClubsListResponse
   | CareerStateResponse
@@ -258,4 +273,5 @@ export type EngineResponse =
   | LiveMatchTraceResponse
   | LiveMatchSubstitutionAppliedResponse
   | SettingsUpdatedResponse
+  | PlayerPromotedResponse
   | ErrorResponse;

@@ -24,6 +24,13 @@ export interface Club {
   stadiumCapacity: number;
   /** Referencia jogadores em World.players — não embute os objetos (fonte única de verdade). */
   squad: PlayerId[];
+  /**
+   * Categoria de base: jovens promessas (ver `generation/academy.ts`) que vivem em World.players
+   * mas ficam de fora de `squad` — invisíveis pra escalação/simulação de partida de propósito
+   * (Lineup.tsx e season.ts só leem `squad`). `promotePlayer` move um id daqui pra `squad`.
+   * Opcional só pra tolerar saves salvos antes dessa feature — sempre tratar como `?? []`.
+   */
+  academySquad?: PlayerId[];
   /** Formação/estilo real pesquisado (último jogo) pra escalação automática de CPU — ausente = DEFAULT_AUTO_TACTICS (season.ts). */
   formation?: Formation;
   style?: TacticStyle;

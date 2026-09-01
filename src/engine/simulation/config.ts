@@ -109,6 +109,23 @@ export const DEVELOPMENT_DECLINE_PER_YEAR = 1.5;
 export const DEVELOPMENT_MAX_DECLINE_PER_SEASON = 6;
 
 /**
+ * Categorias de base (ver `generation/academy.ts`): geração procedural de jovens promessas
+ * (15-18 anos) por clube, todo ano, e o crescimento passivo deles enquanto não promovidos ao
+ * elenco principal (sem minutagem em jogo oficial — `developPlayer` não se aplica a eles).
+ */
+export const ACADEMY_MIN_AGE = 15;
+export const ACADEMY_MAX_AGE = 18;
+/** Quantidade de novas promessas geradas por clube a cada temporada (sorteado nesse intervalo). */
+export const ACADEMY_MIN_INTAKE = 3;
+export const ACADEMY_MAX_INTAKE = 5;
+/** Idade em que uma promessa não promovida é liberada da base (removida de `world.players`) — não fica acumulando pra sempre. */
+export const ACADEMY_RELEASE_AGE = 21;
+/** Fração do gap força→potencial fechada numa temporada de treino na base, no teto (15 anos). Mesma lógica de retornos decrescentes de `DEVELOPMENT_BASE_GROWTH_RATE`, taxa própria (crescimento em treino, sem jogo oficial, é mais lento). */
+export const ACADEMY_GROWTH_RATE = 0.25;
+/** Piso da velocidade de crescimento perto de `ACADEMY_RELEASE_AGE` — mesmo padrão de `DEVELOPMENT_MIN_GROWTH_SPEED`. */
+export const ACADEMY_MIN_GROWTH_SPEED = 0.3;
+
+/**
  * Multiplicador de drenagem de energia por posição (mobilidade/distância percorrida real) —
  * ala/ponta e volante/meia-central cobrem mais campo (maratona de corrida); zagueiro e
  * centroavante fixo cobrem menos (jogo mais posicional). Goleiro fora da tabela: usa sempre

@@ -2,11 +2,12 @@ import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import './AppShell.css';
 
-export type HubScreen = 'home' | 'squad' | 'lineup' | 'calendar' | 'table' | 'settings';
+export type HubScreen = 'home' | 'squad' | 'academy' | 'lineup' | 'calendar' | 'table' | 'settings';
 
 const TABS: { id: HubScreen; label: string }[] = [
   { id: 'home', label: 'Início' },
   { id: 'squad', label: 'Elenco' },
+  { id: 'academy', label: 'Categorias de Base' },
   { id: 'lineup', label: 'Escalação' },
   { id: 'calendar', label: 'Calendário' },
   { id: 'table', label: 'Tabela' },
@@ -35,6 +36,22 @@ function IconSquad() {
         d="M5 2 2 4.2l1.4 2.4L5 5.6V14h6V5.6l1.6 1L14 4.2 11 2c-.6.9-1.7 1.5-3 1.5S5.6 2.9 5 2z"
         fill="currentColor"
       />
+    </svg>
+  );
+}
+
+function IconAcademy() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path
+        d="M8 2 1.5 5.2 8 8.4l6.5-3.2L8 2ZM3.5 6.7v3.6c0 1 2 2.4 4.5 2.4s4.5-1.4 4.5-2.4V6.7"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path d="M14 5.6v4.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -83,6 +100,7 @@ function IconSettings() {
 const TAB_ICONS: Record<HubScreen, () => ReactNode> = {
   home: IconHome,
   squad: IconSquad,
+  academy: IconAcademy,
   lineup: IconLineup,
   calendar: IconCalendar,
   table: IconTable,

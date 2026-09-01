@@ -108,6 +108,14 @@ export function resolveSquad(career: CareerState, clubId: ClubId): Player[] {
   return club.squad.map((id) => byId.get(id)).filter((p): p is Player => p !== undefined);
 }
 
+/** Promessas da categoria de base de um clube (ver `Club.academySquad`) — nunca inclui o elenco principal. */
+export function resolveAcademySquad(career: CareerState, clubId: ClubId): Player[] {
+  const club = findClub(career, clubId);
+  if (!club) return [];
+  const byId = playersById(career);
+  return (club.academySquad ?? []).map((id) => byId.get(id)).filter((p): p is Player => p !== undefined);
+}
+
 /** Pontos → vitórias → saldo de gols → gols pró (ver limitações em engine/simulation/standings.ts). */
 export function sortStandingsForDisplay(standings: StandingEntry[]): StandingEntry[] {
   return [...standings].sort((a, b) => {

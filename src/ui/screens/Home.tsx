@@ -6,10 +6,11 @@ import { TACTIC_STYLE_LABELS } from '../../engine/types';
 import { addDays, toEpochDay } from '../../engine/generation/calendar';
 import { DEFAULT_AUTO_TACTICS } from '../../engine/simulation/season';
 import { buildSeasonSummary } from '../../engine/simulation/seasonLifecycle';
-import { findClub, findPlayerCompetition, isSeriesB, sortStandingsForDisplay, standingPosition } from '../utils';
+import { findClub, findPlayerCompetition, isSeriesB, outcomeFor, sortStandingsForDisplay, standingPosition } from '../utils';
+import type { StandingEntry } from '../../engine/types';
 import { defaultSlotName } from '../../persistence/slotName';
 import { CLUB_CRESTS } from '../clubCrests';
-import { Badge, Button, Card, CloudSaveControls, RoundResultsList, TextField } from '../components';
+import { Button, Card, CloudSaveControls, RoundResultsList, TextField } from '../components';
 import type { Screen } from '../../App';
 import './Home.css';
 
@@ -76,6 +77,29 @@ function matchupTactics(club: Club | undefined, isPlayerClub: boolean, playerTac
     formation: club?.formation ?? DEFAULT_AUTO_TACTICS.formation,
     style: club?.style ?? DEFAULT_AUTO_TACTICS.style,
   };
+}
+
+/** Últimos N resultados do clube do jogador (mais recente primeiro), como letra única V/E/D — painel "Últimos 5" do herói. */
+function lastResultLetters(competition: CareerState['season']['competitions'][number], clubId: string, limit = 5): string[] {
+  const finished = competition.fixtures
+    .flat()
+    .filter((f) => f.result && (f.homeTeamId === clubId || f.awayTeamId === clubId))
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+    .slice(0, limit);
+  return finished.map((f) => {
+    const outcome = outcomeFor(f, clubId);
+    return outcome === 'win' ? 'V' : outcome === 'loss' ? 'D' : 'E';
+  });
+}
+
+/** Janela de N linhas da tabela centrada na posição do clube do jogador — painel "Onde você está" da barra lateral. */
+function nearbyStandings(standings: StandingEntry[], clubId: string, windowSize = 5): { entry: StandingEntry; position: number }[] {
+  const table = sortStandingsForDisplay(standings);
+  const total = table.length;
+  const ownIndex = table.findIndex((e) => e.clubId === clubId);
+  let start = ownIndex === -1 ? 0 : Math.max(0, ownIndex - Math.floor(windowSize / 2));
+  start = Math.min(start, Math.max(0, total - windowSize));
+  return table.slice(start, start + windowSize).map((entry, i) => ({ entry, position: start + i + 1 }));
 }
 
 function downloadTextFile(filename: string, content: string): void {
@@ -318,17 +342,17 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
           {playerInSeriesB ? (
             <Card className="season-end__zone">
               <span className="eyebrow">Acesso à Série A</span>
-              <ClubStandingList career={career} standings={competition.standings} clubIds={summary.promoted} accent="var(--pitch)" />
+              <ClubStandingList career={career} standings={competition.standings} clubIds={summary.promoted} accent="var(--fm-accent)" />
             </Card>
           ) : (
             <Card className="season-end__zone">
               <span className="eyebrow">Classificados para a Libertadores</span>
-              <ClubStandingList career={career} standings={competition.standings} clubIds={summary.libertadores} accent="var(--pitch)" />
+              <ClubStandingList career={career} standings={competition.standings} clubIds={summary.libertadores} accent="var(--fm-accent)" />
             </Card>
           )}
           <Card className="season-end__zone">
             <span className="eyebrow">{playerInSeriesB ? 'Zona de rebaixamento' : 'Rebaixados para a Série B'}</span>
-            <ClubStandingList career={career} standings={competition.standings} clubIds={summary.relegated} accent="var(--danger)" />
+            <ClubStandingList career={career} standings={competition.standings} clubIds={summary.relegated} accent="var(--fm-danger)" />
           </Card>
         </div>
 
@@ -373,88 +397,150 @@ export function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const homeTactics = matchupTactics(homeTeam, isHome, tactics);
   const awayTactics = matchupTactics(awayTeam, !isHome, tactics);
 
+  const roundFixtureCount = fixture ? competition.fixtures[fixture.round - 1]?.length : undefined;
+
   return (
     <div className="home">
-      {passedResults.length > 0 && (
-        <Card className="matchup-passed">
-          <span className="eyebrow">Enquanto isso…</span>
-          <RoundResultsList
-            entries={passedResults.map((f) => ({
-              homeTeamId: f.homeTeamId,
-              awayTeamId: f.awayTeamId,
-              homeGoals: f.result?.homeGoals ?? 0,
-              awayGoals: f.result?.awayGoals ?? 0,
-              finished: true,
-            }))}
-            clubName={(id) => findClub(career, id)?.name ?? id}
-          />
-        </Card>
-      )}
+      <div className="home__main">
+        {fixture && homeTeam && awayTeam && (
+          <div className="fm-glass-hero matchup">
+            <div className="matchup__top">
+              <p className="matchup__context">
+                <span className="matchup__context-label">Próximo jogo</span>
+                <span className="matchup__context-meta">
+                  {formatFixtureDate(fixture.date)} · Rodada {fixture.round}/{competition.fixtures.length} · {competition.name}
+                </span>
+              </p>
 
-      {fixture && homeTeam && awayTeam && (
-        <Card accentColor={playerClub?.colors.primary} className="matchup">
-          <span className="eyebrow">
-            Rodada {fixture.round}/{competition.fixtures.length} · {formatFixtureDate(fixture.date)} ·{' '}
-            {competition.name}
-          </span>
+              <div className="matchup__teams">
+                <div className="matchup__team matchup__team--home">
+                  {CLUB_CRESTS[homeTeam.id] && (
+                    <img className="matchup__crest matchup__crest--home" src={CLUB_CRESTS[homeTeam.id]} alt="" width={148} height={148} />
+                  )}
+                  <div className="matchup__team-info">
+                    <p className="matchup__name" title={homeTeam.name}>
+                      {homeTeam.name}
+                      {homePosition && <span className="matchup__name-position numeric">{homePosition}º</span>}
+                    </p>
+                    <p className="matchup__tactics">
+                      {homeTactics.formation} · {TACTIC_STYLE_LABELS[homeTactics.style]}
+                    </p>
+                  </div>
+                </div>
 
-          <div className="matchup__teams">
-            <div className="matchup__team">
-              {CLUB_CRESTS[homeTeam.id] && (
-                <img className="matchup__crest" src={CLUB_CRESTS[homeTeam.id]} alt="" width={96} height={96} />
-              )}
-              <p className="matchup__name" title={homeTeam.name}>
-                {homeTeam.name}
-                {homePosition && <span className="matchup__name-position numeric">{homePosition}º</span>}
-              </p>
-              <p className="matchup__tactics">
-                {homeTactics.formation} · {TACTIC_STYLE_LABELS[homeTactics.style]}
-              </p>
-              <p className="matchup__morale" title="Moral do clube — não influencia a simulação, só reflete a campanha">
-                Moral <span className="numeric">{homeTeam.morale}</span>
-              </p>
-              <Badge tone={isHome ? 'pitch' : 'neutral'}>Mandante</Badge>
+                <div className="matchup__team matchup__team--away">
+                  <div className="matchup__team-info">
+                    <p className="matchup__name" title={awayTeam.name}>
+                      {awayTeam.name}
+                      {awayPosition && <span className="matchup__name-position numeric">{awayPosition}º</span>}
+                    </p>
+                    <p className="matchup__tactics">
+                      {awayTactics.formation} · {TACTIC_STYLE_LABELS[awayTactics.style]}
+                    </p>
+                  </div>
+                  {CLUB_CRESTS[awayTeam.id] && (
+                    <img className="matchup__crest matchup__crest--away" src={CLUB_CRESTS[awayTeam.id]} alt="" width={88} height={88} />
+                  )}
+                </div>
+              </div>
             </div>
 
-            <span className="matchup__vs">×</span>
+            <div className="matchup__stats">
+              <div className="matchup__stat">
+                <span className="matchup__stat-label">Mando</span>
+                <span className="matchup__stat-value matchup__stat-value--accent">{isHome ? 'Em casa' : 'Fora'}</span>
+              </div>
+              <div className="matchup__stat">
+                <span className="matchup__stat-label">Moral do grupo</span>
+                <span className="matchup__stat-value">
+                  {playerClub?.morale ?? '—'} <span className="matchup__stat-suffix">de 100</span>
+                </span>
+              </div>
+              <div className="matchup__stat">
+                <span className="matchup__stat-label">Escalação</span>
+                <span className={`matchup__stat-value${lineupCheck.valid ? ' matchup__stat-value--accent' : ''}`}>
+                  {lineup?.starters.length ?? 0} em campo · {lineupCheck.valid ? 'pronta' : 'incompleta'}
+                </span>
+              </div>
+              <div className="matchup__stat">
+                <span className="matchup__stat-label">Últimos 5</span>
+                <span className="matchup__stat-value matchup__stat-form numeric">
+                  {lastResultLetters(competition, career.playerClubId).join(' ') || '—'}
+                </span>
+              </div>
+            </div>
 
-            <div className="matchup__team">
-              {CLUB_CRESTS[awayTeam.id] && (
-                <img className="matchup__crest" src={CLUB_CRESTS[awayTeam.id]} alt="" width={96} height={96} />
-              )}
-              <p className="matchup__name" title={awayTeam.name}>
-                {awayTeam.name}
-                {awayPosition && <span className="matchup__name-position numeric">{awayPosition}º</span>}
-              </p>
-              <p className="matchup__tactics">
-                {awayTactics.formation} · {TACTIC_STYLE_LABELS[awayTactics.style]}
-              </p>
-              <p className="matchup__morale" title="Moral do clube — não influencia a simulação, só reflete a campanha">
-                Moral <span className="numeric">{awayTeam.morale}</span>
-              </p>
-              <Badge tone={!isHome ? 'pitch' : 'neutral'}>Visitante</Badge>
+            <div className="matchup__footer">
+              {!lineupCheck.valid && <p className="matchup__warning">{lineupCheck.reason}</p>}
+              {error && <p className="error-banner">{error}</p>}
+              <div className="matchup__action">
+                {isMatchDay ? (
+                  <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={() => startMatch()}>
+                    {loading ? 'Simulando…' : 'Iniciar Partida'}
+                  </Button>
+                ) : (
+                  <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={handleAdvanceTime}>
+                    {loading ? 'Avançando…' : 'Avançar o tempo'}
+                  </Button>
+                )}
+                <Button variant="secondary" onClick={() => onNavigate('lineup')}>
+                  Escalação
+                </Button>
+              </div>
             </div>
           </div>
+        )}
 
-          {!lineupCheck.valid && <p className="matchup__warning">{lineupCheck.reason}</p>}
-          {error && <p className="error-banner">{error}</p>}
+        {passedResults.length > 0 && (
+          <Card className="matchup-passed">
+            <div className="matchup-passed__header">
+              <span className="eyebrow">Enquanto isso na rodada</span>
+              {roundFixtureCount !== undefined && (
+                <span className="matchup-passed__count numeric">
+                  {passedResults.length} de {roundFixtureCount} jogos encerrados
+                </span>
+              )}
+            </div>
+            <RoundResultsList
+              entries={passedResults.map((f) => ({
+                homeTeamId: f.homeTeamId,
+                awayTeamId: f.awayTeamId,
+                homeGoals: f.result?.homeGoals ?? 0,
+                awayGoals: f.result?.awayGoals ?? 0,
+                finished: true,
+              }))}
+              clubName={(id) => findClub(career, id)?.name ?? id}
+            />
+          </Card>
+        )}
+      </div>
 
-          <div className="matchup__action">
-            {isMatchDay ? (
-              <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={() => startMatch()}>
-                {loading ? 'Simulando…' : 'Iniciar Partida'}
-              </Button>
-            ) : (
-              <Button variant="primary" block disabled={!lineupCheck.valid || loading} onClick={handleAdvanceTime}>
-                {loading ? 'Avançando…' : 'Avançar o tempo'}
-              </Button>
-            )}
-          </div>
+      <div className="home__sidebar">
+        <Card className="home__standings">
+          <span className="eyebrow">Onde você está</span>
+          <ul className="home__standings-list">
+            {nearbyStandings(competition.standings, career.playerClubId).map(({ entry, position }) => {
+              const club = findClub(career, entry.clubId);
+              const isOwn = entry.clubId === career.playerClubId;
+              return (
+                <li key={entry.clubId} className={`home__standings-row${isOwn ? ' home__standings-row--own' : ''}`}>
+                  <span className={`home__standings-pos numeric${position <= 4 ? ' home__standings-pos--accent' : ' home__standings-pos--warn'}`}>
+                    {position}
+                  </span>
+                  {club && CLUB_CRESTS[club.id] && <img className="home__standings-crest" src={CLUB_CRESTS[club.id]} alt="" />}
+                  <span className="home__standings-name" title={club?.name ?? entry.clubId}>
+                    {club?.name ?? entry.clubId}
+                  </span>
+                  <span className="home__standings-points numeric">{entry.points}</span>
+                </li>
+              );
+            })}
+          </ul>
         </Card>
-      )}
 
-      <SaveExportControls defaultSlotName={slotName} />
-      <CloudSaveControls defaultSlotName={slotName} />
+        <SaveExportControls defaultSlotName={slotName} />
+        <CloudSaveControls defaultSlotName={slotName} />
+      </div>
 
       {rollOverlay}
     </div>

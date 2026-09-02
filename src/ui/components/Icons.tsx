@@ -44,11 +44,11 @@ export function IconCard({ color, className, style }: IconProps & { color: strin
  * sempre visual, nunca número ou texto (Escalação mostra só o ícone).
  */
 export function IconCardStack({ count, className }: { count: 1 | 2; className?: string }) {
-  if (count === 1) return <IconCard color="var(--floodlight)" className={className} />;
+  if (count === 1) return <IconCard color="var(--fm-warn)" className={className} />;
   return (
     <span className={className} style={{ position: 'relative', display: 'inline-block', width: 16, height: 15 }}>
-      <IconCard color="var(--floodlight)" style={{ position: 'absolute', left: 0, top: 3 }} />
-      <IconCard color="var(--floodlight)" style={{ position: 'absolute', left: 5, top: 0 }} />
+      <IconCard color="var(--fm-warn)" style={{ position: 'absolute', left: 0, top: 3 }} />
+      <IconCard color="var(--fm-warn)" style={{ position: 'absolute', left: 5, top: 0 }} />
     </span>
   );
 }
@@ -62,7 +62,7 @@ export function IconSub({ className, style }: IconProps) {
     <svg width="13" height="15" viewBox="0 0 13 16" aria-hidden="true" className={className} style={style}>
       <path
         d="M3.5 1 L3.5 11 M1 8.5 L3.5 11 L6 8.5"
-        stroke="var(--pitch)"
+        stroke="var(--fm-accent)"
         strokeWidth="1.6"
         fill="none"
         strokeLinecap="round"
@@ -70,7 +70,7 @@ export function IconSub({ className, style }: IconProps) {
       />
       <path
         d="M9.5 15 L9.5 5 M7 7.5 L9.5 5 L12 7.5"
-        stroke="var(--danger)"
+        stroke="var(--fm-danger)"
         strokeWidth="1.6"
         fill="none"
         strokeLinecap="round"

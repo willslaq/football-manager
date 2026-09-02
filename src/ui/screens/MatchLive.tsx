@@ -23,14 +23,6 @@ function IconPause() {
   );
 }
 
-function IconChevron() {
-  return (
-    <svg width="7" height="12" viewBox="0 0 7 12" aria-hidden="true">
-      <path d="M1 1l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </svg>
-  );
-}
-
 function IconTerminal() {
   return (
     <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
@@ -113,11 +105,65 @@ export function MatchLive() {
 
   const homeGoalEvents = liveMatch.events.filter((e) => e.type === 'goal' && e.teamId === liveMatch.homeTeamId);
   const awayGoalEvents = liveMatch.events.filter((e) => e.type === 'goal' && e.teamId === liveMatch.awayTeamId);
+  const isShotEvent = (type: string) => type === 'goal' || type === 'shot_saved' || type === 'shot_missed';
+  const homeShots = liveMatch.events.filter((e) => isShotEvent(e.type) && e.teamId === liveMatch.homeTeamId).length;
+  const awayShots = liveMatch.events.filter((e) => isShotEvent(e.type) && e.teamId === liveMatch.awayTeamId).length;
 
   const isFullTime = liveMatch.minute >= 90;
+  const half = liveMatch.minute > 45 ? '2º tempo' : '1º tempo';
+  // Rodada real do confronto ao vivo — mesmo fixture que Home mostrava antes de "Iniciar Partida" —,
+  // só pra dar contexto na barra de controle; não afeta o motor nem a UI de resultado.
+  const liveRound = career.season.competitions
+    .flatMap((c) => c.fixtures.flat())
+    .find(
+      (f) =>
+        f.date === career.season.currentDate &&
+        f.homeTeamId === liveMatch.homeTeamId &&
+        f.awayTeamId === liveMatch.awayTeamId,
+    )?.round;
 
   return (
     <>
+      <div className="ml-topbar">
+        <span className="ml-live-badge">
+          <span className="ml-live-dot" />
+          {isFullTime ? 'Fim de jogo' : liveMatch.paused ? 'Pausado' : 'Ao vivo'}
+        </span>
+        <span className="ml-minute numeric">{liveMatch.minute}&apos;</span>
+        <span className="ml-topbar__context">
+          {half}
+          {liveRound !== undefined && <> · Rodada {liveRound}</>}
+        </span>
+
+        {!isFullTime && (
+          <div className="ml-controls">
+            <Button variant="secondary" size="sm" onClick={toggleLiveMatchPause} aria-pressed={liveMatch.paused}>
+              {liveMatch.paused ? <IconPlay /> : <IconPause />}
+              {liveMatch.paused ? 'Retomar' : 'Pausar'}
+            </Button>
+
+            <div className="ml-speed-toggle" role="group" aria-label="Velocidade da simulação">
+              <button
+                type="button"
+                className={liveMatch.speed === 1 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
+                aria-pressed={liveMatch.speed === 1}
+                onClick={() => setLiveMatchSpeed(1)}
+              >
+                1x
+              </button>
+              <button
+                type="button"
+                className={liveMatch.speed === 2 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
+                aria-pressed={liveMatch.speed === 2}
+                onClick={() => setLiveMatchSpeed(2)}
+              >
+                2x
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="match-live-layout">
         <OnPitchList
           pitchRoster={liveMatch.pitchRoster}
@@ -127,71 +173,26 @@ export function MatchLive() {
           playerCondition={playerCondition}
           onOpen={openSubstitutionDialog}
           disabled={isFullTime}
+          subCount={liveMatch.subCount}
         />
 
         <main className="match-live">
-          <div className="ml-header">
-            <span className="ml-live-badge">
-              <span className="ml-live-dot" />
-              {isFullTime ? 'Fim de jogo' : liveMatch.paused ? 'Pausado' : 'Ao vivo'}
-            </span>
-            <span className="ml-minute numeric">{liveMatch.minute}&apos;</span>
-          </div>
-
-          {!isFullTime && (
-            <div className="ml-controls">
-              <Button variant="secondary" size="sm" onClick={toggleLiveMatchPause} aria-pressed={liveMatch.paused}>
-                {liveMatch.paused ? <IconPlay /> : <IconPause />}
-                {liveMatch.paused ? 'Retomar' : 'Pausar'}
-              </Button>
-
-              <div className="ml-speed-toggle" role="group" aria-label="Velocidade da simulação">
-                <button
-                  type="button"
-                  className={liveMatch.speed === 1 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
-                  aria-pressed={liveMatch.speed === 1}
-                  onClick={() => setLiveMatchSpeed(1)}
-                >
-                  <IconChevron />
-                  1x
-                </button>
-                <button
-                  type="button"
-                  className={liveMatch.speed === 2 ? 'ml-speed-btn ml-speed-btn--active' : 'ml-speed-btn'}
-                  aria-pressed={liveMatch.speed === 2}
-                  onClick={() => setLiveMatchSpeed(2)}
-                >
-                  <IconChevron />
-                  <IconChevron />
-                  2x
-                </button>
-              </div>
-            </div>
-          )}
-
-          <Card accentColor={home?.colors.primary} className="ml-scoreboard">
-            <div className="ml-teams">
+          <div className="fm-glass-hero ml-scoreboard">
+            <div className="ml-scoreboard__main">
               <div className="ml-team">
                 {home && CLUB_CRESTS[home.id] && <img className="ml-team__crest" src={CLUB_CRESTS[home.id]} alt="" />}
                 <span className="ml-team__name" title={home?.name}>
                   {home?.name ?? liveMatch.homeTeamId}
                 </span>
-                {homeGoalEvents.length > 0 && (
-                  <ul className="ml-goals">
-                    {homeGoalEvents.map((event, i) => (
-                      <li key={i}>
-                        <IconBall className="ml-goals__ball" />
-                        {event.minute}&apos; {playerName(event.playerId)}
-                      </li>
-                    ))}
-                  </ul>
-                )}
               </div>
 
-              <div className="ml-score numeric">
-                <span>{liveMatch.homeGoals}</span>
-                <span className="ml-score__sep">—</span>
-                <span>{liveMatch.awayGoals}</span>
+              <div className="ml-score-center">
+                <div className="ml-score numeric">
+                  <span>{liveMatch.homeGoals}</span>
+                  <span className="ml-score__sep">—</span>
+                  <span>{liveMatch.awayGoals}</span>
+                </div>
+                <span className="ml-score-minute">{liveMatch.minute} minutos</span>
               </div>
 
               <div className="ml-team">
@@ -199,25 +200,41 @@ export function MatchLive() {
                 <span className="ml-team__name" title={away?.name}>
                   {away?.name ?? liveMatch.awayTeamId}
                 </span>
-                {awayGoalEvents.length > 0 && (
-                  <ul className="ml-goals">
-                    {awayGoalEvents.map((event, i) => (
-                      <li key={i}>
-                        <IconBall className="ml-goals__ball" />
-                        {event.minute}&apos; {playerName(event.playerId)}
-                      </li>
-                    ))}
-                  </ul>
-                )}
               </div>
             </div>
-          </Card>
 
-          <Card className="ml-possession">
-            <div className="ml-possession__row">
-              <span className="ml-possession__value numeric">{liveMatch.possessionHome}%</span>
-              <div className="ml-possession__body">
+            <div className="ml-scoreboard__markers">
+              <ul className="ml-goals">
+                {homeGoalEvents.length > 0 ? (
+                  homeGoalEvents.map((event, i) => (
+                    <li key={i}>
+                      <IconBall className="ml-goals__ball" />
+                      {event.minute}&apos; {playerName(event.playerId)}
+                    </li>
+                  ))
+                ) : (
+                  <li className="ml-goals__empty">Sem gols</li>
+                )}
+              </ul>
+              <span className="ml-scoreboard__divider" />
+              <ul className="ml-goals">
+                {awayGoalEvents.length > 0 ? (
+                  awayGoalEvents.map((event, i) => (
+                    <li key={i}>
+                      <IconBall className="ml-goals__ball" />
+                      {event.minute}&apos; {playerName(event.playerId)}
+                    </li>
+                  ))
+                ) : (
+                  <li className="ml-goals__empty">Sem gols</li>
+                )}
+              </ul>
+            </div>
+
+            <div className="ml-scoreboard__stats">
+              <div className="ml-possession">
                 <span className="ml-possession__label">Posse de bola</span>
+                <span className="ml-possession__value numeric">{liveMatch.possessionHome}%</span>
                 <div className="ml-possession__track">
                   <div
                     className="ml-possession__fill ml-possession__fill--home"
@@ -228,10 +245,16 @@ export function MatchLive() {
                     style={{ width: `${100 - liveMatch.possessionHome}%` }}
                   />
                 </div>
+                <span className="ml-possession__value ml-possession__value--away numeric">{100 - liveMatch.possessionHome}%</span>
               </div>
-              <span className="ml-possession__value ml-possession__value--away numeric">{100 - liveMatch.possessionHome}%</span>
+              <div className="ml-shots">
+                <span className="ml-shots__label">Finalizações</span>
+                <span className="ml-shots__value numeric">
+                  {homeShots} · {awayShots}
+                </span>
+              </div>
             </div>
-          </Card>
+          </div>
 
           <Card className="ml-feed">
             <span className="eyebrow">Lance a lance</span>
@@ -246,13 +269,12 @@ export function MatchLive() {
               order="desc"
               emptyMessage="Partida em andamento…"
             />
+            {!isFullTime && (
+              <Button variant="ghost" block onClick={skipLiveMatch}>
+                Pular para o resultado
+              </Button>
+            )}
           </Card>
-
-          {!isFullTime && (
-            <Button variant="ghost" block onClick={skipLiveMatch}>
-              Pular para o resultado
-            </Button>
-          )}
         </main>
 
         <Card className="ml-sidebar" aria-label="Outros jogos do dia">

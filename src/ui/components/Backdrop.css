@@ -2,16 +2,48 @@
   position: relative;
   min-height: 100vh;
   background:
-    radial-gradient(60% 42% at 50% -8%, color-mix(in srgb, var(--pitch) 22%, transparent), transparent 70%),
-    radial-gradient(38% 30% at 88% 8%, color-mix(in srgb, var(--floodlight) 12%, transparent), transparent 70%),
-    repeating-linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--chalk) 3%, transparent) 0,
-      color-mix(in srgb, var(--chalk) 3%, transparent) 1px,
-      transparent 1px,
-      transparent 64px
+    radial-gradient(62% 46% at 46% -8%, rgb(55 214 122 / 11%), transparent 72%),
+    radial-gradient(42% 38% at 96% 14%, rgb(80 190 200 / 6%), transparent 72%),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 4.5%) 0 9%,
+      rgb(255 255 255 / 0%) 9% 26%,
+      rgb(255 255 255 / 3%) 26% 31%,
+      rgb(255 255 255 / 0%) 31% 62%,
+      rgb(255 255 255 / 2.5%) 62% 68%,
+      rgb(255 255 255 / 0%) 68%
     ),
-    var(--ink);
+    var(--fm-bg);
+}
+
+:root[data-theme='light'] .backdrop {
+  background:
+    radial-gradient(62% 46% at 46% -8%, rgb(23 134 76 / 10%), transparent 72%),
+    radial-gradient(42% 38% at 96% 14%, rgb(60 150 170 / 6%), transparent 72%),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 55%) 0 9%,
+      rgb(255 255 255 / 0%) 9% 28%,
+      rgb(255 255 255 / 40%) 28% 33%,
+      rgb(255 255 255 / 0%) 33%
+    ),
+    var(--fm-bg);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .backdrop {
+    background:
+      radial-gradient(62% 46% at 46% -8%, rgb(23 134 76 / 10%), transparent 72%),
+      radial-gradient(42% 38% at 96% 14%, rgb(60 150 170 / 6%), transparent 72%),
+      linear-gradient(
+        112deg,
+        rgb(255 255 255 / 55%) 0 9%,
+        rgb(255 255 255 / 0%) 9% 28%,
+        rgb(255 255 255 / 40%) 28% 33%,
+        rgb(255 255 255 / 0%) 33%
+      ),
+      var(--fm-bg);
+  }
 }
 
 .backdrop__container {

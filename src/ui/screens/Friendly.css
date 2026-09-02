@@ -6,12 +6,12 @@
 
 .friendly__title {
   font-size: var(--text-3xl);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .friendly__lead {
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   max-width: var(--measure);
 }
 
@@ -34,8 +34,17 @@
   gap: var(--space-4);
   min-width: 0;
   padding: var(--space-4);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border-radius: var(--fm-radius-card);
+  background: var(--fm-surface);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  box-shadow: var(--fm-panel-shadow);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .friendly-side {
+    background: var(--fm-solid-panel);
+  }
 }
 
 .friendly-side__header {

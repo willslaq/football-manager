@@ -8,11 +8,11 @@ import type { Screen } from '../../App';
 import './Table.css';
 
 const ZONE_COLOR: Record<Exclude<StandingsZone, null>, string> = {
-  libertadores: 'var(--pitch)',
-  'libertadores-pre': 'color-mix(in srgb, var(--pitch) 50%, transparent)',
-  sula: 'var(--floodlight)',
-  relegation: 'var(--danger)',
-  promotion: 'var(--pitch)',
+  libertadores: 'var(--fm-accent)',
+  'libertadores-pre': 'color-mix(in srgb, var(--fm-accent) 50%, transparent)',
+  sula: 'var(--fm-warn)',
+  relegation: 'var(--fm-danger)',
+  promotion: 'var(--fm-accent)',
 };
 
 const LEGEND_A: { zone: Exclude<StandingsZone, null>; label: string }[] = [
@@ -58,7 +58,10 @@ export function Table({ onNavigate }: { onNavigate: (screen: Screen) => void }) 
             </Button>
           ))}
         </div>
-        <h1 className="standings__title">{competition.name}</h1>
+        <div className="standings__heading">
+          <span className="eyebrow">Classificação · rodada {career.season.currentRound}</span>
+          <h1 className="standings__title">{competition.name}</h1>
+        </div>
         <div className="standings__legend">
           {legend.map((item) => (
             <span className="standings__legend-item" key={item.zone}>
@@ -107,7 +110,11 @@ export function Table({ onNavigate }: { onNavigate: (screen: Screen) => void }) 
                     </td>
                     <td>
                       <div className="standings__club">
-                        {crest && <img className="standings__crest" src={crest} alt="" width={24} height={24} />}
+                        {crest ? (
+                          <img className="standings__crest" src={crest} alt="" width={24} height={24} />
+                        ) : (
+                          <span className="standings__crest standings__crest--placeholder" aria-hidden="true" />
+                        )}
                         <span className="standings__name" title={club?.name ?? entry.clubId}>
                           {club?.name ?? entry.clubId}
                         </span>

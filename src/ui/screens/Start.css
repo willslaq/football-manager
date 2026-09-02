@@ -16,17 +16,17 @@
 
 .start__title {
   font-size: var(--text-3xl);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .start__lead {
   font-size: var(--text-lg);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .start__hint {
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   margin: calc(var(--space-3) * -1) 0 var(--space-3);
 }
 
@@ -40,7 +40,7 @@
 
 .account-control__hint {
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   text-align: right;
   max-width: 14rem;
 }
@@ -54,10 +54,17 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: var(--fm-chip);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-radius: var(--radius-full);
   padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .account-chip {
+    background: var(--fm-chip-strong);
+  }
 }
 
 .account-chip__avatar {
@@ -67,8 +74,8 @@
   width: 1.75rem;
   height: 1.75rem;
   border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--pitch) 22%, transparent);
-  color: var(--pitch);
+  background: color-mix(in srgb, var(--fm-accent) 22%, transparent);
+  color: var(--fm-accent);
   font-weight: 800;
   font-size: var(--text-sm);
 }
@@ -76,7 +83,7 @@
 .account-chip__name {
   font-size: var(--text-sm);
   font-weight: 700;
-  color: var(--chalk);
+  color: var(--fm-text);
   max-width: 10rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,7 +95,7 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--mist);
+  color: var(--fm-text-dim);
   margin-bottom: var(--space-3);
 }
 
@@ -99,8 +106,8 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: var(--radius-full);
-  background: var(--surface-2);
-  border: 2px solid color-mix(in srgb, var(--accent-color, var(--pitch)) 40%, var(--line));
+  background: var(--fm-chip-strong);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent-color, var(--fm-accent)) 40%, var(--fm-hairline));
   width: 40px;
   height: 40px;
 }
@@ -114,13 +121,13 @@
 .club-crest__fallback {
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .club-crest--hero {
   width: 96px;
   height: 96px;
-  box-shadow: 0 0 32px color-mix(in srgb, var(--accent-color, var(--pitch)) 35%, transparent);
+  box-shadow: 0 0 32px color-mix(in srgb, var(--accent-color, var(--fm-accent)) 35%, transparent);
 }
 
 .club-crest--hero .club-crest__fallback {
@@ -148,7 +155,7 @@
   pointer-events: none;
   background: radial-gradient(
     55% 90% at 0% 50%,
-    color-mix(in srgb, var(--accent-color, var(--pitch)) 20%, transparent),
+    color-mix(in srgb, var(--accent-color, var(--fm-accent)) 20%, transparent),
     transparent 72%
   );
 }
@@ -176,12 +183,12 @@
 
 .hero-card__club {
   font-size: var(--text-2xl);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .hero-card__meta {
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .hero-card__badges {
@@ -210,17 +217,17 @@
 .hero-card__rounds-value {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .hero-card__rounds-total {
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .hero-card__date {
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .hero-card__actions {
@@ -268,7 +275,7 @@
 .save-card__name {
   font-size: var(--text-base);
   font-weight: 800;
-  color: var(--chalk);
+  color: var(--fm-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -276,7 +283,7 @@
 
 .save-card__meta {
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -300,7 +307,7 @@
 
 .save-card__date {
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .save-card__actions {
@@ -325,21 +332,29 @@
   padding: var(--space-5);
   text-align: left;
   cursor: pointer;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  background: var(--fm-surface);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  box-shadow: var(--fm-panel-shadow);
+  border-radius: var(--fm-radius-card);
   transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .action-tile {
+    background: var(--fm-solid-panel);
+  }
 }
 
 .action-tile:hover {
-  border-color: var(--pitch);
-  background: var(--surface-2);
+  box-shadow: var(--fm-panel-shadow), inset 0 0 0 1.5px var(--fm-accent);
+  background: var(--fm-surface-strong);
 }
 
 .action-tile--floodlight:hover {
-  border-color: var(--floodlight);
+  box-shadow: var(--fm-panel-shadow), inset 0 0 0 1.5px var(--fm-warn);
 }
 
 .action-tile__icon {
@@ -350,18 +365,18 @@
   width: 2.75rem;
   height: 2.75rem;
   border-radius: var(--radius-md);
-  background: var(--surface-2);
-  color: var(--mist);
+  background: var(--fm-chip-strong);
+  color: var(--fm-text-dim);
 }
 
 .action-tile--pitch .action-tile__icon {
-  background: color-mix(in srgb, var(--pitch) 16%, transparent);
-  color: var(--pitch);
+  background: color-mix(in srgb, var(--fm-accent) 16%, transparent);
+  color: var(--fm-accent);
 }
 
 .action-tile--floodlight .action-tile__icon {
-  background: color-mix(in srgb, var(--floodlight) 18%, transparent);
-  color: var(--floodlight);
+  background: color-mix(in srgb, var(--fm-warn) 18%, transparent);
+  color: var(--fm-warn);
 }
 
 .action-tile__vs {
@@ -381,16 +396,16 @@
 .action-tile__title {
   font-size: var(--text-base);
   font-weight: 800;
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .action-tile__desc {
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .action-tile__chevron {
-  color: var(--mist);
+  color: var(--fm-text-dim);
   flex-shrink: 0;
 }
 

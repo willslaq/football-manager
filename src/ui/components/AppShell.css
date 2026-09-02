@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--ink);
+  background: var(--fm-bg);
 }
 
 .app-shell__topbar {
@@ -12,32 +12,50 @@
   display: flex;
   align-items: center;
   gap: var(--space-5);
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  padding: 0 clamp(1rem, 4vw, 3rem);
-  height: 4rem;
+  background: rgb(255 255 255 / 3.5%);
+  backdrop-filter: blur(22px) saturate(120%);
+  -webkit-backdrop-filter: blur(22px) saturate(120%);
+  box-shadow: 0 1px 0 var(--fm-hairline-hi);
+  padding: 0 clamp(1rem, 4vw, 2rem);
+  height: var(--fm-topbar-h);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .app-shell__topbar {
+    background: var(--fm-solid-panel-strong);
+  }
 }
 
 .app-shell__brand {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
-  letter-spacing: 0.03em;
-  color: var(--chalk);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--fm-text);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .app-shell__brand span {
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .app-shell__tabs {
   display: flex;
   align-items: stretch;
-  gap: var(--space-1);
+  gap: 6px;
+  padding: 5px;
+  border-radius: var(--radius-full);
+  background: var(--fm-chip);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   overflow-x: auto;
   scrollbar-width: none;
-  height: 100%;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .app-shell__tabs {
+    background: var(--fm-chip-strong);
+  }
 }
 
 .app-shell__tabs::-webkit-scrollbar {
@@ -47,27 +65,27 @@
 .app-shell__tab {
   display: flex;
   align-items: center;
-  padding: 0 var(--space-3);
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
   font-family: var(--font-body);
   font-weight: 700;
   font-size: var(--text-sm);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--mist);
+  color: var(--fm-text-dim);
   white-space: nowrap;
-  border-bottom: 3px solid transparent;
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+    color 160ms ease,
+    background-color 160ms ease;
 }
 
 .app-shell__tab:hover {
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
-.app-shell__tab--active {
-  color: var(--chalk);
-  border-bottom-color: var(--pitch);
+.app-shell__tab--active,
+.app-shell__tab--active:hover {
+  background: var(--fm-text);
+  color: var(--fm-bg);
+  font-weight: 800;
 }
 
 .app-shell__club {
@@ -76,6 +94,17 @@
   align-items: center;
   gap: var(--space-3);
   flex-shrink: 0;
+  padding: 8px 16px 8px 8px;
+  border-radius: var(--radius-full);
+  background: var(--fm-chip);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .app-shell__club {
+    background: var(--fm-chip-strong);
+  }
 }
 
 .app-shell__club-info {
@@ -86,9 +115,9 @@
 }
 
 .app-shell__club-name {
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--chalk);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--fm-text);
   max-width: 12rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -96,8 +125,8 @@
 }
 
 .app-shell__club-round {
-  font-size: var(--text-xs);
-  color: var(--mist);
+  font-size: 13px;
+  color: var(--fm-text-dim);
 }
 
 .app-shell__crest {
@@ -111,29 +140,61 @@
   position: relative;
   flex: 1;
   background:
-    radial-gradient(55% 38% at 50% -10%, color-mix(in srgb, var(--pitch) 16%, transparent), transparent 70%),
-    radial-gradient(34% 26% at 92% 0%, color-mix(in srgb, var(--floodlight) 10%, transparent), transparent 70%),
-    repeating-linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--chalk) 3%, transparent) 0,
-      color-mix(in srgb, var(--chalk) 3%, transparent) 1px,
-      transparent 1px,
-      transparent 64px
+    radial-gradient(62% 46% at 46% -8%, rgb(55 214 122 / 11%), transparent 72%),
+    radial-gradient(42% 38% at 96% 14%, rgb(80 190 200 / 6%), transparent 72%),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 4.5%) 0 9%,
+      rgb(255 255 255 / 0%) 9% 26%,
+      rgb(255 255 255 / 3%) 26% 31%,
+      rgb(255 255 255 / 0%) 31% 62%,
+      rgb(255 255 255 / 2.5%) 62% 68%,
+      rgb(255 255 255 / 0%) 68%
     ),
-    var(--ink);
+    var(--fm-bg);
+}
+
+:root[data-theme='light'] .app-shell__content {
+  background:
+    radial-gradient(62% 46% at 46% -8%, rgb(23 134 76 / 10%), transparent 72%),
+    radial-gradient(42% 38% at 96% 14%, rgb(60 150 170 / 6%), transparent 72%),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 55%) 0 9%,
+      rgb(255 255 255 / 0%) 9% 28%,
+      rgb(255 255 255 / 40%) 28% 33%,
+      rgb(255 255 255 / 0%) 33%
+    ),
+    var(--fm-bg);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .app-shell__content {
+    background:
+      radial-gradient(62% 46% at 46% -8%, rgb(23 134 76 / 10%), transparent 72%),
+      radial-gradient(42% 38% at 96% 14%, rgb(80 190 200 / 6%), transparent 72%),
+      linear-gradient(
+        112deg,
+        rgb(255 255 255 / 55%) 0 9%,
+        rgb(255 255 255 / 0%) 9% 28%,
+        rgb(255 255 255 / 40%) 28% 33%,
+        rgb(255 255 255 / 0%) 33%
+      ),
+      var(--fm-bg);
+  }
 }
 
 .app-shell__container {
   max-width: var(--container);
   margin: 0 auto;
-  padding: var(--space-6) clamp(1rem, 4vw, 3rem) var(--space-8);
+  padding: var(--fm-pad-screen) clamp(1rem, 4vw, var(--fm-pad-screen)) var(--space-8);
 }
 
 /* Navegação flutuante para mobile — substitui as tabs do topbar quando o espaço é curto. */
 .app-shell__mobile-backdrop {
   position: fixed;
   inset: 0;
-  background: color-mix(in srgb, var(--ink) 55%, transparent);
+  background: color-mix(in srgb, var(--fm-bg) 55%, transparent);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   opacity: 0;
@@ -174,9 +235,10 @@
 }
 
 .app-shell__mobile-option-label {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  color: var(--chalk);
+  background: var(--fm-chip-strong);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--fm-text);
   font-size: var(--text-xs);
   font-weight: 700;
   padding: 0.3rem 0.7rem;
@@ -190,23 +252,22 @@
   width: 3rem;
   height: 3rem;
   border-radius: var(--radius-full);
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  color: var(--chalk);
+  background: var(--fm-chip-strong);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--fm-text);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 16px rgb(0 0 0 / 30%);
   transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+    background 160ms ease,
+    color 160ms ease;
 }
 
 .app-shell__mobile-option--active {
-  background: var(--pitch);
-  border-color: transparent;
-  color: var(--pitch-ink);
+  background: var(--fm-accent);
+  color: var(--fm-accent-ink);
 }
 
 .app-shell__mobile-fab {
@@ -215,14 +276,14 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: var(--radius-full);
-  background: var(--pitch);
-  color: var(--pitch-ink);
+  background: linear-gradient(180deg, var(--fm-accent-hi) 0%, var(--fm-accent-lo) 100%);
+  color: var(--fm-accent-ink);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
     0 10px 24px rgb(0 0 0 / 35%),
-    0 0 0 4px color-mix(in srgb, var(--pitch) 18%, transparent);
+    0 0 0 4px color-mix(in srgb, var(--fm-accent) 18%, transparent);
   transition: transform 0.2s var(--ease-out);
 }
 

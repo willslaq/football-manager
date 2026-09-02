@@ -15,7 +15,7 @@
 
 .mh-title {
   font-size: var(--text-2xl);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .mh-filter {
@@ -24,7 +24,7 @@
 }
 
 .mh-empty {
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 @keyframes mh-rise-in {
@@ -65,7 +65,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .mh-match__result {
@@ -108,7 +108,7 @@
 
 .mh-match__name {
   font-weight: 600;
-  color: var(--chalk);
+  color: var(--fm-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -137,7 +137,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   white-space: nowrap;
 }
 
@@ -152,7 +152,7 @@
 .mh-match__score {
   font-size: var(--text-xl);
   font-weight: 800;
-  color: var(--chalk);
+  color: var(--fm-text);
   white-space: nowrap;
   align-self: start;
 }
@@ -167,18 +167,18 @@
 }
 
 .mh-match__outcome--win {
-  color: var(--pitch);
-  background: color-mix(in srgb, var(--pitch) 18%, transparent);
+  color: var(--fm-accent);
+  background: color-mix(in srgb, var(--fm-accent) 18%, transparent);
 }
 
 .mh-match__outcome--draw {
-  color: var(--floodlight);
-  background: color-mix(in srgb, var(--floodlight) 20%, transparent);
+  color: var(--fm-warn);
+  background: color-mix(in srgb, var(--fm-warn) 20%, transparent);
 }
 
 .mh-match__outcome--loss {
-  color: var(--danger);
-  background: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--fm-danger);
+  background: color-mix(in srgb, var(--fm-danger) 18%, transparent);
 }
 
 /* ---------- Modo "Rodada completa" ---------- */
@@ -214,7 +214,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
   margin-bottom: var(--space-2);
 }
 
@@ -230,7 +230,7 @@
   gap: var(--space-3);
   padding: var(--space-2);
   border: none;
-  border-top: 1px solid var(--line);
+  box-shadow: 0 -1px 0 var(--fm-hairline);
   background: none;
   font: inherit;
   color: inherit;
@@ -240,11 +240,11 @@
 }
 
 .mh-round__fixtures .mh-fixture:first-child {
-  border-top: none;
+  box-shadow: none;
 }
 
 .mh-fixture:hover {
-  background: var(--surface-2);
+  background: var(--fm-chip-strong);
 }
 
 .mh-fixture--own {
@@ -260,7 +260,7 @@
   bottom: 0.3rem;
   width: 3px;
   border-radius: var(--radius-sm);
-  background: var(--outcome-color, var(--pitch));
+  background: var(--outcome-color, var(--fm-accent));
 }
 
 .mh-fixture__team {
@@ -290,7 +290,7 @@
 
 .mh-fixture__score {
   font-weight: 700;
-  color: var(--chalk);
+  color: var(--fm-text);
   white-space: nowrap;
 }
 

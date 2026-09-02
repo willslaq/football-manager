@@ -9,7 +9,7 @@
 .squad__layout {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-4);
+  gap: var(--fm-gap);
   flex-wrap: wrap;
 }
 
@@ -21,34 +21,54 @@
   gap: var(--space-3);
 }
 
+.squad__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.squad__title {
+  font-size: 22px;
+  line-height: 1;
+}
+
 .squad__filters {
   display: flex;
-  gap: var(--space-2);
+  gap: 6px;
+  padding: 5px;
+  border-radius: var(--radius-full);
+  background: var(--fm-chip);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .squad__filters {
+    background: var(--fm-chip-strong);
+  }
 }
 
 .squad__filter {
-  padding: 0.35rem 0.75rem;
-  font-size: var(--text-xs);
-  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--mist);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+  color: var(--fm-text-dim);
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+    color 160ms ease,
+    background-color 160ms ease;
 }
 
 .squad__filter:hover {
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
-.squad__filter--active {
-  color: var(--pitch-ink);
-  background: var(--pitch);
-  border-color: var(--pitch);
+.squad__filter--active,
+.squad__filter--active:hover {
+  color: var(--fm-bg);
+  background: var(--fm-text);
 }
 
 .card.squad__card {
@@ -64,49 +84,56 @@
 
 .squad__row {
   display: grid;
-  grid-template-columns: 2.4fr 0.7fr 0.6fr 0.8fr 0.9fr 0.8fr 1fr 1.1fr 0.9fr;
+  grid-template-columns: 2.4fr 0.7fr 0.7fr 0.8fr 0.9fr 0.8fr 1.1fr 1.1fr 0.8fr;
   align-items: center;
-  gap: var(--space-3);
-  padding: 0 var(--space-4);
+  gap: 14px;
+  padding: 0 24px;
   min-width: 50rem;
-  border-bottom: 1px solid var(--line);
+  box-shadow: 0 -1px 0 var(--fm-hairline);
 }
 
 .squad__row--head {
   height: 2.75rem;
+  box-shadow: 0 1px 0 var(--fm-hairline-hi);
+}
+
+.squad__scroll .squad__row:first-child {
+  box-shadow: none;
 }
 
 .squad__row--clickable {
+  height: var(--fm-row-h);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  font-size: 15px;
+  transition: background-color 160ms ease;
 }
 
 .squad__row--clickable:hover {
-  background: var(--surface-2);
+  background: rgb(255 255 255 / 2.5%);
 }
 
 .squad__row--selected {
-  background: color-mix(in srgb, var(--pitch) 10%, transparent);
+  background: color-mix(in srgb, var(--fm-accent) 8%, transparent);
 }
 
 .squad__sort {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: var(--text-xs);
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--mist);
-  transition: color 0.15s ease;
+  letter-spacing: 0.1em;
+  color: var(--fm-text-faint);
+  transition: color 160ms ease;
 }
 
 .squad__sort:hover {
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .squad__sort--active {
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .squad__sort:not(:first-child) {
@@ -130,34 +157,44 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 600;
-  color: var(--chalk);
+  font-weight: 700;
+  color: var(--fm-text);
 }
 
 .squad__pos {
   font-family: var(--font-display);
-  font-size: var(--text-sm);
+  font-size: 15px;
   letter-spacing: 0.04em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
+  text-align: right;
 }
 
 .squad__stat {
   text-align: right;
   font-weight: 700;
-  color: var(--chalk);
+  color: var(--fm-text);
+}
+
+.squad__stat--force {
+  font-weight: 800;
+  color: var(--fm-accent);
 }
 
 .squad__stat--high {
-  color: var(--pitch);
+  color: var(--fm-accent);
+}
+
+.squad__stat--mid {
+  color: var(--fm-warn);
 }
 
 .squad__stat--low {
-  color: var(--floodlight);
+  color: var(--fm-danger);
 }
 
 .squad__stat--muted {
   font-weight: 500;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 /* Painel de detalhe do jogador */
@@ -199,40 +236,37 @@
 .squad__detail-name {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--text-lg);
-  color: var(--chalk);
+  font-size: 30px;
+  color: var(--fm-text);
 }
 
 .squad__detail-meta {
   margin: 0.2rem 0 0;
-  font-size: var(--text-sm);
-  color: var(--mist);
+  font-size: 15px;
+  color: var(--fm-text-dim);
 }
 
 .squad__detail-value {
   margin: 0.3rem 0 0;
   font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--pitch);
+  font-weight: 800;
+  color: var(--fm-accent);
 }
 
 .squad__detail-close {
   flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: var(--radius-full);
-  border: 1px solid var(--line);
-  color: var(--mist);
+  background: rgb(255 255 255 / 6%);
+  color: var(--fm-text-dim);
   font-size: var(--text-md);
   line-height: 1;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: color 160ms ease;
 }
 
 .squad__detail-close:hover {
-  color: var(--chalk);
-  border-color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .squad__detail-badges {
@@ -244,17 +278,16 @@
 .squad__detail-badge {
   padding: 0.2rem 0.55rem;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--line);
+  background: var(--fm-chip-strong);
   font-family: var(--font-display);
-  font-size: var(--text-xs);
+  font-size: 14px;
   letter-spacing: 0.03em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .squad__detail-badge--primary {
-  color: var(--pitch-ink);
-  background: var(--pitch);
-  border-color: var(--pitch);
+  color: var(--fm-accent-ink);
+  background: var(--fm-accent);
 }
 
 .squad__detail-section {
@@ -268,7 +301,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .squad__detail-bars {
@@ -278,7 +311,7 @@
 }
 
 .squad__detail-bars .progress__label {
-  min-width: 9rem;
+  min-width: 118px;
   text-align: left;
 }
 
@@ -290,12 +323,12 @@
 }
 
 .squad__detail-label {
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .squad__detail-value {
   font-weight: 600;
-  color: var(--chalk);
+  color: var(--fm-text);
   text-align: right;
 }
 

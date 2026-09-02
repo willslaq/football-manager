@@ -43,7 +43,7 @@ function toTopPercent(line: number): number {
 /** Mesmo limiar usado em match.ts (COHERENCE_NOTE_LOW_THRESHOLD) pra decidir se a fricção formação×estilo é grande o bastante pra valer um aviso. */
 const COHERENCE_WARNING_THRESHOLD = 0.95;
 
-type SidebarSortField = 'name' | 'position' | 'strength' | 'condition';
+type SidebarSortField = 'name' | 'position' | 'strength' | 'condition' | 'morale';
 type SortDirection = 'asc' | 'desc';
 
 /** Mesmo padrão de colunas ordenáveis da tela de Elenco, restrito às colunas visíveis na barra lateral. */
@@ -51,7 +51,8 @@ const SIDEBAR_COLUMNS: { field: SidebarSortField; label: string; defaultDirectio
   { field: 'name', label: 'Nome', defaultDirection: 'asc' },
   { field: 'position', label: 'Pos', defaultDirection: 'asc' },
   { field: 'strength', label: 'For', defaultDirection: 'desc' },
-  { field: 'condition', label: 'Cond', defaultDirection: 'desc' },
+  { field: 'condition', label: 'Cnd', defaultDirection: 'desc' },
+  { field: 'morale', label: 'Mrl', defaultDirection: 'desc' },
 ];
 
 function compareSidebar(field: SidebarSortField, a: Player, b: Player): number {
@@ -64,6 +65,8 @@ function compareSidebar(field: SidebarSortField, a: Player, b: Player): number {
       return a.strength - b.strength;
     case 'condition':
       return a.condition - b.condition;
+    case 'morale':
+      return a.morale - b.morale;
   }
 }
 
@@ -197,37 +200,36 @@ export function PitchEditor({
     onAssignmentsChange(autoAssign(slots, squad.filter((p) => p.suspendedMatches === 0)));
   }
 
-  const formationId = `${idPrefix}-formation`;
   const styleId = `${idPrefix}-style`;
 
   return (
     <div className={`pitch-editor${compact ? ' pitch-editor--compact' : ''}`}>
       <div className="lineup__controls">
-        <div className="lineup__field field">
-          <label className="field__label" htmlFor={formationId}>
-            Formação
-          </label>
-          <select
-            id={formationId}
-            className="field__input"
-            value={formation}
-            onChange={(e) => onFormationChange(e.target.value as Formation)}
-          >
+        <div className="lineup__field">
+          <span className="field__label">Formação</span>
+          <div className="lineup__formation-track" role="radiogroup" aria-label="Formação">
             {FORMATIONS.map((f) => (
-              <option key={f} value={f}>
+              <button
+                key={f}
+                type="button"
+                role="radio"
+                aria-checked={formation === f}
+                className={`lineup__formation-btn${formation === f ? ' lineup__formation-btn--active' : ''}`}
+                onClick={() => onFormationChange(f)}
+              >
                 {f}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
-        <div className="lineup__field field">
+        <div className="lineup__field">
           <label className="field__label" htmlFor={styleId}>
             Estilo
           </label>
           <select
             id={styleId}
-            className="field__input"
+            className="lineup__style-select"
             value={style}
             onChange={(e) => onStyleChange(e.target.value as TacticStyle)}
           >
@@ -321,6 +323,7 @@ export function PitchEditor({
                     <span className="lineup__pos">{player.position}</span>
                     <span className="numeric">{player.strength}</span>
                     <span className={`numeric ${conditionClass(player.condition)}`}>{player.condition}</span>
+                    <span className={`numeric ${conditionClass(player.morale)}`}>{player.morale}</span>
                   </div>
                 );
               })}
@@ -330,6 +333,13 @@ export function PitchEditor({
 
         <div className="lineup__pitch-col">
           <div className="pitch">
+            <div className="pitch__lines" aria-hidden="true">
+              <span className="pitch__line pitch__line--boundary" />
+              <span className="pitch__line pitch__line--halfway" />
+              <span className="pitch__line pitch__line--circle" />
+              <span className="pitch__line pitch__line--box pitch__line--box-top" />
+              <span className="pitch__line pitch__line--box pitch__line--box-bottom" />
+            </div>
             {slots.map((slot) => {
               const player = assignments[slot.id] ? playersById.get(assignments[slot.id]!) : undefined;
               const role = positionAtCoord(slot.coord);

@@ -7,28 +7,28 @@
 .energy-bar__track {
   width: 2rem;
   height: 5px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
+  border-radius: var(--radius-full);
+  background: var(--fm-surface-inset);
   overflow: hidden;
 }
 
 .energy-bar__fill {
   display: block;
   height: 100%;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-full);
   transition: width 400ms var(--ease-out);
 }
 
 .energy-bar__track--high .energy-bar__fill {
-  background: var(--pitch);
+  background: var(--fm-accent);
 }
 
 .energy-bar__track--mid .energy-bar__fill {
-  background: var(--floodlight);
+  background: var(--fm-warn);
 }
 
 .energy-bar__track--low .energy-bar__fill {
-  background: var(--danger);
+  background: var(--fm-danger);
 }
 
 @media (prefers-reduced-motion: reduce) {

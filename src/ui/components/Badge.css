@@ -8,16 +8,16 @@
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
   border-radius: var(--radius-sm);
-  background: var(--surface-2);
-  color: var(--mist);
+  background: var(--fm-chip-strong);
+  color: var(--fm-text-dim);
 }
 
 .badge--pitch {
-  background: color-mix(in srgb, var(--pitch) 18%, transparent);
-  color: var(--pitch);
+  background: color-mix(in srgb, var(--fm-accent) 18%, transparent);
+  color: var(--fm-accent);
 }
 
 .badge--floodlight {
-  background: color-mix(in srgb, var(--floodlight) 20%, transparent);
-  color: var(--floodlight);
+  background: color-mix(in srgb, var(--fm-warn) 20%, transparent);
+  color: var(--fm-warn);
 }

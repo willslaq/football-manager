@@ -7,16 +7,16 @@
 .progress__track {
   flex: 1;
   height: 6px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
+  border-radius: var(--radius-full);
+  background: var(--fm-surface-inset);
   overflow: hidden;
 }
 
 .progress__fill {
   width: 100%;
   height: 100%;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, var(--pitch-strong), var(--pitch));
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--fm-accent-lo), var(--fm-accent-hi));
   transform-origin: left;
   transition: transform 250ms var(--ease-out);
   will-change: transform;
@@ -30,6 +30,6 @@
 
 .progress__label {
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   white-space: nowrap;
 }

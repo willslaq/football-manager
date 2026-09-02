@@ -6,5 +6,5 @@
 
 .google-signin__error {
   font-size: var(--text-sm);
-  color: var(--danger);
+  color: var(--fm-danger);
 }

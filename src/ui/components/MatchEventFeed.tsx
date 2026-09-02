@@ -15,8 +15,8 @@ const FEED_META: Partial<Record<MatchEventType, { label: string; tone: 'pitch' |
 
 /** Cor do cartão gráfico por tipo de evento — só yellow_card/red_card usam IconCard, o resto usa Badge. */
 const CARD_COLOR: Partial<Record<MatchEventType, string>> = {
-  yellow_card: 'var(--floodlight)',
-  red_card: 'var(--danger)',
+  yellow_card: 'var(--fm-warn)',
+  red_card: 'var(--fm-danger)',
 };
 
 function FeedItem({

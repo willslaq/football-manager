@@ -86,13 +86,13 @@ export function Calendar({ onSelect }: CalendarProps) {
           <h1 className="cal__title">{monthLabel}</h1>
         </div>
         <div className="cal__nav">
-          <Button variant="secondary" size="sm" onClick={() => goToMonth(-1)} aria-label="Mês anterior">
+          <Button className="cal__nav-btn" variant="secondary" onClick={() => goToMonth(-1)} aria-label="Mês anterior">
             ‹
           </Button>
-          <Button variant="secondary" size="sm" onClick={goToToday}>
+          <Button variant="secondary" onClick={goToToday}>
             Hoje
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => goToMonth(1)} aria-label="Próximo mês">
+          <Button className="cal__nav-btn" variant="secondary" onClick={() => goToMonth(1)} aria-label="Próximo mês">
             ›
           </Button>
         </div>

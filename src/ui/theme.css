@@ -1,25 +1,41 @@
 /*
- * Design system — "Matchday": túnel de vestiário / gramado sob refletores.
- * Dark é a identidade primária do produto; light é uma variante completa,
- * não um segundo pensamento. Componentes só devem usar estas variáveis —
- * nunca cores literais — para que os dois temas continuem consistentes.
+ * Design system — "Modo Carreira" + vidro suave: painéis cinematográficos, escudos em escala
+ * grande, cartões de raio 16px, hierarquia por tamanho em vez de por borda. Nenhuma superfície
+ * tem `border` — a separação vem de translucidez, blur e sombra (hairline via box-shadow).
+ * Componentes só devem usar estas variáveis — nunca cores literais — para que os dois temas
+ * continuem consistentes.
  */
 
 :root {
   /* Cor — dark (padrão) */
-  --ink: #0a0e14;
-  --surface: #131a24;
-  --surface-2: #1b2430;
-  --pitch: #2fd968;
-  --pitch-strong: #22c55e;
-  --pitch-ink: #06210f;
-  --floodlight: #f4b740;
-  --floodlight-ink: #2a1c02;
-  --chalk: #edf2f0;
-  --mist: #8b98a5;
-  --line: rgb(237 242 240 / 10%);
-  --danger: #f2715a;
-  --danger-ink: #2a0d06;
+  --fm-bg: #0d1116;
+  --fm-surface: rgb(255 255 255 / 3.5%);
+  --fm-surface-strong: rgb(255 255 255 / 4%);
+  --fm-surface-row: rgb(255 255 255 / 3%);
+  --fm-surface-inset: rgb(0 0 0 / 26%);
+  --fm-chip: rgb(255 255 255 / 5%);
+  --fm-chip-strong: rgb(255 255 255 / 7%);
+  --fm-text: #eef3f2;
+  --fm-text-dim: #9aa7b2;
+  --fm-text-faint: #7f8d99;
+  --fm-accent: #37d67a;
+  --fm-accent-hi: #55e894;
+  --fm-accent-lo: #2ec96f;
+  --fm-accent-ink: #06210f;
+  --fm-warn: #f0b64b;
+  --fm-warn-ink: #2a1c02;
+  --fm-danger: #f2715a;
+  --fm-danger-ink: #2a0d06;
+  --fm-hairline: rgb(255 255 255 / 4%);
+  --fm-hairline-hi: rgb(255 255 255 / 5%);
+
+  --fm-hero-shadow: 0 20px 46px rgb(0 0 0 / 28%);
+  --fm-panel-shadow: 0 16px 38px rgb(0 0 0 / 24%);
+  --fm-hero-glow: linear-gradient(140deg, rgb(255 255 255 / 5%) 0%, rgb(255 255 255 / 0%) 58%);
+
+  /* Fallback sólido quando `backdrop-filter` não é suportado (ver @supports abaixo). */
+  --fm-solid-panel: #1a222c;
+  --fm-solid-panel-strong: #161d26;
 
   /* Tipografia */
   --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
@@ -44,10 +60,24 @@
   --space-7: 3rem;
   --space-8: 4rem;
 
-  --radius-sm: 2px;
-  --radius-md: 3px;
-  --radius-lg: 4px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   --radius-full: 999px;
+
+  /* Aliases explícitos do handoff — mesmos valores de --radius-*, nomes usados na spec. */
+  --fm-radius-card: 16px;
+  --fm-radius-inner: 12px;
+  --fm-radius-control: 10px;
+  --fm-radius-pill: 999px;
+
+  --fm-pad-screen: 32px;
+  --fm-pad-card: 24px 28px;
+  --fm-gap: 20px;
+
+  --fm-row-h: 52px;
+  --fm-cell-h: 108px;
+  --fm-topbar-h: 76px;
 
   --container: 88rem;
   /** Medida de leitura confortável para blocos de texto corrido, independente da largura do container. */
@@ -63,19 +93,33 @@
 /* Preferência de sistema — só se aplica sem escolha manual (nenhum [data-theme] no <html>). */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
-    --ink: #f5f8f5;
-    --surface: #ffffff;
-    --surface-2: #eef2ee;
-    --pitch: #1c9a4c;
-    --pitch-strong: #16803c;
-    --pitch-ink: #eafcf1;
-    --floodlight: #a86a0a;
-    --floodlight-ink: #fdf3e0;
-    --chalk: #101713;
-    --mist: #5b6b63;
-    --line: rgb(16 23 19 / 10%);
-    --danger: #c8412a;
-    --danger-ink: #fdece8;
+    --fm-bg: #eaeeeb;
+    --fm-surface: rgb(255 255 255 / 48%);
+    --fm-surface-strong: rgb(255 255 255 / 52%);
+    --fm-surface-row: rgb(255 255 255 / 42%);
+    --fm-surface-inset: rgb(16 23 19 / 10%);
+    --fm-chip: rgb(255 255 255 / 45%);
+    --fm-chip-strong: rgb(255 255 255 / 62%);
+    --fm-text: #131a16;
+    --fm-text-dim: #5e6b63;
+    --fm-text-faint: #7c877f;
+    --fm-accent: #17864c;
+    --fm-accent-hi: #22a25e;
+    --fm-accent-lo: #147243;
+    --fm-accent-ink: #ffffff;
+    --fm-warn: #b07a12;
+    --fm-warn-ink: #fdf3e0;
+    --fm-danger: #c8412a;
+    --fm-danger-ink: #fdece8;
+    --fm-hairline: rgb(16 23 19 / 6%);
+    --fm-hairline-hi: rgb(16 23 19 / 8%);
+
+    --fm-hero-shadow: 0 16px 38px rgb(16 23 19 / 8%);
+    --fm-panel-shadow: 0 14px 34px rgb(16 23 19 / 7%);
+    --fm-hero-glow: linear-gradient(140deg, rgb(255 255 255 / 45%) 0%, rgb(255 255 255 / 0%) 58%);
+
+    --fm-solid-panel: #ffffff;
+    --fm-solid-panel-strong: #f5f7f5;
 
     color-scheme: light;
   }
@@ -83,19 +127,33 @@
 
 /* Escolha manual do usuário (tela de Configurações) — sempre vence a preferência de sistema. */
 :root[data-theme='light'] {
-  --ink: #f5f8f5;
-  --surface: #ffffff;
-  --surface-2: #eef2ee;
-  --pitch: #1c9a4c;
-  --pitch-strong: #16803c;
-  --pitch-ink: #eafcf1;
-  --floodlight: #a86a0a;
-  --floodlight-ink: #fdf3e0;
-  --chalk: #101713;
-  --mist: #5b6b63;
-  --line: rgb(16 23 19 / 10%);
-  --danger: #c8412a;
-  --danger-ink: #fdece8;
+  --fm-bg: #eaeeeb;
+  --fm-surface: rgb(255 255 255 / 48%);
+  --fm-surface-strong: rgb(255 255 255 / 52%);
+  --fm-surface-row: rgb(255 255 255 / 42%);
+  --fm-surface-inset: rgb(16 23 19 / 10%);
+  --fm-chip: rgb(255 255 255 / 45%);
+  --fm-chip-strong: rgb(255 255 255 / 62%);
+  --fm-text: #131a16;
+  --fm-text-dim: #5e6b63;
+  --fm-text-faint: #7c877f;
+  --fm-accent: #17864c;
+  --fm-accent-hi: #22a25e;
+  --fm-accent-lo: #147243;
+  --fm-accent-ink: #ffffff;
+  --fm-warn: #b07a12;
+  --fm-warn-ink: #fdf3e0;
+  --fm-danger: #c8412a;
+  --fm-danger-ink: #fdece8;
+  --fm-hairline: rgb(16 23 19 / 6%);
+  --fm-hairline-hi: rgb(16 23 19 / 8%);
+
+  --fm-hero-shadow: 0 16px 38px rgb(16 23 19 / 8%);
+  --fm-panel-shadow: 0 14px 34px rgb(16 23 19 / 7%);
+  --fm-hero-glow: linear-gradient(140deg, rgb(255 255 255 / 45%) 0%, rgb(255 255 255 / 0%) 58%);
+
+  --fm-solid-panel: #ffffff;
+  --fm-solid-panel-strong: #f5f7f5;
 
   color-scheme: light;
 }
@@ -115,8 +173,8 @@ body {
 }
 
 body {
-  background: var(--ink);
-  color: var(--chalk);
+  background: var(--fm-bg);
+  color: var(--fm-text);
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.55;
@@ -136,6 +194,7 @@ h3 {
 
 p {
   margin: 0;
+  text-wrap: pretty;
 }
 
 button,
@@ -151,10 +210,11 @@ button {
   border: none;
   margin: 0;
   padding: 0;
+  cursor: pointer;
 }
 
 :focus-visible {
-  outline: 2px solid var(--pitch);
+  outline: 2px solid var(--fm-accent);
   outline-offset: 2px;
 }
 
@@ -172,17 +232,17 @@ button {
 
 .eyebrow {
   font-family: var(--font-body);
-  font-weight: 700;
+  font-weight: 800;
   font-size: var(--text-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 /** Scrollbar fina no tom do design system, pra listas roláveis (ex.: tabela do Elenco) em vez da barra nativa do SO. */
 .scroll-styled {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--mist) 40%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--fm-text-dim) 40%, transparent) transparent;
 }
 
 .scroll-styled::-webkit-scrollbar {
@@ -195,21 +255,21 @@ button {
 }
 
 .scroll-styled::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--mist) 40%, transparent);
+  background-color: color-mix(in srgb, var(--fm-text-dim) 40%, transparent);
   border-radius: var(--radius-full);
 }
 
 .scroll-styled::-webkit-scrollbar-thumb:hover {
-  background-color: color-mix(in srgb, var(--mist) 65%, transparent);
+  background-color: color-mix(in srgb, var(--fm-text-dim) 65%, transparent);
 }
 
 .error-banner {
-  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
-  background: color-mix(in srgb, var(--danger) 12%, transparent);
-  color: var(--danger);
+  background: color-mix(in srgb, var(--fm-danger) 14%, transparent);
+  color: var(--fm-danger);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fm-danger) 30%, transparent);
 }
 
 /** Par de botões pra escolher entre duas opções (ex.: NewCareer/Home — intensidade tática). */
@@ -217,4 +277,162 @@ button {
   display: flex;
   gap: var(--space-2);
   margin: var(--space-2) 0 var(--space-3);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Luz ambiente do fundo — aplicada no container de conteúdo de todas as   */
+/* telas, logo abaixo da barra de topo. É o que dá ao blur algo pra        */
+/* difundir; sem ela o vidro fica cinza morto.                             */
+/* ---------------------------------------------------------------------- */
+.fm-ambient {
+  background:
+    radial-gradient(62% 46% at 46% -8%, rgb(55 214 122 / 11%), transparent 72%),
+    radial-gradient(42% 38% at 96% 14%, rgb(80 190 200 / 6%), transparent 72%),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 4.5%) 0 9%,
+      rgb(255 255 255 / 0%) 9% 26%,
+      rgb(255 255 255 / 3%) 26% 31%,
+      rgb(255 255 255 / 0%) 31% 62%,
+      rgb(255 255 255 / 2.5%) 62% 68%,
+      rgb(255 255 255 / 0%) 68%
+    ),
+    var(--fm-bg);
+}
+
+:root[data-theme='light'] .fm-ambient {
+  background:
+    radial-gradient(62% 46% at 46% -8%, rgb(23 134 76 / 10%), transparent 72%),
+    radial-gradient(42% 38% at 96% 14%, rgb(60 150 170 / 6%), transparent 72%),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 55%) 0 9%,
+      rgb(255 255 255 / 0%) 9% 28%,
+      rgb(255 255 255 / 40%) 28% 33%,
+      rgb(255 255 255 / 0%) 33%
+    ),
+    var(--fm-bg);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .fm-ambient {
+    background:
+      radial-gradient(62% 46% at 46% -8%, rgb(23 134 76 / 10%), transparent 72%),
+      radial-gradient(42% 38% at 96% 14%, rgb(60 150 170 / 6%), transparent 72%),
+      linear-gradient(
+        112deg,
+        rgb(255 255 255 / 55%) 0 9%,
+        rgb(255 255 255 / 0%) 9% 28%,
+        rgb(255 255 255 / 40%) 28% 33%,
+        rgb(255 255 255 / 0%) 33%
+      ),
+      var(--fm-bg);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Superfícies de vidro — três níveis. Regra crítica: nenhuma tem border.  */
+/* Separação interna via box-shadow (hairline) ou grade com gap+bg.       */
+/* ---------------------------------------------------------------------- */
+.fm-glass-hero,
+.fm-glass-panel,
+.fm-glass-chip {
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.fm-glass-hero {
+  border-radius: var(--fm-radius-card);
+  background: var(--fm-surface-strong);
+  backdrop-filter: blur(22px) saturate(125%);
+  -webkit-backdrop-filter: blur(22px) saturate(125%);
+  box-shadow: var(--fm-hero-shadow);
+}
+
+.fm-glass-panel {
+  border-radius: var(--fm-radius-card);
+  background: var(--fm-surface);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  box-shadow: var(--fm-panel-shadow);
+}
+
+.fm-glass-chip {
+  border-radius: var(--fm-radius-pill);
+  background: var(--fm-chip);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .fm-glass-hero {
+    background: var(--fm-solid-panel-strong);
+  }
+
+  .fm-glass-panel {
+    background: var(--fm-solid-panel);
+  }
+
+  .fm-glass-chip {
+    background: var(--fm-chip-strong);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* CTA primário — gradiente accent com realce especular no topo.           */
+/* ---------------------------------------------------------------------- */
+.fm-btn-primary {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.06em;
+  border: none;
+  border-radius: var(--fm-radius-inner);
+  padding: 22px;
+  cursor: pointer;
+  background: linear-gradient(180deg, var(--fm-accent-hi) 0%, var(--fm-accent-lo) 100%);
+  color: var(--fm-accent-ink);
+  box-shadow:
+    0 10px 26px rgb(55 214 122 / 18%),
+    inset 0 1px 0 rgb(255 255 255 / 30%);
+  transition:
+    filter 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.fm-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.fm-btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    0 5px 13px rgb(55 214 122 / 9%),
+    inset 0 1px 0 rgb(255 255 255 / 30%);
+}
+
+.fm-btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Pulso "Ao vivo" — respeita prefers-reduced-motion (ver regra global abaixo). */
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

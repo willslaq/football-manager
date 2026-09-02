@@ -1,11 +1,12 @@
 .rrl-empty {
-  color: var(--mist);
+  color: var(--fm-text-dim);
   font-size: var(--text-sm);
 }
 
 .rrl-list {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 @keyframes rrl-rise-in {
@@ -24,19 +25,16 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2);
-  border-top: 1px solid var(--line);
+  padding: 14px 16px;
+  border-radius: var(--fm-radius-inner);
+  background: var(--fm-surface-row);
   animation: rrl-rise-in 220ms var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * 40ms);
 }
 
-.rrl-list .rrl-row:first-child {
-  border-top: none;
-}
-
 .rrl-row--own {
   position: relative;
-  padding-left: calc(var(--space-2) + 3px);
+  padding-left: calc(16px + 3px);
 }
 
 .rrl-row--own::before {
@@ -47,7 +45,7 @@
   bottom: 0.3rem;
   width: 3px;
   border-radius: var(--radius-sm);
-  background: var(--pitch);
+  background: var(--fm-accent);
 }
 
 .rrl-team {
@@ -77,15 +75,17 @@
 }
 
 .rrl-score {
-  font-weight: 700;
-  color: var(--chalk);
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  color: var(--fm-text);
   white-space: nowrap;
   min-width: 3.5rem;
   text-align: center;
 }
 
 .rrl-score--pending {
-  color: var(--mist);
+  color: var(--fm-text-dim);
   font-weight: 400;
 }
 

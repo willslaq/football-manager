@@ -17,7 +17,7 @@
 .finance__balance {
   font-family: var(--font-display);
   font-size: var(--text-3xl);
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .finance__layout {
@@ -43,20 +43,20 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .finance-card__hint {
   margin: 0;
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .finance__empty {
   margin: 0;
   padding: var(--space-5) 0;
   text-align: center;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .finance__ledger {
@@ -72,15 +72,15 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 0 var(--fm-hairline);
 }
 
 .finance__row:last-child {
-  border-bottom: none;
+  box-shadow: none;
 }
 
 .finance__row-date {
-  color: var(--mist);
+  color: var(--fm-text-dim);
   font-size: var(--text-sm);
 }
 
@@ -95,18 +95,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .finance__row-amount {
   text-align: right;
   font-weight: 700;
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .finance__row-balance {
   text-align: right;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .finance-ticket {
@@ -121,5 +121,5 @@
   text-align: center;
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  color: var(--chalk);
+  color: var(--fm-text);
 }

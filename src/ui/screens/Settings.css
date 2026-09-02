@@ -1,17 +1,27 @@
 .settings {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 40rem;
+  gap: var(--fm-gap);
+  max-width: 44rem;
   margin: 0 auto;
+  padding-bottom: var(--space-6);
 }
 
-.settings-card {
+.card.settings-card {
   display: flex;
   flex-direction: column;
+  gap: 14px;
+  padding: 26px 28px;
+}
+
+.settings-card .field__label {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--fm-text-faint);
 }
 
 .settings-card__hint {
-  font-size: var(--text-sm);
-  color: var(--mist);
+  font-size: 15px;
+  color: var(--fm-text-dim);
 }

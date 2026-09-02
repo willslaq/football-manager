@@ -20,12 +20,12 @@
 
 .cloud-controls__message {
   font-size: var(--text-sm);
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .cloud-controls__error {
   font-size: var(--text-sm);
-  color: var(--danger);
+  color: var(--fm-danger);
 }
 
 .cloud-controls__list {
@@ -50,5 +50,5 @@
 }
 
 .cloud-controls__row-date {
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }

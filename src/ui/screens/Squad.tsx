@@ -77,9 +77,9 @@ function compareBy(field: SortField, a: Player, b: Player): number {
 }
 
 function statClass(value: number): string {
-  if (value >= 80) return 'squad__stat squad__stat--high';
-  if (value < 50) return 'squad__stat squad__stat--low';
-  return 'squad__stat';
+  if (value >= 70) return 'squad__stat squad__stat--high';
+  if (value >= 40) return 'squad__stat squad__stat--mid';
+  return 'squad__stat squad__stat--low';
 }
 
 function formatPhysical(player: Player): string {
@@ -148,7 +148,7 @@ export function Squad() {
   const virtualizer = useVirtualizer({
     count: squad.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 48,
+    estimateSize: () => 52,
     overscan: 8,
   });
 
@@ -186,7 +186,10 @@ export function Squad() {
   return (
     <div className="squad">
       <div className="squad__header">
-        <span className="eyebrow">{fullSquad.length} jogadores federados no profissional</span>
+        <div className="squad__heading">
+          <span className="eyebrow">Profissional</span>
+          <h2 className="squad__title">{fullSquad.length} jogadores federados</h2>
+        </div>
         <div className="squad__filters">
           {POSITION_FILTERS.map((f) => (
             <button
@@ -243,7 +246,7 @@ export function Squad() {
                       </span>
                       <span className="squad__pos">{player.position}</span>
                       <span className="numeric squad__stat">{player.age}</span>
-                      <span className={`numeric ${statClass(player.strength)}`}>{player.strength}</span>
+                      <span className="numeric squad__stat squad__stat--force">{player.strength}</span>
                       <span className={`numeric ${statClass(player.condition)}`}>{player.condition}</span>
                       <span className={`numeric ${statClass(player.morale)}`}>{player.morale}</span>
                       <span className="numeric squad__stat squad__stat--muted">{formatMarketValueBRL(player.marketValue)}</span>
@@ -337,10 +340,10 @@ export function Squad() {
                 <span className="squad__detail-label">Cartões</span>
                 <span className="squad__detail-value squad__detail-cards">
                   <span className="squad__detail-card-count">
-                    {panelPlayer.seasonStats.yellowCards} <IconCard color="var(--floodlight)" />
+                    {panelPlayer.seasonStats.yellowCards} <IconCard color="var(--fm-warn)" />
                   </span>
                   <span className="squad__detail-card-count">
-                    {panelPlayer.seasonStats.redCards} <IconCard color="var(--danger)" />
+                    {panelPlayer.seasonStats.redCards} <IconCard color="var(--fm-danger)" />
                   </span>
                 </span>
               </div>

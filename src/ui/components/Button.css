@@ -7,16 +7,17 @@
   font-weight: 700;
   font-size: var(--text-sm);
   letter-spacing: 0.02em;
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border-radius: var(--fm-radius-control);
+  border: none;
   padding: 0.75rem 1.25rem;
   cursor: pointer;
   transition:
-    transform 120ms var(--ease-out),
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    opacity 0.15s ease;
+    transform 160ms var(--ease-out),
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease,
+    opacity 160ms ease;
   white-space: nowrap;
 }
 
@@ -39,49 +40,55 @@
 }
 
 .btn--primary {
-  --cut: 10px;
-  background: var(--pitch);
-  color: var(--pitch-ink);
-  border-radius: 0;
-  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
-  box-shadow: 0 0 0 rgb(47 217 104 / 0%);
-}
-
-.btn--primary.btn--sm {
-  --cut: 7px;
+  background: linear-gradient(180deg, var(--fm-accent-hi) 0%, var(--fm-accent-lo) 100%);
+  color: var(--fm-accent-ink);
+  box-shadow:
+    0 6px 16px rgb(55 214 122 / 18%),
+    inset 0 1px 0 rgb(255 255 255 / 25%);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: var(--pitch-strong);
-  box-shadow: 0 0 24px rgb(47 217 104 / 35%);
+  filter: brightness(1.06);
+}
+
+.btn--primary:active:not(:disabled) {
+  box-shadow:
+    0 3px 8px rgb(55 214 122 / 9%),
+    inset 0 1px 0 rgb(255 255 255 / 25%);
 }
 
 .btn--secondary {
-  background: transparent;
-  color: var(--chalk);
-  border-color: var(--line);
+  background: var(--fm-chip-strong);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--fm-text);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .btn--secondary {
+    background: var(--fm-solid-panel);
+  }
 }
 
 .btn--secondary:hover:not(:disabled) {
-  border-color: var(--pitch);
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .btn--ghost {
   background: transparent;
-  color: var(--mist);
+  color: var(--fm-text-dim);
   padding-inline: var(--space-2);
 }
 
 .btn--ghost:hover:not(:disabled) {
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .btn--danger {
   background: transparent;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .btn--danger:hover:not(:disabled) {
-  color: var(--danger);
+  color: var(--fm-danger);
 }

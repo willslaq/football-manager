@@ -1,6 +1,6 @@
 .match-event-feed__empty {
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .match-event-feed__list {
@@ -42,13 +42,13 @@
 .match-event-feed__minute {
   flex-shrink: 0;
   width: 2.2rem;
-  color: var(--mist);
+  color: var(--fm-text-dim);
   font-weight: 700;
 }
 
 .match-event-feed__text {
   font-size: var(--text-sm);
-  color: var(--chalk);
+  color: var(--fm-text);
   line-height: 1.5;
 }
 

@@ -32,23 +32,22 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
-  border: 1px solid var(--line);
+  color: var(--fm-text-dim);
+  background: var(--fm-chip);
   border-radius: var(--radius-sm);
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+    color 160ms ease,
+    background-color 160ms ease;
 }
 
 .academy__filter:hover {
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
-.academy__filter--active {
-  color: var(--pitch-ink);
-  background: var(--pitch);
-  border-color: var(--pitch);
+.academy__filter--active,
+.academy__filter--active:hover {
+  color: var(--fm-accent-ink);
+  background: var(--fm-accent);
 }
 
 .card.academy__card {
@@ -62,7 +61,7 @@
   margin: 0;
   padding: var(--space-5);
   text-align: center;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .academy__table {
@@ -76,7 +75,7 @@
   gap: var(--space-3);
   padding: var(--space-2) var(--space-4);
   min-width: 32rem;
-  border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 0 var(--fm-hairline);
 }
 
 .academy__row--head {
@@ -86,7 +85,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .academy__row--head .numeric {
@@ -99,11 +98,11 @@
 }
 
 .academy__row--clickable:hover {
-  background: var(--surface-2);
+  background: var(--fm-chip-strong);
 }
 
 .academy__row--selected {
-  background: color-mix(in srgb, var(--pitch) 10%, transparent);
+  background: color-mix(in srgb, var(--fm-accent) 10%, transparent);
 }
 
 .academy__name {
@@ -111,28 +110,28 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .academy__pos {
   font-family: var(--font-display);
   font-size: var(--text-sm);
   letter-spacing: 0.04em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .academy__stat {
   text-align: right;
   font-weight: 700;
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .academy__stat--high {
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .academy__stat--low {
-  color: var(--floodlight);
+  color: var(--fm-warn);
 }
 
 /* Painel de detalhe da promessa */
@@ -158,13 +157,13 @@
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .academy__detail-meta {
   margin: 0.2rem 0 0;
   font-size: var(--text-sm);
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .academy__detail-section {
@@ -178,7 +177,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .academy__detail-bars {

@@ -11,17 +11,40 @@
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
-  font-size: var(--text-sm);
-  color: var(--mist);
+  font-size: 15px;
+  color: var(--fm-text-dim);
+}
+
+.lineup__status > .numeric {
+  padding: 9px 16px;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 6%);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .lineup__status--valid {
-  color: var(--pitch);
-  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: var(--radius-full);
+  background: rgb(55 214 122 / 14%);
+  color: var(--fm-accent);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .lineup__status--invalid {
-  color: var(--floodlight);
+  padding: 9px 16px;
+  border-radius: var(--radius-full);
+  background: rgb(242 113 90 / 14%);
+  color: var(--fm-danger);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .lineup__save {
@@ -32,5 +55,5 @@
 }
 
 .lineup__save-message {
-  color: var(--pitch);
+  color: var(--fm-accent);
 }

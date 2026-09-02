@@ -181,9 +181,9 @@ export type Outcome = 'win' | 'draw' | 'loss';
 
 /** Mesmas cores usadas no restante da UI (zonas da Tabela, resultado no MatchResult) — Histórico e Calendário compartilham. */
 export const OUTCOME_VAR: Record<Outcome, string> = {
-  win: 'var(--pitch)',
-  draw: 'var(--floodlight)',
-  loss: 'var(--danger)',
+  win: 'var(--fm-accent)',
+  draw: 'var(--fm-warn)',
+  loss: 'var(--fm-danger)',
 };
 
 export const OUTCOME_LABEL: Record<Outcome, string> = { win: 'Vitória', draw: 'Empate', loss: 'Derrota' };

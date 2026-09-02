@@ -42,15 +42,15 @@
 }
 
 .mr-outcome--win {
-  color: var(--pitch);
+  color: var(--fm-accent);
 }
 
 .mr-outcome--loss {
-  color: var(--danger);
+  color: var(--fm-danger);
 }
 
 .mr-outcome--draw {
-  color: var(--floodlight);
+  color: var(--fm-warn);
 }
 
 /* Placar */
@@ -87,7 +87,7 @@
 .mr-team__name {
   font-family: var(--font-display);
   font-size: clamp(var(--text-sm), 2.6vw, var(--text-lg));
-  color: var(--chalk);
+  color: var(--fm-text);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,13 +101,13 @@
   gap: var(--space-2);
   font-family: var(--font-display);
   font-size: var(--text-3xl);
-  color: var(--chalk);
+  color: var(--fm-text);
   flex-shrink: 0;
   padding-top: var(--space-2);
 }
 
 .mr-score__sep {
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .mr-goals {
@@ -118,7 +118,7 @@
   flex-direction: column;
   gap: 0.2rem;
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   text-align: center;
 }
 
@@ -154,12 +154,12 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--mist);
+  color: var(--fm-text-dim);
 }
 
 .mr-motm__name {
   font-size: var(--text-lg);
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 /* Detalhes da partida (lance a lance, expansível) */
@@ -178,7 +178,7 @@
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 700;
-  color: var(--chalk);
+  color: var(--fm-text);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -186,7 +186,7 @@
 
 .mr-details__chevron {
   flex-shrink: 0;
-  color: var(--mist);
+  color: var(--fm-text-dim);
   transition: transform 200ms var(--ease-out);
 }
 
@@ -202,7 +202,7 @@
 
 .mr-details__body {
   padding: var(--space-4) var(--space-5) var(--space-5);
-  border-top: 1px solid var(--line);
+  box-shadow: 0 -1px 0 var(--fm-hairline);
 
   opacity: 1;
 
@@ -230,7 +230,7 @@
   width: 2.5rem;
   flex-shrink: 0;
   font-weight: 700;
-  color: var(--chalk);
+  color: var(--fm-text);
 }
 
 .stat-row__value--away {
@@ -247,7 +247,7 @@
 
 .stat-row__label {
   font-size: var(--text-xs);
-  color: var(--mist);
+  color: var(--fm-text-dim);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -258,7 +258,7 @@
   height: 6px;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: var(--surface-2);
+  background: var(--fm-chip-strong);
 }
 
 .stat-row__fill {
@@ -266,11 +266,11 @@
 }
 
 .stat-row__fill--home {
-  background: var(--pitch);
+  background: var(--fm-accent);
 }
 
 .stat-row__fill--away {
-  background: var(--floodlight);
+  background: var(--fm-warn);
   margin-left: auto;
 }
 
@@ -292,7 +292,7 @@
 .mr-reason__note {
   flex: 1;
   font-size: var(--text-sm);
-  color: var(--chalk);
+  color: var(--fm-text);
   line-height: 1.5;
 }
 

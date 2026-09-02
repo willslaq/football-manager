@@ -1,4 +1,5 @@
 import type { ClubId, Club } from './club';
+import type { FinanceTransaction } from './finance';
 import type { Player, PlayerId } from './player';
 import type { Season } from './season';
 import type { CompetitionId } from './competition';
@@ -49,4 +50,6 @@ export interface CareerState {
   season: Season;
   history: CareerHistoryEntry[];
   settings: CareerSettings;
+  /** Extrato financeiro do clube do jogador — ver `FinanceTransaction`. Só o clube do jogador, não o mundo inteiro. */
+  financeLog: FinanceTransaction[];
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import './AppShell.css';
 
-export type HubScreen = 'home' | 'squad' | 'academy' | 'lineup' | 'calendar' | 'table' | 'settings';
+export type HubScreen = 'home' | 'squad' | 'academy' | 'lineup' | 'calendar' | 'table' | 'finance' | 'settings';
 
 const TABS: { id: HubScreen; label: string }[] = [
   { id: 'home', label: 'Início' },
@@ -11,6 +11,7 @@ const TABS: { id: HubScreen; label: string }[] = [
   { id: 'lineup', label: 'Escalação' },
   { id: 'calendar', label: 'Calendário' },
   { id: 'table', label: 'Tabela' },
+  { id: 'finance', label: 'Finanças' },
   { id: 'settings', label: 'Configurações' },
 ];
 
@@ -86,6 +87,21 @@ function IconTable() {
   );
 }
 
+function IconFinance() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" fill="none" />
+      <path
+        d="M9.6 5.8c-.3-.5-.9-.8-1.6-.8-1 0-1.8.6-1.8 1.4s.8 1.2 1.8 1.4c1 .2 1.8.6 1.8 1.4s-.8 1.4-1.8 1.4c-.7 0-1.3-.3-1.6-.8M8 4.6v.6M8 10.8v.6"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
 function IconSettings() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -104,6 +120,7 @@ const TAB_ICONS: Record<HubScreen, () => ReactNode> = {
   lineup: IconLineup,
   calendar: IconCalendar,
   table: IconTable,
+  finance: IconFinance,
   settings: IconSettings,
 };
 

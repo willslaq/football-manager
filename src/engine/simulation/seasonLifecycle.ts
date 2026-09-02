@@ -10,6 +10,7 @@ import type { PlayerId } from '../types/player';
 import { LIBERTADORES_CUTOFF_POSITION, PROMOTION_CUTOFF_POSITION, RELEGATION_CUTOFF_POSITION } from './config';
 import { developAcademyPlayer, developPlayer } from './development';
 import { advanceAcademies } from './academy';
+import { computePrizeMoney, prizePoolForDivision } from './finance';
 import { sortStandings } from './standings';
 
 export interface SeasonSummary {
@@ -108,6 +109,10 @@ export function buildSeasonSummary(state: CareerState, competitionIndex = 0): Se
  * Também gira a categoria de base de cada clube (`advanceAcademies`): libera por idade quem não
  * foi promovido, faz cada promessa restante crescer em treino (`developAcademyPlayer` — sem
  * minutagem, diferente de `developPlayer`) e gera o intake do próximo ano — ver `academy.ts`.
+ *
+ * Distribui a premiação de fim de temporada de cada divisão (`computePrizeMoney`, taperada pela
+ * posição final NA divisão da temporada que acabou, antes do acesso/rebaixamento acima) — soma
+ * ao `Club.budget` de todo mundo, e registra em `financeLog` só se for o clube do jogador.
  */
 export function startNewSeason(state: CareerState): CareerState {
   if (state.season.state !== 'finished') {
@@ -142,6 +147,16 @@ export function startNewSeason(state: CareerState): CareerState {
   const historyEntryA: CareerHistoryEntry = { year: state.season.year, ...summaryA };
   const historyEntryB: CareerHistoryEntry = { year: state.season.year, ...summaryB };
 
+  // Premiação de fim de temporada: taperada por posição final NA PRÓPRIA divisão (ver
+  // `computePrizeMoney`), somada ao caixa antes de qualquer coisa mudar de divisão pra
+  // temporada seguinte — a posição que rendeu o prêmio é a da temporada que ACABOU.
+  const seriesATeamIds = new Set(competitionA.teams);
+  const prizeByClub = new Map<ClubId, number>();
+  for (const [clubId, position] of positionByClub) {
+    const totalTeams = totalTeamsByClub.get(clubId) ?? 20;
+    prizeByClub.set(clubId, computePrizeMoney(position, totalTeams, prizePoolForDivision(seriesATeamIds.has(clubId))));
+  }
+
   const relegatedFromA = new Set(summaryA.relegated);
   const promotedFromB = new Set(summaryB.promoted);
   const nextSeriesATeams = [...competitionA.teams.filter((id) => !relegatedFromA.has(id)), ...promotedFromB];
@@ -158,11 +173,28 @@ export function startNewSeason(state: CareerState): CareerState {
 
   const clubs = state.world.clubs.map((club) => {
     const totalTeams = totalTeamsByClub.get(club.id) ?? 20;
+    const base = academyClubById.get(club.id) ?? club;
     return {
-      ...(academyClubById.get(club.id) ?? club),
+      ...base,
       morale: moraleFromFinalStanding(positionByClub.get(club.id) ?? totalTeams, totalTeams),
+      budget: base.budget + (prizeByClub.get(club.id) ?? 0),
     };
   });
+
+  const playerPrize = prizeByClub.get(state.playerClubId) ?? 0;
+  const financeLog =
+    playerPrize > 0
+      ? [
+          ...state.financeLog,
+          {
+            date: state.season.currentDate,
+            type: 'prize' as const,
+            description: `Premiação ${seriesATeamIds.has(state.playerClubId) ? 'Série A' : 'Série B'} — ${positionByClub.get(state.playerClubId) ?? '?'}º lugar`,
+            amountEur: playerPrize,
+            balanceAfterEur: clubs.find((c) => c.id === state.playerClubId)?.budget ?? 0,
+          },
+        ]
+      : state.financeLog;
 
   const players = [
     ...state.world.players
@@ -192,5 +224,6 @@ export function startNewSeason(state: CareerState): CareerState {
       [competitionB.id]: nextSeriesBTeams,
     }),
     history: [...state.history, historyEntryA, historyEntryB],
+    financeLog,
   };
 }

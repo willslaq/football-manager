@@ -9,6 +9,7 @@ import { Academy } from './ui/screens/Academy';
 import { Lineup } from './ui/screens/Lineup';
 import { Calendar } from './ui/screens/Calendar';
 import { Table } from './ui/screens/Table';
+import { Finance } from './ui/screens/Finance';
 import { Settings } from './ui/screens/Settings';
 import { MatchLive } from './ui/screens/MatchLive';
 import { MatchResult } from './ui/screens/MatchResult';
@@ -104,6 +105,7 @@ function App() {
         />
       )}
       {screen === 'table' && <Table onNavigate={setScreen} />}
+      {screen === 'finance' && <Finance />}
       {screen === 'home' && <Home onNavigate={setScreen} />}
       {screen === 'settings' && <Settings />}
     </AppShell>

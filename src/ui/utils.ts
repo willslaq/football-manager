@@ -68,15 +68,31 @@ export const POSITION_FILTERS: { id: PlayerListFilter; label: string }[] = [
  * Transfermarkt), nunca convertido/persistido em R$. Sem cotação em tempo real no MVP; ajustar
  * aqui se quiser refletir uma taxa diferente.
  */
-const EUR_TO_BRL_RATE = 6;
+export const EUR_TO_BRL_RATE = 6;
 
-/** `Player.marketValue` (EUR) formatado como R$ compacto (mil/mi) pra caber em coluna de tabela. */
+/** R$ arredondado a partir de um valor em EUR — inverso de `eurFromBRL`, mesma cotação fixa de `formatEurBRL`. */
+export function brlFromEur(eur: number): number {
+  return Math.round(eur * EUR_TO_BRL_RATE);
+}
+
+/** EUR a partir de um valor em R$ digitado/ajustado na UI (ex.: preço do ingresso na tela de Finanças) — o motor guarda tudo em EUR. */
+export function eurFromBRL(brl: number): number {
+  return brl / EUR_TO_BRL_RATE;
+}
+
+/** Qualquer valor em EUR formatado como R$ compacto (mil/mi) — base de `formatMarketValueBRL` e da tela de Finanças. */
+export function formatEurBRL(eur: number): string {
+  const brl = eur * EUR_TO_BRL_RATE;
+  const abs = Math.abs(brl);
+  if (abs >= 1_000_000) return `R$ ${(brl / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mi`;
+  if (abs >= 1_000) return `R$ ${Math.round(brl / 1_000).toLocaleString('pt-BR')} mil`;
+  return `R$ ${brl.toLocaleString('pt-BR')}`;
+}
+
+/** `Player.marketValue` (EUR) formatado como R$ compacto (mil/mi) pra caber em coluna de tabela — 0/ausente vira "—", diferente de `formatEurBRL` (onde zero é um saldo legítimo). */
 export function formatMarketValueBRL(marketValueEur: number): string {
   if (!marketValueEur) return '—';
-  const brl = marketValueEur * EUR_TO_BRL_RATE;
-  if (brl >= 1_000_000) return `R$ ${(brl / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mi`;
-  if (brl >= 1_000) return `R$ ${Math.round(brl / 1_000).toLocaleString('pt-BR')} mil`;
-  return `R$ ${brl.toLocaleString('pt-BR')}`;
+  return formatEurBRL(marketValueEur);
 }
 
 export function findClub(career: CareerState, clubId: ClubId): Club | undefined {

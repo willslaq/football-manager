@@ -45,6 +45,13 @@ export interface SetTacticalIntensityRequest {
   payload: { tacticalIntensity: TacticalIntensity };
 }
 
+/** Ajusta o preço do ingresso (EUR) do clube do jogador — clamped à faixa da própria divisão, ver `ticketPriceRange` em simulation/finance.ts. */
+export interface SetTicketPriceRequest {
+  type: 'setTicketPrice';
+  requestId: string;
+  payload: { ticketPrice: number };
+}
+
 /**
  * Avança só o CALENDÁRIO até a data do próximo jogo do time do jogador (ver `advanceCalendar` em
  * simulation/season.ts) — não pula direto pra "próxima rodada" nem já inicia a partida: caminha
@@ -135,6 +142,7 @@ export type EngineRequest =
   | SetLiveMatchSpeedRequest
   | SetLiveMatchPausedRequest
   | SetTacticalIntensityRequest
+  | SetTicketPriceRequest
   | RequestSubstitutionRequest
   | PromotePlayerRequest;
 
@@ -230,7 +238,7 @@ export interface LiveMatchTraceResponse {
   payload: { entry: EngineTraceEntry };
 }
 
-/** CareerState.settings mudou (ex.: tacticalIntensity) — só atualiza `career`, não mexe em lineup/partida em exibição. */
+/** CareerState mudou por uma ação simples (ex.: tacticalIntensity, ticketPrice) — só atualiza `career`, não mexe em lineup/partida em exibição. */
 export interface SettingsUpdatedResponse {
   type: 'settingsUpdated';
   requestId: string;

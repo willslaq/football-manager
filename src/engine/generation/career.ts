@@ -18,6 +18,7 @@ export function createBrasileiraoCareer(
     season: generateSeason(playerClubId),
     history: [],
     settings: { tacticalIntensity },
+    financeLog: [],
   };
 }
 

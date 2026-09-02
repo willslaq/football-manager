@@ -4,6 +4,7 @@ import type { Player } from '../types/player';
 import type { World } from '../types/career';
 import { clubReputationFromStanding, generatePlayerDerived, moraleFromFinalStanding, playerSeed } from './attributes';
 import { generateAcademyIntake } from './academy';
+import { computeStartingBudget, defaultTicketPrice } from '../simulation/finance';
 import { INITIAL_SEASON_YEAR } from './season';
 import type { RawClubFile, RawStandingsFile } from './rawData';
 import standingsFileA from '../../data/brasileirao-2026/standings-current.json';
@@ -29,7 +30,12 @@ function loadRawClubs(modules: Record<string, { default: RawClubFile }>): RawClu
  * categoria de base de cada clube (`academySquad`) com o intake do ano inicial (ver `academy.ts`),
  * pra não começar vazia — as próximas gerações vêm de `startNewSeason` a cada temporada.
  */
-function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStandingsFile['standings']): World {
+function buildDivision(
+  seed: number,
+  rawClubs: RawClubFile[],
+  standings: RawStandingsFile['standings'],
+  isSeriesA: boolean,
+): World {
   const totalTeams = standings.length;
   const positionByClub = new Map(standings.map((entry, index) => [entry.clubId, index + 1]));
 
@@ -94,6 +100,8 @@ function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStan
       academySquad: academy.map((p) => p.id),
       formation: raw.club.formation,
       style: raw.club.style,
+      budget: computeStartingBudget(reputation, raw.club.stadiumCapacity),
+      ticketPrice: defaultTicketPrice(isSeriesA),
     });
   }
 
@@ -111,7 +119,7 @@ function buildDivision(seed: number, rawClubs: RawClubFile[], standings: RawStan
  * partir da seed, como antes.
  */
 export function generateWorld(seed: number): World {
-  const seriesA = buildDivision(seed, loadRawClubs(clubModulesA), (standingsFileA as RawStandingsFile).standings);
-  const seriesB = buildDivision(seed, loadRawClubs(clubModulesB), (standingsFileB as RawStandingsFile).standings);
+  const seriesA = buildDivision(seed, loadRawClubs(clubModulesA), (standingsFileA as RawStandingsFile).standings, true);
+  const seriesB = buildDivision(seed, loadRawClubs(clubModulesB), (standingsFileB as RawStandingsFile).standings, false);
   return { clubs: [...seriesA.clubs, ...seriesB.clubs], players: [...seriesA.players, ...seriesB.players] };
 }

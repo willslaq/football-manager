@@ -201,6 +201,8 @@ interface CareerStore {
   listClubs: (seed: number) => void;
   startCareer: (seed: number, trainerName: string, clubId: string, tacticalIntensity?: TacticalIntensity) => void;
   setTacticalIntensity: (tacticalIntensity: TacticalIntensity) => void;
+  /** Ajusta o preço do ingresso (EUR) do clube do jogador — clamped à faixa da própria divisão pelo motor. */
+  setTicketPrice: (ticketPrice: number) => void;
   /** Promove uma promessa da categoria de base pro elenco principal do clube do jogador. */
   promotePlayer: (playerId: PlayerId) => void;
   /**
@@ -467,6 +469,10 @@ export const useCareerStore = create<CareerStore>((set, get) => {
 
     setTacticalIntensity: (tacticalIntensity) => {
       send({ type: 'setTacticalIntensity', requestId: crypto.randomUUID(), payload: { tacticalIntensity } });
+    },
+
+    setTicketPrice: (ticketPrice) => {
+      send({ type: 'setTicketPrice', requestId: crypto.randomUUID(), payload: { ticketPrice } });
     },
 
     promotePlayer: (playerId) => {

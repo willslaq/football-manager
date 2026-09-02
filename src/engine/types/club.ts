@@ -34,4 +34,18 @@ export interface Club {
   /** Formação/estilo real pesquisado (último jogo) pra escalação automática de CPU — ausente = DEFAULT_AUTO_TACTICS (season.ts). */
   formation?: Formation;
   style?: TacticStyle;
+  /**
+   * Saldo em caixa do clube, em EUR (mesma convenção de `Player.marketValue` — exibição converte
+   * pra R$, ver `formatEurBRL`). Cresce com bilheteria (`simulation/finance.ts`'s
+   * `computeMatchdayRevenue`) e premiação de fim de temporada (`computePrizeMoney`) — só receita
+   * por ora, sem despesas (não há contratos/salários no jogo ainda).
+   */
+  budget: number;
+  /**
+   * Preço médio do ingresso pro mando de campo, em EUR. CPU nunca muda o próprio (fica sempre no
+   * padrão da divisão, ver `defaultTicketPrice`); o clube do jogador pode ajustar dentro da faixa
+   * de `ticketPriceRange`, na tela de Finanças. Afeta a receita de bilheteria linearmente e a
+   * ocupação do estádio com uma leve elasticidade (ver `FINANCE_TICKET_PRICE_ELASTICITY`).
+   */
+  ticketPrice: number;
 }

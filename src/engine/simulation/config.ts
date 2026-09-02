@@ -399,6 +399,62 @@ export const RED_CARD_SECTOR_PENALTY: Record<Sector, number> = {
 /** Máximo de substituições por time por partida (ver match.ts's MatchSubstitution/applySubstitution). */
 export const MAX_SUBSTITUTIONS_PER_TEAM = 5;
 
+/** Todas as constantes do sistema financeiro (ver simulation/finance.ts) — caixa do clube, bilheteria e premiação. */
+
+/**
+ * Orçamento inicial de um clube novo, em EUR (mesma convenção de `Player.marketValue`): parte
+ * fixa + variável por reputação e capacidade do estádio (ver `computeStartingBudget`). Clube
+ * grande/badalado com estádio maior começa com caixa maior, sem precisar de tabela por clube —
+ * reaproveitada tanto na geração do mundo (world.ts) quanto na migração de saves antigos
+ * (engine.worker.ts's `setCareer`), pra nunca inventar um valor diferente do que uma carreira
+ * nova receberia.
+ */
+export const FINANCE_BASE_STARTING_BUDGET_EUR = 2_000_000;
+export const FINANCE_STARTING_BUDGET_PER_REPUTATION_EUR = 150_000;
+export const FINANCE_STARTING_BUDGET_PER_CAPACITY_EUR = 100;
+
+/** Preço médio do ingresso (EUR) por divisão — padrão pra toda CPU e ponto de partida do clube do jogador (ver `defaultTicketPrice`). */
+export const FINANCE_DEFAULT_TICKET_PRICE_SERIE_A_EUR = 25;
+export const FINANCE_DEFAULT_TICKET_PRICE_SERIE_B_EUR = 12;
+/** Faixa permitida pro ajuste de preço do ingresso do clube do jogador — múltiplo do padrão da própria divisão (ver `ticketPriceRange`). */
+export const FINANCE_TICKET_PRICE_MIN_MULTIPLIER = 0.5;
+export const FINANCE_TICKET_PRICE_MAX_MULTIPLIER = 2.5;
+
+/**
+ * Ocupação-base do estádio (fração da capacidade, 0-1) num jogo "neutro": reputação e moral do
+ * mandante na média (50), tabela no meio, adversário de reputação igual, preço no padrão da
+ * divisão. Os pesos abaixo deslocam a partir daí (ver `computeMatchdayRevenue`).
+ */
+export const FINANCE_BASE_OCCUPANCY = 0.55;
+export const FINANCE_OCCUPANCY_MIN = 0.15;
+export const FINANCE_OCCUPANCY_MAX = 0.98;
+/** Cada ponto de reputação acima/abaixo de 50 (neutro) desloca a ocupação por esse tanto. */
+export const FINANCE_OCCUPANCY_REPUTATION_WEIGHT = 0.006;
+/** Cada ponto de moral acima/abaixo de 50 (neutro) desloca a ocupação por esse tanto — torcida empolgada aparece mais. */
+export const FINANCE_OCCUPANCY_MORALE_WEIGHT = 0.003;
+/** Cada posição de distância do meio da tabela desloca a ocupação — briga por título ou fuga do rebaixamento atrai público, meio de tabela morno afasta. */
+export const FINANCE_OCCUPANCY_TABLE_POSITION_WEIGHT = 0.006;
+/** Quando o visitante é mais badalado (reputação maior) que o mandante, cada ponto de diferença atrai público extra — só nessa direção, visitante fraco não afasta ninguém. */
+export const FINANCE_OCCUPANCY_OPPONENT_REPUTATION_WEIGHT = 0.004;
+/** Ruído aleatório (±, seedado por partida) somado à ocupação de cada jogo — variação natural de público, não um "passeio" acumulado como POSSESSION_WALK_NOISE. */
+export const FINANCE_OCCUPANCY_NOISE_AMPLITUDE = 0.06;
+/**
+ * Elasticidade de preço: cada fração acima/abaixo do preço-padrão da divisão desloca a ocupação
+ * nessa proporção na direção oposta. Sem isso, subir o preço ao máximo seria sempre a jogada
+ * certa na tela de Finanças (mais receita por ingresso, sem contrapartida nenhuma) — esse
+ * coeficiente é o que torna o ajuste de preço uma escolha de verdade.
+ */
+export const FINANCE_TICKET_PRICE_ELASTICITY = 0.35;
+
+/**
+ * Prêmio total distribuído por divisão ao fim da temporada, em EUR — taperado linearmente por
+ * posição final (ver `computePrizeMoney`), sem tabela por clube. Dimensionado pra ficar relevante
+ * perto da bilheteria agregada de uma temporada da divisão, sem dominá-la (representa um valor
+ * único combinando premiação de competição e cota de TV, sem os dois itemizados separadamente).
+ */
+export const FINANCE_SERIE_A_PRIZE_POOL_EUR = 40_000_000;
+export const FINANCE_SERIE_B_PRIZE_POOL_EUR = 12_000_000;
+
 /**
  * Overrides de parâmetro em runtime — único ponto de entrada pra calibração/análise de
  * sensibilidade externa (ver `benchmark/`, fora do bundle do jogo). Cobre só os escalares que

@@ -51,6 +51,8 @@ function validateClub(club: Club, playerIds: Set<string>, errors: string[]): voi
   if (!inRange(club.reputation, 0, 100)) errors.push(`${label}: reputation fora de [0, 100]`);
   if (!inRange(club.morale, 0, 100)) errors.push(`${label}: morale fora de [0, 100]`);
   if (club.stadiumCapacity <= 0) errors.push(`${label}: stadiumCapacity deve ser > 0`);
+  if (!Number.isFinite(club.budget) || club.budget < 0) errors.push(`${label}: budget inválido (${club.budget})`);
+  if (!Number.isFinite(club.ticketPrice) || club.ticketPrice <= 0) errors.push(`${label}: ticketPrice inválido (${club.ticketPrice})`);
   if (club.squad.length === 0) errors.push(`${label}: squad vazio`);
 
   for (const playerId of club.squad) {
@@ -180,6 +182,18 @@ export function validateCareerState(state: CareerState): ValidationResult {
       errors.push(`history (${entry.year}) referencia goleiro (luva de ouro) inexistente (${entry.goldenGlove.playerId})`);
     }
   }
+
+  // `?? []` (não `state.financeLog.forEach` direto): saves de antes do sistema financeiro não
+  // têm o campo NENHUM (undefined, não `[]`) — sem isso, validar um save assim ANTES da migração
+  // (ver `persistence/serialize.ts`'s `importCareerFromJSON`, que valida antes de passar pelo
+  // `setCareer` do worker) travaria com TypeError em vez de reportar erro de validação.
+  (state.financeLog ?? []).forEach((entry, index) => {
+    const label = `financeLog[${index}]`;
+    if (!ISO_DATE_RE.test(entry.date)) errors.push(`${label}: date inválido (${entry.date})`);
+    if (entry.type !== 'matchday' && entry.type !== 'prize') errors.push(`${label}: type inválido (${entry.type})`);
+    if (!Number.isFinite(entry.amountEur) || entry.amountEur < 0) errors.push(`${label}: amountEur inválido (${entry.amountEur})`);
+    if (!Number.isFinite(entry.balanceAfterEur)) errors.push(`${label}: balanceAfterEur inválido (${entry.balanceAfterEur})`);
+  });
 
   return { valid: errors.length === 0, errors };
 }

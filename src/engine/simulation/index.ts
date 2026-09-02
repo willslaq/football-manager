@@ -8,3 +8,4 @@ export * from './seasonLifecycle';
 export * from './standings';
 export * from './academy';
 export * from './development';
+export * from './finance';

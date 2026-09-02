@@ -46,6 +46,8 @@ function makeClub(id: string, name: string, squad: string[]): Club {
     colors: { primary: '#ff0000', secondary: '#ffffff' },
     stadiumCapacity: 20000,
     squad,
+    budget: 10_000_000,
+    ticketPrice: 25,
   };
 }
 
@@ -99,6 +101,7 @@ function buildExampleCareerState(): CareerState {
     },
     history: [],
     settings: { tacticalIntensity: 'subtle' },
+    financeLog: [],
   };
 }
 

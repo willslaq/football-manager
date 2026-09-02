@@ -14,6 +14,7 @@ import {
   CLUB_MORALE_WIN_DELTA,
   CONDITION_RECOVERY_PER_DAY,
 } from './config';
+import { applyMatchdayRevenue } from './finance';
 import { autoAssign, buildSlots, slotPositionsByPlayer } from './formation';
 import { simulateMatch, type MatchTeamInput } from './match';
 
@@ -339,8 +340,9 @@ function earliestPendingDate(competitions: Competition[], cursor: string): strin
 /**
  * Simula e comita de uma vez uma lista de fixtures (nenhum deles do time do jogador — CPU x CPU
  * sempre) que compartilham a mesma data: tabela, moral dos clubes envolvidos, estatísticas de
- * quem jogou e suspensão servida (escopada aos dois elencos de cada partida — ver
- * `decrementSuspensions`). `onCommitted` recebe cada fixture já resolvido, na ordem processada,
+ * quem jogou, suspensão servida (escopada aos dois elencos de cada partida — ver
+ * `decrementSuspensions`) e bilheteria creditada ao mandante (ver `applyMatchdayRevenue`).
+ * `onCommitted` recebe cada fixture já resolvido, na ordem processada,
  * pra quem chama decidir se ele é "enquanto isso" (data passada) ou "mesmo dia" (ver
  * `advanceToNextEvent`). Função pura.
  */
@@ -356,6 +358,7 @@ function commitFixturesBatch(
 
   let players = state.world.players;
   let clubs = state.world.clubs;
+  let financeLog = state.financeLog;
   const competitions = state.season.competitions.map((c) => ({ ...c, fixtures: c.fixtures.map((r) => [...r]) }));
 
   for (const { competitionIndex, roundIndex, fixture } of refs) {
@@ -364,6 +367,22 @@ function commitFixturesBatch(
     const seed = deriveSeed(state.seed, `fixture:${fixture.round}:${fixture.homeTeamId}:${fixture.awayTeamId}`);
     const result = simulateMatch(home, away, seed, state.settings.tacticalIntensity);
     const playedFixture: Fixture = { ...fixture, result };
+
+    // Bilheteria calculada com a tabela ENTRANDO nessa partida (antes do resultado dela ser
+    // aplicado abaixo) — reflete a expectativa de público de quem foi assistir, não o resultado.
+    const revenue = applyMatchdayRevenue(
+      clubs,
+      fixture.homeTeamId,
+      fixture.awayTeamId,
+      competitions[competitionIndex].standings,
+      competitions[competitionIndex].teams.length,
+      competitionIndex === 0,
+      state.playerClubId,
+      fixture.date,
+      deriveSeed(state.seed, `attendance:${fixture.round}:${fixture.homeTeamId}:${fixture.awayTeamId}`),
+    );
+    clubs = revenue.clubs;
+    if (revenue.transaction) financeLog = [...financeLog, revenue.transaction];
 
     competitions[competitionIndex].fixtures[roundIndex] = competitions[competitionIndex].fixtures[roundIndex].map((f) =>
       f === fixture ? playedFixture : f,
@@ -398,7 +417,7 @@ function commitFixturesBatch(
     onCommitted(playedFixture);
   }
 
-  return { ...state, world: { ...state.world, players, clubs }, season: { ...state.season, competitions } };
+  return { ...state, world: { ...state.world, players, clubs }, season: { ...state.season, competitions }, financeLog };
 }
 
 export interface AdvanceCalendarResult {
@@ -591,8 +610,10 @@ export function startMatchDay(state: CareerState, input: AdvanceRoundInput): Sta
 
 /**
  * Comita o resultado FINAL (pós-substituições, se houve) da partida do jogador: tabela, moral
- * dos dois clubes envolvidos e estatísticas de quem participou (titulares + qualquer
- * substituto que entrou — ver `collectMatchStatMaps`). Chamado depois que a transmissão ao
+ * dos dois clubes envolvidos, estatísticas de quem participou (titulares + qualquer
+ * substituto que entrou — ver `collectMatchStatMaps`) e bilheteria creditada ao mandante (ver
+ * `applyMatchdayRevenue` — vale tanto quando o clube do jogador manda quanto quando visita).
+ * Chamado depois que a transmissão ao
  * vivo termina (ver engine.worker.ts). Suspensão do time do jogador já foi servida em
  * `advanceToNextEvent` no instante em que a data foi alcançada — não repete aqui. Função pura.
  */
@@ -613,6 +634,21 @@ export function commitPlayerMatchResult(
 
   const playedFixture: Fixture = { ...ctx.playerFixture, result: finalResult };
   const updatedRound = round.map((f) => (f === ctx.playerFixture ? playedFixture : f));
+
+  // Bilheteria com a tabela ENTRANDO nessa partida — mesma regra de commitFixturesBatch, usa
+  // `competition.standings` (ainda não tocado pelo resultado desse jogo, ver applyResultToStandings abaixo).
+  const revenue = applyMatchdayRevenue(
+    state.world.clubs,
+    ctx.playerFixture.homeTeamId,
+    ctx.playerFixture.awayTeamId,
+    competition.standings,
+    competition.teams.length,
+    competitionIndex === 0,
+    state.playerClubId,
+    ctx.playerFixture.date,
+    deriveSeed(state.seed, `attendance:${ctx.playerFixture.round}:${ctx.playerFixture.homeTeamId}:${ctx.playerFixture.awayTeamId}`),
+  );
+
   const standings = applyResultToStandings(competition.standings, playedFixture);
 
   const homeClub = state.world.clubs.find((c) => c.id === ctx.playerFixture.homeTeamId);
@@ -633,7 +669,7 @@ export function commitPlayerMatchResult(
   return {
     ...state,
     world: {
-      clubs: state.world.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
+      clubs: revenue.clubs.map((c) => (moraleByClub.has(c.id) ? { ...c, morale: moraleByClub.get(c.id)! } : c)),
       players: applyFinalEnergy(
         applyParticipantStats(
           state.world.players,
@@ -648,6 +684,7 @@ export function commitPlayerMatchResult(
       ),
     },
     season: { ...nextSeason, currentRound: deriveCurrentRound(nextSeason, state.playerClubId) },
+    financeLog: revenue.transaction ? [...state.financeLog, revenue.transaction] : state.financeLog,
   };
 }
 

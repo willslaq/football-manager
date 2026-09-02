@@ -10,10 +10,13 @@ import {
   generateSeason,
   generateWorld,
   initialStandingsByClub,
+  computeStartingBudget,
+  defaultTicketPrice,
   MAX_SUBSTITUTIONS_PER_TEAM,
   pickAutoLineup,
   promotePlayer,
   setTacticalIntensity,
+  setTicketPrice,
   simulateMatch,
   startMatchDay,
   startNewSeason,
@@ -404,6 +407,11 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
         // é o que distingue "nunca gerada" de "gerada e vazia") — completa com um intake pro ano
         // ATUAL da temporada salva (mesma lógica de `world.ts`'s ano inicial, só que aplicada
         // agora em vez de na criação da carreira; não tenta reconstruir os anos que já passaram).
+        // Saves de antes do sistema financeiro não têm `Club.budget`/`Club.ticketPrice` nem
+        // `CareerState.financeLog` — completa caixa/preço com a MESMA fórmula que uma carreira
+        // nova receberia (`computeStartingBudget`/`defaultTicketPrice`, ancorada na reputação
+        // ATUAL do clube salvo, não a de uma carreira nova) e o extrato com `[]` (sem tentar
+        // reconstruir bilheteria/premiação de temporadas já jogadas antes dessa versão).
         const incoming = request.payload.state;
         const needsSerieB = incoming.season.competitions.length < 2;
         const serieBAddon = needsSerieB ? generateSeason(incoming.playerClubId) : null;
@@ -434,17 +442,21 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
             .filter((club) => club.academySquad === undefined)
             .map((club) => [club.id, generateAcademyIntake(incoming.seed, club, incoming.season.year)]),
         );
+        const seriesATeamIds = new Set(baseSeason.competitions[0]?.teams ?? []);
 
         const normalized: CareerState = {
           ...incoming,
           settings: incoming.settings ?? { tacticalIntensity: 'subtle' },
           season: baseSeason.currentDate ? baseSeason : backfillFixtureDates(baseSeason, new Date().toISOString().slice(0, 10)),
+          financeLog: incoming.financeLog ?? [],
           world: {
             ...baseWorld,
             clubs: baseWorld.clubs.map((club) => ({
               ...club,
               morale: club.morale ?? 70,
               academySquad: club.academySquad ?? (academyByClub.get(club.id) ?? []).map((p) => p.id),
+              budget: club.budget ?? computeStartingBudget(club.reputation, club.stadiumCapacity),
+              ticketPrice: club.ticketPrice ?? defaultTicketPrice(seriesATeamIds.has(club.id)),
             })),
             players: [
               ...baseWorld.players.map((player) => ({
@@ -491,6 +503,13 @@ self.onmessage = (event: MessageEvent<EngineRequest>) => {
       case 'setTacticalIntensity': {
         if (!career) throw new Error('Nenhuma carreira iniciada');
         career = setTacticalIntensity(career, request.payload.tacticalIntensity);
+        respond({ type: 'settingsUpdated', requestId: request.requestId, payload: { state: career } });
+        break;
+      }
+
+      case 'setTicketPrice': {
+        if (!career) throw new Error('Nenhuma carreira iniciada');
+        career = setTicketPrice(career, request.payload.ticketPrice);
         respond({ type: 'settingsUpdated', requestId: request.requestId, payload: { state: career } });
         break;
       }

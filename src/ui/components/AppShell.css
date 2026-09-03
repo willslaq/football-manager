@@ -40,6 +40,7 @@
 }
 
 .app-shell__tabs {
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: 6px;
@@ -62,6 +63,12 @@
   display: none;
 }
 
+.app-shell__tabs-track {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
 .app-shell__tab {
   display: flex;
   align-items: center;
@@ -72,20 +79,21 @@
   font-size: var(--text-sm);
   color: var(--fm-text-dim);
   white-space: nowrap;
-  transition:
-    color 160ms ease,
-    background-color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .app-shell__tab:hover {
   color: var(--fm-text);
 }
 
-.app-shell__tab--active,
-.app-shell__tab--active:hover {
+.app-shell__tabs-indicator-layer {
   background: var(--fm-text);
+}
+
+.app-shell__tabs-indicator-layer .app-shell__tab {
   color: var(--fm-bg);
   font-weight: 800;
+  transition: none;
 }
 
 .app-shell__club {

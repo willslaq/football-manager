@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
+import { useTabIndicator } from '../hooks/useTabIndicator';
 import './AppShell.css';
 
 export type HubScreen = 'home' | 'squad' | 'academy' | 'lineup' | 'calendar' | 'table' | 'finance' | 'settings';
@@ -148,6 +149,7 @@ interface AppShellProps {
  */
 export function AppShell({ active, onNavigate, clubName, clubCrest, roundLabel, children }: AppShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { trackRef: tabsRef, registerItem: registerTab, indicator } = useTabIndicator<HubScreen>(active);
 
   const handleMobileNavigate = (screen: HubScreen) => {
     onNavigate(screen);
@@ -161,18 +163,41 @@ export function AppShell({ active, onNavigate, clubName, clubCrest, roundLabel, 
           Manager<span>FC</span>
         </span>
 
-        <nav className="app-shell__tabs" aria-label="Navegação da carreira">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={`app-shell__tab${active === tab.id ? ' app-shell__tab--active' : ''}`}
-              aria-current={active === tab.id ? 'page' : undefined}
-              onClick={() => onNavigate(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <nav className="app-shell__tabs" aria-label="Navegação da carreira" ref={tabsRef}>
+          <div className="app-shell__tabs-track">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                ref={registerTab(tab.id)}
+                type="button"
+                className="app-shell__tab"
+                aria-current={active === tab.id ? 'page' : undefined}
+                onClick={() => onNavigate(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div
+            className="fm-indicator-layer app-shell__tabs-indicator-layer"
+            aria-hidden="true"
+            data-ready={indicator ? 'true' : 'false'}
+            style={
+              indicator
+                ? ({
+                    '--fm-indicator-left': `${indicator.left}px`,
+                    '--fm-indicator-right': `${indicator.right}px`,
+                  } as CSSProperties)
+                : undefined
+            }
+          >
+            {TABS.map((tab) => (
+              <span key={tab.id} className="app-shell__tab">
+                {tab.label}
+              </span>
+            ))}
+          </div>
         </nav>
 
         <div className="app-shell__club">

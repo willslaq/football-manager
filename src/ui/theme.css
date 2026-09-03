@@ -279,6 +279,49 @@ button {
   margin: var(--space-2) 0 var(--space-3);
 }
 
+/*
+ * Sliding tab-indicator overlay, for any "track" of segmented buttons (a
+ * shared chip background + pill/tag items that toggle an active state) that
+ * wants the active item to slide/stretch to the new selection instead of
+ * snapping. Pair with `useTabIndicator` (src/ui/hooks/useTabIndicator.ts)
+ * for the --fm-indicator-left/right measurements.
+ *
+ * The background lives on THIS container, not on the individual item
+ * copies inside it — that's what makes it paint as one continuous shape
+ * straight through the gaps between items, so the clip-path window always
+ * reveals a single unbroken pill/tag, never two separate rounded
+ * fragments with a gap showing through in the middle.
+ *
+ * The host track needs `position: relative`; this layer fills it via
+ * `inset: 0`. Consumers set `--fm-indicator-gap` / `--fm-indicator-radius`
+ * to match their track's own `gap` / `border-radius` (defaults: 6px / full
+ * pill), plus their own `background` and a `color` (+ optional
+ * `font-weight`) on the duplicated item copies for the active look.
+ */
+.fm-indicator-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  gap: var(--fm-indicator-gap, 6px);
+  pointer-events: none;
+  clip-path: inset(0 100% 0 0 round var(--fm-indicator-radius, var(--radius-full)));
+  transition: clip-path 250ms var(--ease-in-out);
+}
+
+.fm-indicator-layer[data-ready='true'] {
+  clip-path: inset(
+    0 var(--fm-indicator-right, 100%) 0 var(--fm-indicator-left, 0px) round
+      var(--fm-indicator-radius, var(--radius-full))
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-indicator-layer {
+    transition-duration: 0.01ms;
+  }
+}
+
 /* ---------------------------------------------------------------------- */
 /* Luz ambiente do fundo — aplicada no container de conteúdo de todas as   */
 /* telas, logo abaixo da barra de topo. É o que dá ao blur algo pra        */

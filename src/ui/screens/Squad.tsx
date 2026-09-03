@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCareerStore } from '../../store/careerStore';
 import {
@@ -10,6 +11,7 @@ import {
   type PlayerListFilter,
 } from '../utils';
 import { Card, IconCard, ProgressBar } from '../components';
+import { useTabIndicator } from '../hooks/useTabIndicator';
 import type { Player, PlayerAttributes } from '../../engine/types';
 import './Squad.css';
 
@@ -110,6 +112,7 @@ export function Squad() {
   const career = useCareerStore((s) => s.career);
   const parentRef = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState<Filter>('ALL');
+  const { trackRef: filtersRef, registerItem: registerFilter, indicator: filterIndicator } = useTabIndicator<Filter>(filter);
   const [sort, setSort] = useState<{ field: SortField; direction: SortDirection }>({
     field: 'strength',
     direction: 'desc',
@@ -190,17 +193,34 @@ export function Squad() {
           <span className="eyebrow">Profissional</span>
           <h2 className="squad__title">{fullSquad.length} jogadores federados</h2>
         </div>
-        <div className="squad__filters">
-          {POSITION_FILTERS.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              className={`squad__filter${filter === f.id ? ' squad__filter--active' : ''}`}
-              onClick={() => setFilter(f.id)}
-            >
-              {f.label}
-            </button>
-          ))}
+        <div className="squad__filters" ref={filtersRef}>
+          <div className="squad__filters-track">
+            {POSITION_FILTERS.map((f) => (
+              <button key={f.id} ref={registerFilter(f.id)} type="button" className="squad__filter" onClick={() => setFilter(f.id)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          <div
+            className="fm-indicator-layer squad__filters-indicator-layer"
+            aria-hidden="true"
+            data-ready={filterIndicator ? 'true' : 'false'}
+            style={
+              filterIndicator
+                ? ({
+                    '--fm-indicator-left': `${filterIndicator.left}px`,
+                    '--fm-indicator-right': `${filterIndicator.right}px`,
+                  } as CSSProperties)
+                : undefined
+            }
+          >
+            {POSITION_FILTERS.map((f) => (
+              <span key={f.id} className="squad__filter">
+                {f.label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 

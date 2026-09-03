@@ -33,8 +33,8 @@
 }
 
 .squad__filters {
+  position: relative;
   display: flex;
-  gap: 6px;
   padding: 5px;
   border-radius: var(--radius-full);
   background: var(--fm-chip);
@@ -48,6 +48,11 @@
   }
 }
 
+.squad__filters-track {
+  display: flex;
+  gap: 6px;
+}
+
 .squad__filter {
   padding: 9px 18px;
   border-radius: var(--radius-full);
@@ -56,19 +61,20 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--fm-text-dim);
-  transition:
-    color 160ms ease,
-    background-color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .squad__filter:hover {
   color: var(--fm-text);
 }
 
-.squad__filter--active,
-.squad__filter--active:hover {
-  color: var(--fm-bg);
+.squad__filters-indicator-layer {
   background: var(--fm-text);
+}
+
+.squad__filters-indicator-layer .squad__filter {
+  color: var(--fm-bg);
+  transition: none;
 }
 
 .card.squad__card {

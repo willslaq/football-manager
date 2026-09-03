@@ -61,8 +61,8 @@
 }
 
 .new-career__division-track {
+  position: relative;
   display: inline-flex;
-  gap: 4px;
   padding: 4px;
   border-radius: var(--radius-full);
   background: var(--fm-chip);
@@ -76,6 +76,11 @@
   }
 }
 
+.new-career__division-track-items {
+  display: inline-flex;
+  gap: 4px;
+}
+
 .new-career__division-btn {
   padding: 8px 16px;
   border-radius: var(--radius-full);
@@ -84,19 +89,21 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--fm-text-dim);
-  transition:
-    color 160ms ease,
-    background-color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .new-career__division-btn:hover {
   color: var(--fm-text);
 }
 
-.new-career__division-btn--active,
-.new-career__division-btn--active:hover {
+.new-career__division-indicator-layer {
+  --fm-indicator-gap: 4px;
   background: var(--fm-accent);
+}
+
+.new-career__division-indicator-layer .new-career__division-btn {
   color: var(--fm-accent-ink);
+  transition: none;
 }
 
 .new-career__hint {

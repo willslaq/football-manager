@@ -39,11 +39,18 @@
 }
 
 .lineup__formation-track {
+  position: relative;
   display: inline-flex;
-  gap: 4px;
   padding: 4px;
   border-radius: var(--fm-radius-inner);
   background: var(--fm-chip-strong);
+  --fm-indicator-gap: 4px;
+  --fm-indicator-radius: var(--radius-sm);
+}
+
+.lineup__formation-track-items {
+  display: inline-flex;
+  gap: 4px;
 }
 
 .lineup__formation-btn {
@@ -53,19 +60,20 @@
   font-weight: 700;
   font-size: var(--text-xs);
   color: var(--fm-text-dim);
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .lineup__formation-btn:hover {
   color: var(--fm-text);
 }
 
-.lineup__formation-btn--active,
-.lineup__formation-btn--active:hover {
+.lineup__formation-indicator-layer {
   background: var(--fm-accent);
+}
+
+.lineup__formation-indicator-layer .lineup__formation-btn {
   color: var(--fm-accent-ink);
+  transition: none;
 }
 
 .lineup__style-select {

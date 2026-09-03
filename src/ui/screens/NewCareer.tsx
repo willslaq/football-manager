@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { TacticalIntensity } from '../../engine/types';
 import { useCareerStore } from '../../store/careerStore';
 import { Backdrop, Badge, Button, Card, CardButton, ProgressBar, TextField } from '../components';
 import { CLUB_CRESTS } from '../clubCrests';
 import { loadTacticalIntensityPreference, saveTacticalIntensityPreference } from '../tacticalIntensityPreference';
 import { TACTICAL_INTENSITY_COPY } from '../utils';
+import { useTabIndicator } from '../hooks/useTabIndicator';
 import './NewCareer.css';
 
 export function NewCareer({ onBack }: { onBack: () => void }) {
@@ -12,6 +14,8 @@ export function NewCareer({ onBack }: { onBack: () => void }) {
   const [trainerName, setTrainerName] = useState('');
   const [tacticalIntensity, setTacticalIntensity] = useState<TacticalIntensity>(loadTacticalIntensityPreference);
   const [division, setDivision] = useState<'A' | 'B'>('A');
+  const { trackRef: divisionTrackRef, registerItem: registerDivision, indicator: divisionIndicator } =
+    useTabIndicator<'A' | 'B'>(division);
   const [clubFilter, setClubFilter] = useState('');
   const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
   const clubs = useCareerStore((s) => s.clubs);
@@ -75,19 +79,42 @@ export function NewCareer({ onBack }: { onBack: () => void }) {
                 onChange={(e) => setClubFilter(e.target.value)}
                 aria-label="Buscar clube"
               />
-              <div className="new-career__division-track" role="radiogroup" aria-label="Divisão">
-                {(['A', 'B'] as const).map((d) => (
-                  <button
-                    key={d}
-                    type="button"
-                    role="radio"
-                    aria-checked={division === d}
-                    className={`new-career__division-btn${division === d ? ' new-career__division-btn--active' : ''}`}
-                    onClick={() => setDivision(d)}
-                  >
-                    Série {d}
-                  </button>
-                ))}
+              <div className="new-career__division-track" role="radiogroup" aria-label="Divisão" ref={divisionTrackRef}>
+                <div className="new-career__division-track-items">
+                  {(['A', 'B'] as const).map((d) => (
+                    <button
+                      key={d}
+                      ref={registerDivision(d)}
+                      type="button"
+                      role="radio"
+                      aria-checked={division === d}
+                      className="new-career__division-btn"
+                      onClick={() => setDivision(d)}
+                    >
+                      Série {d}
+                    </button>
+                  ))}
+                </div>
+
+                <div
+                  className="fm-indicator-layer new-career__division-indicator-layer"
+                  aria-hidden="true"
+                  data-ready={divisionIndicator ? 'true' : 'false'}
+                  style={
+                    divisionIndicator
+                      ? ({
+                          '--fm-indicator-left': `${divisionIndicator.left}px`,
+                          '--fm-indicator-right': `${divisionIndicator.right}px`,
+                        } as CSSProperties)
+                      : undefined
+                  }
+                >
+                  {(['A', 'B'] as const).map((d) => (
+                    <span key={d} className="new-career__division-btn">
+                      Série {d}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

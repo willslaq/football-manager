@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { DragEvent } from 'react';
+import type { CSSProperties, DragEvent } from 'react';
 import { FORMATIONS, TACTIC_STYLE_LABELS, TACTIC_STYLES } from '../../engine/types';
 import type { Formation, Player, TacticalIntensity, TacticStyle } from '../../engine/types';
 import { formationStyleCoherence } from '../../engine';
@@ -7,6 +7,7 @@ import { assignToSlots, autoAssign, buildSlots } from '../../engine/simulation/f
 import { positionAtCoord } from '../../engine/simulation/pitchZones';
 import { POSITION_FILTERS, POSITION_GROUP, type PlayerListFilter } from '../utils';
 import { positionFit, effectiveOverall } from '../positionFit';
+import { useTabIndicator } from '../hooks/useTabIndicator';
 import { Button } from './Button';
 import { Card } from './Card';
 import { EnergyBar } from './EnergyBar';
@@ -110,6 +111,8 @@ export function PitchEditor({
     direction: 'desc',
   });
   const [dragOverSlot, setDragOverSlot] = useState<string | null>(null);
+  const { trackRef: formationTrackRef, registerItem: registerFormation, indicator: formationIndicator } =
+    useTabIndicator<Formation>(formation);
 
   const playersById = useMemo(() => new Map(squad.map((p) => [p.id, p])), [squad]);
   const visibleSquad = useMemo(() => {
@@ -207,19 +210,42 @@ export function PitchEditor({
       <div className="lineup__controls">
         <div className="lineup__field">
           <span className="field__label">Formação</span>
-          <div className="lineup__formation-track" role="radiogroup" aria-label="Formação">
-            {FORMATIONS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                role="radio"
-                aria-checked={formation === f}
-                className={`lineup__formation-btn${formation === f ? ' lineup__formation-btn--active' : ''}`}
-                onClick={() => onFormationChange(f)}
-              >
-                {f}
-              </button>
-            ))}
+          <div className="lineup__formation-track" role="radiogroup" aria-label="Formação" ref={formationTrackRef}>
+            <div className="lineup__formation-track-items">
+              {FORMATIONS.map((f) => (
+                <button
+                  key={f}
+                  ref={registerFormation(f)}
+                  type="button"
+                  role="radio"
+                  aria-checked={formation === f}
+                  className="lineup__formation-btn"
+                  onClick={() => onFormationChange(f)}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+
+            <div
+              className="fm-indicator-layer lineup__formation-indicator-layer"
+              aria-hidden="true"
+              data-ready={formationIndicator ? 'true' : 'false'}
+              style={
+                formationIndicator
+                  ? ({
+                      '--fm-indicator-left': `${formationIndicator.left}px`,
+                      '--fm-indicator-right': `${formationIndicator.right}px`,
+                    } as CSSProperties)
+                  : undefined
+              }
+            >
+              {FORMATIONS.map((f) => (
+                <span key={f} className="lineup__formation-btn">
+                  {f}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
